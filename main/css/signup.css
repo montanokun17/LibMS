@@ -1,0 +1,110 @@
+
+.signup-td {
+    
+    width: 50%;
+}
+
+.signup-box {
+    padding-top: 80px;
+}
+
+.signup-form {
+    padding-left: 10px;
+    margin-bottom: 30px;
+    margin-top: 20px;
+}
+
+input [type="text"] {
+    padding: 5px;
+    width: 85%;
+    border-radius: 10px;
+    font-size: 11px;
+}
+
+#firstname, #lastname, #username, #email, #con_num, #password {
+    padding: 7px;
+    width: 70%;
+    border-radius: 10px;
+    font-size: 11px;
+}
+
+label {
+    font-size: 11px;
+    font-weight: 600;
+}
+
+/* BOX 2 */
+
+.box-2 {
+
+}
+
+.form-2-box {
+    padding-left: 10px;
+}
+
+button {
+    width: 55%;
+}
+
+.label-1 {
+    padding-bottom: 10px;
+}
+
+.checkbox#pasigresd {
+    margin-left: 0%;
+    margin-right: 0%;
+}
+
+input#pasigresd {
+    padding: 0%;
+    padding-right: 0%;
+    text-align: left;
+}
+
+ul.check-box {
+    list-style-type: none;
+    text-align: left;
+}
+
+
+#brgy.form-select {
+    width: 55%;
+    font-size: 11px;
+    padding-bottom: 5px;
+}
+
+#schlvl.form-select {
+    width: 55%;
+    font-size: 11px;
+    padding-bottom: 5px;
+}
+
+#acctype.form-select {
+    width: 55%;
+    font-size: 11px;
+    padding-bottom: 5px;
+}
+
+#brgy-2 {
+    width: 55%;
+    font-size: 11px;
+    padding-bottom: 5px;
+}
+
+.brgy-2 {
+    padding-bottom: 5px;
+}
+
+#nonPasigbrgy {
+    width: 55%;
+    padding: 7px;
+    border-radius: 10px;
+    font-size: 11px;
+
+}
+
+::placeholder {
+    font-style: italic;
+    font-size: 11px;
+}

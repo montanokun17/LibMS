@@ -1,0 +1,11 @@
+{
+    "name": "acer/phpqr",
+    "autoload": {
+        "psr-4": {
+            "Acer\\Phpqr\\": "src/"
+        }
+    },
+    "require": {
+        "endroid/qr-code": "^4.8"
+    }
+}

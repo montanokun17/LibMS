@@ -1,0 +1,27 @@
+typing_extensions
+pypng
+
+[:platform_system == "Windows"]
+colorama
+
+[all]
+zest.releaser[recommended]
+tox
+pytest
+pytest-cov
+pillow>=9.1.0
+
+[dev]
+tox
+pytest
+pytest-cov
+
+[maintainer]
+zest.releaser[recommended]
+
+[pil]
+pillow>=9.1.0
+
+[test]
+coverage
+pytest

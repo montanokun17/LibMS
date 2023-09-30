@@ -1,0 +1,17 @@
+{
+    "name": "acer/bacon_qr",
+    "autoload": {
+        "psr-4": {
+            "": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "LibMSv1",
+            "email": "montano.nielcarl.bshs1819@gmail.com"
+        } 
+],
+    "require": {
+        "bacon/bacon-qr-code": "^2.0"
+    }
+}

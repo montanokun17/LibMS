@@ -1,0 +1,77 @@
+body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+ /* Navbar styling */
+#navbar{
+    position: relative;
+}
+
+nav {
+    background-color: #333;
+}
+
+li.nav-item {
+    font-size: 13px;
+}
+
+.navbar-nav a {
+    color: #fff;
+}
+
+.active {
+    color: #fff;
+    background-color: #555;
+    padding: 10px;
+}
+
+
+
+
+/* Sidebar styling*/
+
+#sidebar {
+    position: fixed;
+    width: 150px;
+    height: 100%;
+    background-color: #333;
+    color: #fff;
+    transition: width 0.3s ease;
+}
+
+#sidebar ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+#sidebar ul li {
+    padding: 9px;
+    text-align: left;
+    font-size: 12px;
+}
+
+#sidebar a {
+    color: #fff;
+    text-decoration: none;
+}
+
+#sidebar ul li:hover {
+    background-color: #555;
+}
+
+#content {
+    margin-left: 250px;
+    padding: 20px;
+}
+
+/*ID Card Styling*/
+
+li.list-group-item {
+    font-size: 11px;
+}
+
+.Idlogo {
+    margin-right: 30px;
+}

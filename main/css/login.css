@@ -1,0 +1,75 @@
+* {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.form-group {
+    align-content: center;
+    padding: 5px;
+}
+
+input {
+    align-content: center;
+    width: 65%;
+    padding: 5px;
+    border-radius: 10px;
+}
+
+button {
+    width: 65%;
+}
+
+.card-title {
+    font-size: 20px;
+    font-weight: 500;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.form-box {
+    padding-top: 30px;
+
+}
+
+label {
+    font-size: 13px;
+    font-weight: 300;
+}
+
+.forgot {
+    font-size: 12px;
+    text-align: left;
+    font-weight: 600;
+}
+
+.forgot-link {
+    text-decoration: none;
+}
+
+.login-form {
+    padding-top: 150px;
+}
+
+
+/* BOX 2 */
+
+.box-2 {
+    border: 2px solid;
+    width: 48%;
+    border-color: green;
+    padding: 10px;
+}
+
+.box-title {
+    font-weight: 900;
+    font-size: 18px;
+    color: tomato;
+}
+
+.text-box {
+    text-align: left;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+::placeholder {
+    font-size: 11px;
+}
