@@ -35,7 +35,6 @@ CREATE TABLE books (
     book_id INT PRIMARY KEY AUTO_INCREMENT,
     dewey INT NOT NULL,
     section VARCHAR(50) NOT NULL,
-    subject VARCHAR(50) NOT NULL,
     book_title VARCHAR(100) NOT NULL,
     volume VARCHAR(50) NOT NULL,
     year INT NOT NULL,

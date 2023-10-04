@@ -239,105 +239,19 @@ if ($_SESSION['acctype'] === 'Admin') {
     </div>
 <!--SIDEBAR-->
 
-<div class="table-box">
-    <div class="container col-12 col-md-10">
-        <div class="container">
-            <div class="row">
-                <div class="books-box">
-                    <div class="container-fluid">
+<div class="book-box">
+    <div class="container">
+        <div class="row">
+            <div class="form-box">
+                <div class="container-fluid">
+                    <form class="add-book-form" method="POST" action="">
 
-                        <div class="search-bar">
-                            <form method ="GET">
-                                <input type="text" class="search" placeholder ="Enter Book Section, Book Name, or Book's Status..">
-                                <button type="submit" name="search" class="btn btn-primary bg-dark btn-sm"><i class="fa-solid fa-search fa-sm"></i> Search</button>
-                            </form>
-
-                            <div class="dropdown-1">
-                                    <select name="section" id="section-dd">
-                                        <option></option>
-                                        <option selected disabled>*Select Section*</option>
-                                        <option value="Fiction">Fiction</option>
-                                        <option value="Mystery Thriller">Mystery/Thriller</option>
-                                        <option value="Romance">Romance</option>
-                                        <option value="Science Fiction">Science Fiction/Fantasy</option>
-                                        <option value="Horror">Horror</option>
-                                        <option value="Historical Fiction">Historical Fiction</option>
-                                        <option value="Biography/Autobiography">Biography/Autobiography</option>
-                                        <option value="Memoir">Memoir</option>
-                                        <option value="History">History</option>
-                                        <option value="Politics">Politics and Current Events</option>
-                                        <option value="Science and Technology">Science and Technology</option>
-                                        <option value="Business and Finance">Business and Finance</option>
-                                        <option value="Self-Help and Personal Development">Self-Help and Personal Development</option>
-                                        <option value="Art and Architecture">Art and Architecture</option>
-                                        <option value="Travel and Adventure">Travel and Adventure</option>
-                                        <option value="Cookbooks and Food Writing">Cookbooks and Food Writing</option>
-                                        <option value="Young Adult Fiction">Young Adult Fiction</option>
-                                        <option value="Graphic Novels and Comics">Graphic Novels and Comics</option>
-                                        <option value="Poetry">Poetry</option>
-                                        <option value="Religion and Spiritually">Religion and Spiritually</option>
-                                        <option value="Philosophy">Philosophy</option>
-                                        <option value="Reference and Dictionary">Reference and Dictionary</option>
-                                        <option value="Foreign Languages">Foreign Languages</option>
-                                        <option value="Others">Others</option>
-                                    </select>
-
-                                    <select name="status" id="book-status">
-                                        <option selected disabled>*Select Book Status*</option>
-                                        <option value="GOOD">GOOD</option>
-                                        <option value="DAMAGED">DAMAGED</option>
-                                        <option value="DILAPITATED">DILAPITATED</option>
-                                        <option value="LOST">LOST</option>
-                                    </select>
-
-                                    <select name="status" id="book-status">
-                                        <option selected disabled>*Select Dewey Decimal Classification*</option>
-                                        <option value="200">200</option>
-                                        <option value="300">300</option>
-                                        <option value="400">400</option>
-                                        <option value="500">500</option>
-                                    </select>
-                            </div>
-
-                        </div>
-
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Dewey Decimal Classification</th>
-                                    <th>ISBN</th>
-                                    <th>Book Name</th>
-                                    <th>Section</th>
-                                    <th>Volume</th>
-                                    <th>Year</th>
-                                    <th>Author</th>
-                                    <th>Stocks</th>
-                                    <th>Book Status</th>
-                                </tr>
-                            </thead>
-
-                            <tbody>
-                                <tr>
-                                    <td>900</td>
-                                    <td>978-0307269751</td>
-                                    <td>The Girl With Dragon Tattoo</td>
-                                    <td>Mystery Thriller</td>
-                                    <td>1</td>
-                                    <td>2005</td>
-                                    <td>Steig Laarson</td>
-                                    <td>5</td>
-                                    <td>GOOD</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-
-</body>
+<body>
 </html>
-

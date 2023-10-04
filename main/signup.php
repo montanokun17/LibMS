@@ -78,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Set the path where you want to store the QR codes
             $qrCodeFolderPath = '/xampp/htdocs/LibMS/qr_bin/';
-            $qrCodeFileName = "$idNo.png";
+            $qrCodeFileName = "$username - $idNo.png";
             $qrCodePath = $qrCodeFolderPath . $qrCodeFileName;
 
             // Generate the QR code

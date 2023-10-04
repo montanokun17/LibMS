@@ -85,7 +85,7 @@ if ($_SESSION['acctype'] === 'Student' || 'Guest') {
     <link rel="stylesheet" type="text/css" href="/LibMS/resources/bootstrap/css/bootstrap.min.css"/>
     <script type="text/javascript" src="/LibMS/resources/bootstrap/js/bootstrap.min.js"></script>
     <!--Link for CSS File-->
-    <link rel="stylesheet" type="text/css" href="/LibMS/users/student/index.css">
+    <link rel="stylesheet" type="text/css" href="/LibMS/users/guest/index.css">
     <!--Link for Font Awesome Icons-->
     <link rel="stylesheet" href="/LibMS/resources/icons/fontawesome-free-6.4.0-web/css/all.css">
     <!--Link for Google Font-->

@@ -85,7 +85,7 @@ if ($_SESSION['acctype'] === 'Student' || 'Guest') {
     <link rel="stylesheet" type="text/css" href="/LibMS/resources/bootstrap/css/bootstrap.min.css"/>
     <script type="text/javascript" src="/LibMS/resources/bootstrap/js/bootstrap.min.js"></script>
     <!--Link for CSS File-->
-    <link rel="stylesheet" type="text/css" href="/LibMS/users/student/index.css">
+    <link rel="stylesheet" type="text/css" href="/LibMS/users/librarian/index.css">
     <!--Link for Font Awesome Icons-->
     <link rel="stylesheet" href="/LibMS/resources/icons/fontawesome-free-6.4.0-web/css/all.css">
     <!--Link for Google Font-->
@@ -172,10 +172,48 @@ if ($_SESSION['acctype'] === 'Student' || 'Guest') {
                     <a href="#">
                         <i class="fa fa-clock-rotate-left fa-sm"></i>
                         <span class="sidebar-name">
-                            Books' Issuance/Return History
+                            Granted & Rejected Book Borrow Requests
                         </span>
                     </a>
                 </li>
+
+                <li>
+                    <a href="#">
+                        <i class="fa fa-clock-rotate-left fa-sm"></i>
+                        <span class="sidebar-name">
+                            Book Borrow Requests
+                        </span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#">
+                        <i class="fa fa-clock-rotate-left fa-sm"></i>
+                        <span class="sidebar-name">
+                            Renewal Requests
+                        </span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#">
+                        <i class="fa fa-clock-rotate-left fa-sm"></i>
+                        <span class="sidebar-name">
+                             Returned Books
+                        </span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#">
+                        <i class="fa fa-clock-rotate-left fa-sm"></i>
+                        <span class="sidebar-name">
+                             Books Deletion History
+                        </span>
+                    </a>
+                </li>
+
+                
 
             </ul>
 

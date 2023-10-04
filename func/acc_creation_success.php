@@ -15,7 +15,7 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-if (isset($_SESSION['acctype']) && $_SESSION['acctype'] === 'Student') {
+if (isset($_SESSION['acctype']) && $_SESSION['acctype'] === 'Student' || ($_SESSION['acctype']) && $_SESSION['acctype'] === 'Guest') {
     // User logged in or just registered as a student
 
     if (isset($_SESSION['id_no']) && isset($_SESSION['username'])) {
