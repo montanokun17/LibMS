@@ -290,46 +290,306 @@ if ($_SESSION['acctype'] === 'Admin') {
                                         <option value="LOST">LOST</option>
                                     </select>
 
-                                    <select name="status" id="book-status">
-                                        <option selected disabled>*Select Dewey Decimal Classification*</option>
-                                        <option value="200">200</option>
-                                        <option value="300">300</option>
-                                        <option value="400">400</option>
-                                        <option value="500">500</option>
+                                    <select name="dewey" id="book-status">
+                                        <option selected disabled>*Select Dewey Classification*</option>
+                                        <option class="option-title" value="000" >000 - General Works</option>
+                                        <option value="020">020 - Library and Information Science</option>
+                                        <option value="030">030 - General Encylopedias</option>
+                                        <option value="050">050 - General Periodicals</option>
+                                        <option value="060">060 - General Organizations</option>
+                                        <option class="option-title" value="100">100 - Philosophy</option>
+                                        <option value="110">110 - Metaphysics</option>
+                                        <option value="120">120 - Speculative Philosophy</option>
+                                        <option value="130">130 - Psychology and Occultism</option>
+                                        <option value="140">140 - Philosophy (Gen.)</option>
+                                        <option value="150">150 - Psychology (Gen.)</option>
+                                        <option value="160">160 - Logic</option>
+                                        <option class="option-title" value="200">200 - Religion</option>
+                                        <option value="220">220 - The Bible</option>
+                                        <option value="230">230 - Christian Doctrine</option>
+                                        <option value="290">290 - Comparative and Other Religions</option>
+                                        <option class="option-title" value="300">300 - Social Sciences</option>
+                                        <option value="310">310 - Statistics</option>
+                                        <option value="320">320 - Political Science</option>
+                                        <option value="330">330 - Economics</option>
+                                        <option value="340">340 - Law</option>
+                                        <option value="350">350 - Public Administration</option>
+                                        <option value="360">360 - Social Welfare</option>
+                                        <option value="370">370 - Education</option>
+                                        <option value="380">380 - Public Service</option>
+                                        <option value="390">390 - Customs and Folklores</option>
+                                        <option class="option-title" value="400">400 - Language</option>
+                                        <option value="410">410 - Comparative Lingustics</option>
+                                        <option value="420">420 - English and Anglo Saxon</option>
+                                        <option value="430">430 - German Language</option>
+                                        <option value="440">440 - French</option>
+                                        <option value="450">450 - Italian, Romanian</option>
+                                        <option value="460">460 - Spanish, Portuguese</option>
+                                        <option value="470">470 - Latin and Other Italic Languages</option>
+                                        <option value="480">480 - Classical and Modern Greek</option>
+                                        <option value="490">490 - Other Langauges</option>
+                                        <option class="option-title" value="500">500 - Science</option>
+                                        <option value="510">510 - Mathematics</option>
+                                        <option value="520">520 - Astronomy</option>
+                                        <option value="530">530 - Physics</option>
+                                        <option value="540">540 - Chemistry</option>
+                                        <option value="550">550 - Earth Sciences</option>
+                                        <option value="560">560 - Paleontology</option>
+                                        <option value="570">570 - Life Sciences</option>
+                                        <option value="580">580 - Botanical Sciences</option>
+                                        <option value="590">590 - Zoological Sciences</option>
+                                        <option class="option-title" value="600">600 - Technology</option>
+                                        <option value="610">610 - Medical Services</option>
+                                        <option value="620">620 - Engineering</option>
+                                        <option value="630">630 - Agriculture</option>
+                                        <option value="640">640 - Domestic Sciences</option>
+                                        <option value="650">650 - Business and Management</option>
+                                        <option value="660">660 - Chemical Technology</option>
+                                        <option value="670">670 - Manufacturers</option>
+                                        <option value="690">690 - Buidling Construction</option>
+                                        <option class="option-title" value="700">700 - The Arts</option>
+                                        <option value="710">710 - Landscape and Civic Art</option>
+                                        <option value="720">720 - Architecture</option>
+                                        <option value="730">730 - Sculpture, Plastics</option>
+                                        <option value="740">740 - Drawing, Decorative Arts</option>
+                                        <option value="750">750 - Painting</option>
+                                        <option value="760">760 - Prints and Print Making </option>
+                                        <option value="770">770 - Photography</option>
+                                        <option value="780">780 - Music</option>
+                                        <option value="790">790 - Recreation, Performing Arts</option>
+                                        <option class="option-title" value="800">800 - Literature</option>
+                                        <option value="810">810 -  American Literature</option>
+                                        <option value="820">820 - English Literature</option>
+                                        <option value="830">830 - German Literature</option>
+                                        <option value="840">840 - French Literature</option>
+                                        <option value="850">850 - Italian Literature</option>
+                                        <option value="860">860 - Spanish, Portuguese Literature</option>
+                                        <option value="870">870 - Latin and Other Italic Literature</option>
+                                        <option value="880">880 - Classical and Modern Greek Literature</option>
+                                        <option value="890">890 - Other Literature</option>
+                                        <option class="option-title" value="900">900 - History and Geography</option>
+                                        <option value="910">910 - Geography Travel</option>
+                                        <option value="920">920 - Genealogy</option>
+                                        <option value="930">930 - Ancient History</option>
+                                        <option value="940">940 - Europe</option>
+                                        <option value="950">950 - Asia</option>
+                                        <option value="960">960 - Africa</option>
+                                        <option value="970">970 - North America</option>
+                                        <option value="980">980 - South America</option>
+                                        <option value="990">990 - Pacific Ocean Islands</option>
+                                        <option value="991">991 - Indonesia</option>
+                                        <option value="993">993 - New Zealand and Melanesia</option>
+                                        <option value="994">994 - Australia</option>
+                                        <option value="995">995 - New Guinea (Papua)</option>
+                                        <option value="996">996 - Polynesia</option>
+                                        <option value="997">997 - Atlantic Ocean Islands</option>
+                                        <option value="998">998 - Arctic Region</option>
+                                        <option value="999">999 - Antarctic Region</option>
+                                        <option class="option-title" value="920">920 - Biography and Collective Biography</option>
+                                        <option value="920">920 - Biography and Collective Biography</option>
                                     </select>
                             </div>
 
                         </div>
+            
+                <?php
 
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Dewey Decimal Classification</th>
-                                    <th>ISBN</th>
-                                    <th>Book Name</th>
-                                    <th>Section</th>
-                                    <th>Volume</th>
-                                    <th>Year</th>
-                                    <th>Author</th>
-                                    <th>Stocks</th>
-                                    <th>Book Status</th>
-                                </tr>
-                            </thead>
+                    // Default query to fetch all books
+                    $query = "SELECT * FROM books WHERE 'deleted' = 0 ORDER BY book_id DESC";
 
-                            <tbody>
-                                <tr>
-                                    <td>900</td>
-                                    <td>978-0307269751</td>
-                                    <td>The Girl With Dragon Tattoo</td>
-                                    <td>Mystery Thriller</td>
-                                    <td>1</td>
-                                    <td>2005</td>
-                                    <td>Steig Laarson</td>
-                                    <td>5</td>
-                                    <td>GOOD</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                function getBooksByPagination($conn, $query, $offset, $limit) {
+                    $query .= " LIMIT $limit OFFSET $offset"; // Append the LIMIT and OFFSET to the query for pagination
+                    $result = mysqli_query($conn, $query);
+
+                    return $result;
+                }
+
+                $totalBooksQuery = "SELECT COUNT(*) as total FROM books";
+                $totalBooksResult = mysqli_query($conn, $totalBooksQuery);
+                $totalBooks = mysqli_fetch_assoc($totalBooksResult)['total'];
+
+
+                // Number of books to display per page
+                $limit = 8;
+
+                // Get the current page number from the query parameter
+                $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
+
+                // Calculate the offset for the current page
+                $offset = ($page - 1) * $limit;
+
+                // Get the books for the current page
+                $result = getBooksByPagination($conn, $query, $offset, $limit);
+
+                    // Check if the query executed successfully
+                    if ($result && mysqli_num_rows($result) > 0) {
+                        echo '<div class="container">';
+                        echo '<table>';
+                        echo '<thead>';
+                        echo '<tr>';
+                        echo '<th>ISBN</th>';
+                        echo '<th>Book Name</th>';
+                        echo '<th>Author</th>';
+                        echo '<th>Year</th>';
+                        echo '<th>Volume</th>';
+                        echo '<th>Section</th>';
+                        echo '<th>Stocks</th>';
+                        echo '<th>Status</th>';
+                        echo '<th>Action</th>';
+                        echo '</tr>';
+                        echo '</thead>';
+                        echo '<tbody>';
+
+                        while ($book = mysqli_fetch_assoc($result)) {
+                            echo '<tr>';
+                            echo '<td>' . $book['isbn'] . '</td>';
+                            echo '<td>' . $book['book_title'] . '</td>';
+                            echo '<td>' . $book['author'] . '</td>';
+                            echo '<td>' . $book['year'] . '</td>';
+                            echo '<td>' . $book['volume'] . '</td>';
+                            echo '<td>' . $book['section'] . '</td>';
+                            echo '<td>' . $book['stocks'] . '</td>';
+                            if ($book['status'] == 'GOOD') {
+                                echo '<td style="color: green;"><b><i>' . $book['status'] . '</i></b></td>';
+                            } else if ($book['status'] == 'DAMAGED') {
+                                echo '<td style="color: orange;"><b><i>' . $book['status'] . '</i></b></td>';
+                            } else if ($book['status'] == 'DILAPITATED') {
+                                echo '<td style="color: red;"><b><i>' . $book['status'] . '</i></b></td>';
+                            } else {
+                                echo '<td style="color: grey;"><b><i>' . $book['status'] . '</i></b></td>';
+                            }
+                            echo '<td>';
+                            echo '<button type="button" class="btn btn-success btn-sm"><i class="fa-solid fa-circle-info fa-sm"></i> Details</button>';
+                            echo '</td>';
+                            echo '</tr>';
+                        }
+
+                        echo '</tbody>';
+                        echo '</table>';
+
+
+                        // Calculate the total number of pages
+                        $totalPages = ceil($totalBooks / $limit);
+                        if ($totalPages > 1) {
+                            echo '
+                            <div class="pagination-buttons" style="margin-top: 10px;
+                            margin-left: 70px;
+                            ">
+                                ';
+                    
+                            if ($page > 1) {
+                                echo '<a href="?page='.($page - 1).'" class="btn btn-primary btn-sm" id="previous" style="padding: 10px; width:10%;"><i class="fa-solid fa-angle-left"></i>'.($page - 1).' Previous</a>';
+                            }
+                    
+                            if ($page < $totalPages) {
+                                echo '<a href="?page='.($page + 1).'" class="btn btn-primary btn-sm" id="next" style="padding: 10px; width:10%;"> '.($page + 1).' Next <i class="fa-solid fa-angle-right"></i></a>';
+                            }
+                    
+                            echo '
+                            </div>
+                            ';
+                        }
+
+                    } else {
+                        echo "<tr><td colspan='10'>No books found.</td></tr>";
+                    }
+
+
+                    // Close the database connection
+                    mysqli_close($conn);
+
+                ?>
+
+            </div>
+
+                <script>
+                    // JavaScript function for handling pagination buttons
+                    document.addEventListener("DOMContentLoaded", function () {
+                        const previousBtn = document.getElementById("previous");
+                        const nextBtn = document.getElementById("next");
+
+                        if (previousBtn) {
+                            previousBtn.addEventListener("click", function () {
+                                // Go to the previous page by decrementing the current page number
+                                let currentPage = parseInt("<?php echo $page; ?>");
+                                if (currentPage > 1) {
+                                    currentPage--;
+                                    window.location.href = "?page=" + currentPage;
+                                }
+                            });
+                        }
+
+                        if (nextBtn) {
+                            nextBtn.addEventListener("click", function () {
+                                // Go to the next page by incrementing the current page number
+                                let currentPage = parseInt("<?php echo $page; ?>");
+                                let totalPages = parseInt("<?php echo $totalPages; ?>");
+                                if (currentPage < totalPages) {
+                                    currentPage++;
+                                    window.location.href = "?page=" + currentPage;
+                                }
+                            });
+                        }
+                    });
+                </script>
+
+        </div>
+
+                        <?php
+
+                        /*$query = "SELECT * FROM books ORDER BY book_id DESC";
+
+                            // Check if the query executed successfully
+                        if ($result && mysqli_num_rows($result) > 0) {
+                            
+                            echo '<thead>';
+                            echo '<tr>';
+                            echo '<th>Dewey Decimal</th>';
+                            echo '<th>ISBN</th>';
+                            echo '<th>Book Title</th>';
+                            echo '<th>Author</th>';
+                            echo '<th>Section</th>';
+                            echo '<th>Volume</th>';
+                            echo '<th>Year</th>';
+                            echo '<th>Stocks</th>';
+                            echo '<th>Book Status</th>';
+                            echo '</tr>';
+                            echo '</thead>';
+
+                            while ($book = mysqli_fetch_assoc($result)) {
+                                echo '<tbody>';
+                                echo '<tr>';
+                                echo '<td>' . $book['dewey']. '</td>';
+                                echo '<td>' . $book['isbn']. '</td>';
+                                echo '<td>' . $book['book_title']. '</td>';
+                                echo '<td>' . $book['author']. '</td>';
+                                echo '<td>' . $book['section']. '</td>';
+                                echo '<td>' . $book['volume']. '</td>';
+                                echo '<td>' . $book['year']. '</td>';
+                                echo '<td>' . $book['stocks ']. '</td>';
+                                echo '</tr>';
+                                
+                                if ($book['status'] == 'GOOD') {
+                                    echo '<td style="color: green;"><b><i>' . $book['status'] . '</i></b></td>';
+                                } else if ($book['status'] == 'DAMAGED') {
+                                    echo '<td style="color: orange;"><b><i>' . $book['status'] . '</i></b></td>';
+                                } else if ($book['status'] == 'DILAPITATED') {
+                                    echo '<td style="color: red;"><b><i>' . $book['status'] . '</i></b></td>';
+                                } else {
+                                    echo '<td style="color: grey;"><b><i>' . $book['status'] . '</i></b></td>';
+                                }
+                                echo '<td>';
+                                echo '<button type="button" class="btn btn-success btn-sm"><i class="fa-solid fa-circle-info fa-sm"></i> Details</button>';
+                                echo '</td>';
+                                echo '</tr>';
+                            }
+
+                            echo '</tbody>';
+                            echo '</table>';
+                            
+                        }   */
+
+                        ?>
                     </div>
                 </div>
             </div>

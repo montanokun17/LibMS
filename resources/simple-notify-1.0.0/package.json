@@ -1,0 +1,53 @@
+{
+  "name": "simple-notify",
+  "email": "dgknca@gmail.com",
+  "description": "Simple Notify is a pure Javascript library to show nice and customizable alert notifications.",
+  "keywords": [
+    "notification",
+    "toast",
+    "alert",
+    "notify"
+  ],
+  "version": "1.0.0",
+  "homepage": "https://simple-notify.github.io/simple-notify/",
+  "repository": "https://github.com/simple-notify/simple-notify",
+  "author": "Doğukan Çavuş",
+  "license": "MIT",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "watch": "tsup --watch",
+    "prepublishOnly": "yarn && yarn build",
+    "deploy": "gh-pages -d website",
+    "lint": "eslint . --ext .ts",
+    "format": "prettier --write ./src"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn format && git add ."
+    }
+  },
+  "devDependencies": {
+    "@swc/core": "^1.2.239",
+    "@typescript-eslint/eslint-plugin": "^5.33.1",
+    "@typescript-eslint/parser": "^5.33.1",
+    "eslint": "^8.22.0",
+    "eslint-config-prettier": "^8.5.0",
+    "gh-pages": "^4.0.0",
+    "husky": "^8.0.1",
+    "postcss": "^8.4.16",
+    "postcss-nested": "^5.0.6",
+    "postcss-nesting": "^10.1.10",
+    "prettier": "^2.7.1",
+    "tsup": "^6.2.2",
+    "typescript": "^4.7.4"
+  }
+}

@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Prepare and bind the SQL query to check if email already exists
-    $stmt = $conn->prepare("SELECT * FROM users WHERE email = ? and con_num = ?");
+    $stmt = $conn->prepare("SELECT * FROM users WHERE email = ? AND con_num = ?");
     $stmt->bind_param("ss", $email, $con_num);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -74,31 +74,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $qrCodeContent = "ID Number: $idNo\nName: $firstname $lastname\nUsername: $username\nAccount Type: $acctype";
 
             // Generate the QR code image
-            include('D:\xampp\htdocs\LibMS\resources\phpqrcode-master\phpqrcode-master\qrlib.php');
-
-            // Set the path where you want to store the QR codes
-            $qrCodeFolderPath = '/xampp/htdocs/LibMS/qr_bin/';
-            $qrCodeFileName = "$username - $idNo.png";
-            $qrCodePath = $qrCodeFolderPath . $qrCodeFileName;
+            include_once('D:/xampp/htdocs/LibMS/resources/phpqrcode-master/phpqrcode-master/qrlib.php');
 
             // Generate the QR code
-            QRcode::png($qrCodeContent, $qrCodePath, QR_ECLEVEL_L, 10);
+            ob_start(); // Start output buffering
+            QRcode::png($qrCodeContent, null, QR_ECLEVEL_L, 10); // Output the image directly to the buffer
+            $qrCodeImageData = ob_get_clean(); // Get the image data from the buffer
 
-            // Check if the image was saved successfully
-            if (file_exists($qrCodePath)) {
-                // Insert the QR code path into the database
-                $insertQRCodeStmt = $conn->prepare("INSERT INTO qr_table (id_no, username, qr_code) VALUES (?, ?, ?)");
-                $insertQRCodeStmt->bind_param("iss", $idNo, $username, $qrCodeFileName);
-                if ($insertQRCodeStmt->execute()) {
-                    // QR code insertion successful
-                } else {
-                    // Error occurred while inserting QR code
-                    echo "<script>alert('Error inserting QR code: " . $insertQRCodeStmt->error . "');</script>";
-                }
+            // Determine the QR code image type (assuming PNG for this example)
+            $qrCodeImageType = "image/png";
+
+            // Insert the QR code data into the database
+            $insertQRCodeStmt = $conn->prepare("INSERT INTO qr_codes (user_id, username, qr_code_data, qr_code_type) VALUES (?, ?, ?, ?)");
+            $insertQRCodeStmt->bind_param("isss", $idNo, $username, $qrCodeImageData, $qrCodeImageType);
+
+            if ($insertQRCodeStmt->execute()) {
+                // QR code insertion successful
             } else {
-                // Error: QR code image was not saved
-                echo "<script>alert('Error saving QR code image.');</script>";
+                // Error occurred while inserting QR code
+                echo "<script>alert('Error inserting QR code: " . $insertQRCodeStmt->error . "');</script>";
             }
+
+            $insertQRCodeStmt->close();
             
             //header('Location: /LibMS/func/acc_creation_success.php');
 
@@ -264,7 +261,7 @@ $conn->close();
                                                 </div>
 
                                                 
-                                                    <label for="acctype">School Level: </label>
+                                                    <label for="acctype">Account Type: </label>
                                                         <select name="acctype" class="form-select" id="acctype">
                                                             <option selected disabled>Select Account Type</option>
                                                             <option value="Student">Student</option>

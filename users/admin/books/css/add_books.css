@@ -1,0 +1,71 @@
+
+body {
+    font-size: 13px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.add-book-form {
+    margin-left: 250px;
+    margin-top: 40px;
+}
+
+select {
+    border-radius: 10px;
+    padding: 4px;
+}
+
+.dropdown-1 {
+    font-weight: 700;
+    margin-top: 5px;
+}
+
+.bsection {
+    width: 60%;
+}
+
+.dropdown-group-1 {
+    font-weight: 700;
+    margin-bottom: 20px;
+    margin-top: 5px;
+}
+
+.option-title {
+    font-weight: 700;
+    background-color: #3e3e42;
+    color: #ffffff;
+}
+
+.bstatus {
+    width: 20%;
+}
+
+.dewey_dd {
+    width: 30%;
+    margin-right: 10px;
+}
+
+.form-label {
+    margin-bottom: 3px;
+    font-weight: 600;
+}
+
+.form-group {
+    margin-left: 140px;
+}
+
+.form-control {
+    width: 60%;
+    border-radius: 10px;
+    padding: 5px;
+    font-size: 11px;
+}
+
+.form-button {
+    margin-top: 20px;
+    margin-left: 140px;
+}
+
+#submit-btn {
+    width: 60%;
+    padding: 10px;
+}

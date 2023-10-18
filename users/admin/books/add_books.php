@@ -70,7 +70,47 @@ if ($_SESSION['acctype'] === 'Admin') {
     }
 }
 
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Check if the POST values are set
+    if (isset($_POST["section"]) && isset($_POST["dewey"]) && isset($_POST["status"]) &&
+        isset($_POST["book_title"]) && isset($_POST["volume"]) && isset($_POST["year"]) &&
+        isset($_POST["author"]) && isset($_POST["stocks"]) && isset($_POST["isbn"])) {
+
+        // Assign POST values to variables
+        $section = $_POST["section"];
+        $dewey = $_POST["dewey"];
+        $status = $_POST["status"];
+        $book_title = $_POST["book_title"];
+        $volume = $_POST["volume"];
+        $year = $_POST["year"];
+        $author = $_POST["author"];
+        $stocks = $_POST["stocks"];
+        $isbn = $_POST["isbn"];
+
+        // Prepare and bind the SQL statement
+        $stmt = $conn->prepare("INSERT INTO books (section, dewey, status, book_title, volume, year, stocks, author, isbn, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0)");
+        $stmt->bind_param("sssssssss", $section, $dewey, $status, $book_title, $volume, $year, $stocks, $author, $isbn);
+
+        // Execute the statement
+        if ($stmt->execute()) {
+            echo "<script>alert('Book was Successfully Added!');</script>";
+            //$clickcondition = "<script>successNotify();</script>";
+
+        } else {
+            echo "<script>alert('An Error Occurred!');</script>";
+            //$clickcondition = "<script>errorNotify();</script>";
+        }
+
+        $conn->close();
+    } else {
+        echo "<script>alert('Please Fill out all the Required Fields!');</script>";
+        //$clickcondition = "<script>document.write(warningNotify());</script>";
+    }
+}
+
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -85,13 +125,14 @@ if ($_SESSION['acctype'] === 'Admin') {
     <link rel="stylesheet" type="text/css" href="/LibMS/resources/bootstrap/css/bootstrap.min.css"/>
     <script type="text/javascript" src="/LibMS/resources/bootstrap/js/bootstrap.min.js"></script>
     <!--Link for CSS File-->
-    <link rel="stylesheet" type="text/css" href="/LibMS/users/admin/books/css/books.css">
+    <link rel="stylesheet" type="text/css" href="/LibMS/users/admin/books/css/add_books.css">
     <!--Link for NAVBAR and SIDEBAR styling-->
     <link rel="stylesheet" type="text/css" href="/LibMS/users/admin/css/navbar-sidebar.css">
     <!--Link for Font Awesome Icons-->
     <link rel="stylesheet" href="/LibMS/resources/icons/fontawesome-free-6.4.0-web/css/all.css">
     <!--Link for Google Font-->
     <link rel="stylesheet" href="/LibMS/resources/fonts/fonts.css"/>
+
 
 </head>
 
@@ -243,8 +284,190 @@ if ($_SESSION['acctype'] === 'Admin') {
     <div class="container">
         <div class="row">
             <div class="form-box">
-                <div class="container-fluid">
-                    <form class="add-book-form" method="POST" action="">
+                <div class="col-md-12">
+                    <form class="add-book-form" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
+
+                        <div class="dropdown-1">
+                            <label for="booksection">Select Section: </label>
+                            &nbsp;&nbsp;                       
+                            <select name="section" id="section" class="bsection">
+                                <option selected disabled>*Select Book Section*</option>
+                                <option value="Art and Architecture">Art and Architecture</option>
+                                <option value="Biography/Autobiography">Biography/Autobiography</option>
+                                <option value="Business and Finance">Business and Finance</option>
+                                <option value="Cookbooks and Food Writing">Cookbooks and Food Writing</option>
+                                <option value="Fiction">Fiction</option>
+                                <option value="Foreign Languages">Foreign Languages</option>
+                                <option value="Graphic Novels and Comics">Graphic Novels and Comics</option>
+                                <option value="History">History</option>
+                                <option value="Historical Fiction">Historical Fiction</option>
+                                <option value="Horror">Horror</option>
+                                <option value="Memoir">Memoir</option>
+                                <option value="Mystery Thriller">Mystery/Thriller</option>
+                                <option value="Others">Others</option>
+                                <option value="Philosophy">Philosophy</option>
+                                <option value="Politics and Current Events">Politics and Current Events</option>
+                                <option value="Poetry">Poetry</option>
+                                <option value="Reference and Dictionary">Reference and Dictionary</option>
+                                <option value="Religion and Spiritually">Religion and Spiritually</option>
+                                <option value="Romance">Romance</option>
+                                <option value="Science and Technology">Science and Technology</option>
+                                <option value="Science Fiction/Fantasy">Science Fiction/Fantasy</option>
+                                <option value="Self-Help and Personal Development">Self-Help and Personal Development</option>
+                                <option value="Travel and Adventure">Travel and Adventure</option>
+                                <option value="Young Adult Fiction">Young Adult Fiction</option>
+                            </select>
+                        </div>
+
+                        <div class="dropdown-group-1">
+                            <label>Select Dewey Decimal Classification: </label>
+                            &nbsp;&nbsp;
+                            <select name="dewey" id="dewey" class="dewey_dd">
+                                    <option selected disabled>*Select Dewey Classification*</option>
+                                    <option class="option-title" value="000" >000 - General Works</option>
+                                    <option value="020">020 - Library and Information Science</option>
+                                    <option value="030">030 - General Encylopedias</option>
+                                    <option value="050">050 - General Periodicals</option>
+                                    <option value="060">060 - General Organizations</option>
+                                    <option class="option-title" value="100">100 - Philosophy</option>
+                                    <option value="110">110 - Metaphysics</option>
+                                    <option value="120">120 - Speculative Philosophy</option>
+                                    <option value="130">130 - Psychology and Occultism</option>
+                                    <option value="140">140 - Philosophy (Gen.)</option>
+                                    <option value="150">150 - Psychology (Gen.)</option>
+                                    <option value="160">160 - Logic</option>
+                                    <option class="option-title" value="200">200 - Religion</option>
+                                    <option value="220">220 - The Bible</option>
+                                    <option value="230">230 - Christian Doctrine</option>
+                                    <option value="290">290 - Comparative and Other Religions</option>
+                                    <option class="option-title" value="300">300 - Social Sciences</option>
+                                    <option value="310">310 - Statistics</option>
+                                    <option value="320">320 - Political Science</option>
+                                    <option value="330">330 - Economics</option>
+                                    <option value="340">340 - Law</option>
+                                    <option value="350">350 - Public Administration</option>
+                                    <option value="360">360 - Social Welfare</option>
+                                    <option value="370">370 - Education</option>
+                                    <option value="380">380 - Public Service</option>
+                                    <option value="390">390 - Customs and Folklores</option>
+                                    <option class="option-title" value="400">400 - Language</option>
+                                    <option value="410">410 - Comparative Lingustics</option>
+                                    <option value="420">420 - English and Anglo Saxon</option>
+                                    <option value="430">430 - German Language</option>
+                                    <option value="440">440 - French</option>
+                                    <option value="450">450 - Italian, Romanian</option>
+                                    <option value="460">460 - Spanish, Portuguese</option>
+                                    <option value="470">470 - Latin and Other Italic Languages</option>
+                                    <option value="480">480 - Classical and Modern Greek</option>
+                                    <option value="490">490 - Other Langauges</option>
+                                    <option class="option-title" value="500">500 - Science</option>
+                                    <option value="510">510 - Mathematics</option>
+                                    <option value="520">520 - Astronomy</option>
+                                    <option value="530">530 - Physics</option>
+                                    <option value="540">540 - Chemistry</option>
+                                    <option value="550">550 - Earth Sciences</option>
+                                    <option value="560">560 - Paleontology</option>
+                                    <option value="570">570 - Life Sciences</option>
+                                    <option value="580">580 - Botanical Sciences</option>
+                                    <option value="590">590 - Zoological Sciences</option>
+                                    <option class="option-title" value="600">600 - Technology</option>
+                                    <option value="610">610 - Medical Services</option>
+                                    <option value="620">620 - Engineering</option>
+                                    <option value="630">630 - Agriculture</option>
+                                    <option value="640">640 - Domestic Sciences</option>
+                                    <option value="650">650 - Business and Management</option>
+                                    <option value="660">660 - Chemical Technology</option>
+                                    <option value="670">670 - Manufacturers</option>
+                                    <option value="690">690 - Buidling Construction</option>
+                                    <option class="option-title" value="700">700 - The Arts</option>
+                                    <option value="710">710 - Landscape and Civic Art</option>
+                                    <option value="720">720 - Architecture</option>
+                                    <option value="730">730 - Sculpture, Plastics</option>
+                                    <option value="740">740 - Drawing, Decorative Arts</option>
+                                    <option value="750">750 - Painting</option>
+                                    <option value="760">760 - Prints and Print Making </option>
+                                    <option value="770">770 - Photography</option>
+                                    <option value="780">780 - Music</option>
+                                    <option value="790">790 - Recreation, Performing Arts</option>
+                                    <option class="option-title" value="800">800 - Literature</option>
+                                    <option value="810">810 -  American Literature</option>
+                                    <option value="820">820 - English Literature</option>
+                                    <option value="830">830 - German Literature</option>
+                                    <option value="840">840 - French Literature</option>
+                                    <option value="850">850 - Italian Literature</option>
+                                    <option value="860">860 - Spanish, Portuguese Literature</option>
+                                    <option value="870">870 - Latin and Other Italic Literature</option>
+                                    <option value="880">880 - Classical and Modern Greek Literature</option>
+                                    <option value="890">890 - Other Literature</option>
+                                    <option class="option-title" value="900">900 - History and Geography</option>
+                                    <option value="910">910 - Geography Travel</option>
+                                    <option value="920">920 - Genealogy</option>
+                                    <option value="930">930 - Ancient History</option>
+                                    <option value="940">940 - Europe</option>
+                                    <option value="950">950 - Asia</option>
+                                    <option value="960">960 - Africa</option>
+                                    <option value="970">970 - North America</option>
+                                    <option value="980">980 - South America</option>
+                                    <option value="990">990 - Pacific Ocean Islands</option>
+                                    <option value="991">991 - Indonesia</option>
+                                    <option value="993">993 - New Zealand and Melanesia</option>
+                                    <option value="994">994 - Australia</option>
+                                    <option value="995">995 - New Guinea (Papua)</option>
+                                    <option value="996">996 - Polynesia</option>
+                                    <option value="997">997 - Atlantic Ocean Islands</option>
+                                    <option value="998">998 - Arctic Region</option>
+                                    <option value="999">999 - Antarctic Region</option>
+                                    <option class="option-title" value="920">920 - Biography and Collective Biography</option>
+                                    <option value="920">920 - Biography and Collective Biography</option>
+                            </select>
+
+                            <label for="bookstatus" id="dropdown2">Select Book Status: </label>
+                            &nbsp;&nbsp;
+                            <select name="status" id="status" class="bstatus">
+                                <option selected disabled>*Select Book Status*</option>
+                                <option value="GOOD">GOOD</option>
+                                <option value="DAMAGED">DAMAGED</option>
+                                <option value="DILAPITATED">DILAPITATED</option>
+                                <option value="LOST">LOST</option>
+                            </select>
+                        </div>
+                        
+
+                        <div class="form-group"></div>
+
+                        <div class="form-group">
+                            <label class="form-label">Title of the Book:</label>
+                            <input type="text" class="form-control" id="book_title" name="book_title" placeholder="">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Volume:</label>
+                            <input type="text" class="form-control" id="volume" name="volume" placeholder="">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Year:</label>
+                            <input type="text" class="form-control" id="year" name="year" placeholder="">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Author:</label>
+                            <input type="text" class="form-control" id="author" name="author" placeholder="">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Stocks:</label>
+                            <input type="text" class="form-control" id="stocks" name="stocks" placeholder="">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">ISBN:</label>
+                            <input type="text" class="form-control" id="isbn" name="isbn" placeholder="">
+                        </div>
+
+                        <div class="form-button">
+                            <button type="submit" class="btn btn-primary btn-sm" id="submit-btn"><i class="fa fa-solid fa-plus fa-sm"></i> Add Book</button>
+                        </div>
 
                     </form>
                 </div>
@@ -252,6 +475,76 @@ if ($_SESSION['acctype'] === 'Admin') {
         </div>
     </div>
 </div>
+
+
+
+<script>
+
+    function successNotify() {
+<div class="modal" tabindex="-1" role="dialog" id="success-modal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="fa fa-solid fa-check" style="color: green;"></i> Book Successfully Added!</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Book was Successfully Added in the Library Database</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+};
+
+    function errorNotify() {
+<div class="modal" tabindex="-1" role="dialog" id="error-modal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="fa fa-solid fa-x" style="color: red;"></i> An Error Occurred!</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Book was Unsuccessfully Added.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+};
+
+    function warningNotify() {
+<div class="modal" tabindex="-1" role="dialog" id="warning-modal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="fa fa-solid fa-exclamation" style="color: yellow;"></i> An Error Occurred!</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Please Fill out All the Required Fields.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+};
+
+
+</script>
 
 <body>
 </html>

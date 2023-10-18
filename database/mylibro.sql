@@ -24,16 +24,26 @@ VALUES ('100001','admin','mylibrolibrarymanagementsystem@gmail.com','09154985773
        ('100002','librarian','mylibrolibrarymanagementsystem@gmail.com','09154985773','Librarian','Librarian LibMS','librarian01','Librarian','','San Nicolas','Active','0');
 
 
-CREATE TABLE qr_table (
+CREATE TABLE qr_codes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT references users(id_no),
+    username VARCHAR(255) references users(username),
+    qr_code_data BLOB NOT NULL,
+    qr_code_type VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+/*CREATE TABLE qr_table (
     id_no INT references users(id_no),
     username VARCHAR(50) references users(username),
-    qr_code BLOB
-);
+    qr_code LONGBLOB
+);*/
 
 
 CREATE TABLE books (
     book_id INT PRIMARY KEY AUTO_INCREMENT,
-    dewey INT NOT NULL,
+    dewey varchar(100) NOT NULL,
     section VARCHAR(50) NOT NULL,
     book_title VARCHAR(100) NOT NULL,
     volume VARCHAR(50) NOT NULL,

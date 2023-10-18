@@ -170,9 +170,27 @@ if ($_SESSION['acctype'] === 'Student' || 'Guest') {
 
                 <li>
                     <a href="#">
+                        <i class="fa fa-bookmark fa-sm"></i>
+                        <span class="sidebar-name">
+                            Books Requests
+                        </span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#">
                         <i class="fa fa-clock-rotate-left fa-sm"></i>
                         <span class="sidebar-name">
                             Books' Issuance/Return History
+                        </span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#">
+                        <i class="fa fa-bell fa-sm"></i>
+                        <span class="sidebar-name">
+                            Notifications
                         </span>
                     </a>
                 </li>
@@ -230,42 +248,51 @@ if ($_SESSION['acctype'] === 'Student' || 'Guest') {
                     </ul>
 
                     <?php
-                    
                     // Check if the user is logged in
                     if (isset($_SESSION['id_no']) && isset($_SESSION['username'])) {
                         $idNo = $_SESSION['id_no'];
                         $username = $_SESSION['username'];
-                    
-                        // Query to retrieve the QR code path from the database
-                        $qrCodeQuery = "SELECT qr_code FROM qr_table WHERE id_no = ? AND username = ?";
-                        $stmt = $conn->prepare($qrCodeQuery);
-                        $stmt->bind_param("is", $idNo, $username);
-                        $stmt->execute();
-                        $result = $stmt->get_result();
-                    
-                        if ($result->num_rows > 0) {
-                            $row = $result->fetch_assoc();
-                            $qrCodePath = $row['qr_code'];
-                    
-                            // Display the QR code image
-                            echo '<div class="text-center mb-3">';
-                            echo '<img src="' . $qrCodePath . '" width="150px" height="150px" alt="' . $qrCodePath . '">';
-                            echo '</div>';
+
+                        // Query to retrieve the necessary columns from the database
+                        $qrCodePath = "SELECT qr_code_data, qr_code_type FROM qr_codes WHERE user_id = ? AND username = ?";
+                        $statement = $conn->prepare($qrCodePath);
+                        $statement->bind_param("is", $idNo, $username);
+
+                        if ($statement->execute()) {
+                            $result = $statement->get_result();
+
+                            if ($row = $result->fetch_assoc()) {
+                                // Define the desired width and height for the image
+                                $width = 150; // Set your desired width
+                                $height = 150; // Set your desired height
+
+                                echo '<div class="container col-sm-6 center">';
+                                // Use the "width" and "height" attributes to resize the image
+                                echo '<img src="data:image/png;base64,' . base64_encode($row["qr_code_data"]) . '" width="' . $width . '" height="' . $height . '"/>';
+                                echo '</div>';
+                            } else {
+                                // QR code not found in the database
+                                echo '<div class="text-center mb-3">';
+                                echo '<p><i class="fa fa-solid fa-triangle-exclamation fa-sm"></i> QR Code not found.</p>';
+                                echo '</div>';
+                            }
                         } else {
-                            // QR code not found in the database
+                            // Error in executing the SQL query
                             echo '<div class="text-center mb-3">';
-                            echo '<p>QR code not found.</p>';
+                            echo '<p>Error in executing the SQL query.</p>';
                             echo '</div>';
                         }
-                    
-                        $stmt->close();
+
+                        $statement->close();
                     } else {
-                        // User is not logged in, redirect to login page or handle as needed
-                        header('Location: /LibMS/main/login.php'); // Replace with your login page URL
-                        exit();
+                        // User is not logged in
+                        echo '<div class="text-center mb-3">';
+                        echo '<p>You are not logged in.</p>';
+                        echo '</div>';
                     }
 
                     ?>
+
 
 
                 </div>

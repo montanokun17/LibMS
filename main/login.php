@@ -18,12 +18,12 @@ if ($conn->connect_error) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $_POST['username'];
     $idNo = $_POST['id_no'];
-    $password = $_POST['password'];
+    $pass_word = $_POST['password'];
 
     // Perform database query to check if the user exists
-    $query = "SELECT * FROM users WHERE username = ? AND id_no = ?";
+    $query = "SELECT * FROM users WHERE username = ?";
     $stmt = $conn->prepare($query);
-    $stmt->bind_param("ss", $username, $idNo);
+    $stmt->bind_param("s", $username);
     $stmt->execute();
     $result = $stmt->get_result();
 
@@ -37,7 +37,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo '<script>alert("Login Failed, User Account is Disabled. Please Contact the Admin or the Librarian.");</script>';
         } else {
             // Check if the input password matches the hashed password
-            if (md5($password) === $hashedPassword || $hashedPassword = password_hash($password, PASSWORD_BCRYPT)) {
+            if (password_verify($pass_word, $hashedPassword) || $pass_word === $hashedPassword) {
+                // Password matches
 
                 // Store user data in the session
                 $_SESSION['username'] = $username;
@@ -48,9 +49,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if ($acctype === 'Admin') {
                     header('Location: /LibMS/users/admin/index.php');
                 } elseif ($acctype === 'Student') {
-                    header('Location: /LibMS/users/students/index.php');
+                    header('Location: /LibMS/users/student/index.php');
                 } elseif ($acctype === 'Librarian') {
-                    header('Location: /LibMs/users/librarian/index.php');
+                    header('Location: /LibMS/users/librarian/index.php');
                 } elseif ($acctype === 'Guest') {
                     header('Location: guest-page.php');
                 }
@@ -114,7 +115,7 @@ $conn->close();
                         <tbody>
                             <tr>
                                 <td class="form-box">
-                                    <form action="#" method="POST">
+                                    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
                                     
                                     <label for="id_no">Account's ID Number:</label>
                                     <div class="form-group">
