@@ -108,3 +108,8 @@ ul.check-box {
     font-style: italic;
     font-size: 11px;
 }
+
+.terms-link {
+    text-decoration: none;
+    font-size: 12px;
+}

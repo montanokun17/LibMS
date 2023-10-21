@@ -81,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             QRcode::png($qrCodeContent, null, QR_ECLEVEL_L, 10); // Output the image directly to the buffer
             $qrCodeImageData = ob_get_clean(); // Get the image data from the buffer
 
-            // Determine the QR code image type (assuming PNG for this example)
+            // Determine the QR code image type
             $qrCodeImageType = "image/png";
 
             // Insert the QR code data into the database
@@ -373,6 +373,12 @@ $conn->close();
                                     <div class="container-fluid">
                                         <h3><b>REMINDER!</b></h3>
                                         <p>Please Always Remember your Account's ID Number.</p>
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div class="container-fluid">
+                                        <p class="terms-link" style="font-size:12px;">By Signing Up/Creating an Account is an Clear Agreement to Our <a href="#" style="text-decoration:none;">Terms and Policy Agreements.</a></p>
                                     </div>
                                 </td>
                             </tr>

@@ -33,6 +33,15 @@ CREATE TABLE qr_codes (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE user_pics (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT references users(id_no),
+    username VARCHAR(255) references users(username),
+    user_pic_data BLOB NOT NULL,
+    user_pic_type VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 
 /*CREATE TABLE qr_table (
     id_no INT references users(id_no),

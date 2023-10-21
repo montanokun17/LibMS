@@ -1,13 +1,13 @@
 .mini-sidebar {
-    margin-left: 65px;
-    margin-top: 6px;
+    margin-left: 75px;
+    margin-top: 9px;
     padding: 10px;
     list-style-type: none;
-    width: 50%;
     border-radius: 10px;
     border: 2px solid grey;
     background-color: #333;
-    height: 100%;
+    width: 23%;
+    height: 85vh;
 }
 
 .mini-item {
@@ -23,20 +23,80 @@
 
 .mini-item:active {
     background-color: grey;
-    border-radius: 10px;
 }
 
-.card-1 {
-    margin-left: 400px;
-    background-color: #333;
-    width: 70%;
-    padding: 10px;
+.active {
     border-radius: 10px;
-    border: 2px solid grey;
-    height: 100%;
 }
 
 .dash-box-1 {
     background-color: #333;
-    border: 5px solid grey;
+    color: #ffffff;
+    border: 2px solid grey;
+    width: 960px;
+    height: 300px;
+    margin-left: 310px;
+    border-radius: 10px;
+    margin-top: -157px;
+    padding: 10px;
+    height: 77vh;
 }
+
+
+.box-1 {
+    border: 2px solid #ffffff;
+    padding: 15px;
+    width: 500px;
+
+}
+
+.box-2 {
+    border: 2px solid #ffffff;
+    padding: 15px;
+    width: 500px;
+
+}
+
+input[type="text"] {
+    width: 95%;
+    font-size: 12px;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+label {
+    font-weight: 700;
+    font-size: 13px;
+    padding: 3px;
+}
+
+.form-select {
+    width: 75%;
+    font-size: 12px;
+    margin-bottom: 25px;
+    padding: 10px;
+}
+
+#save-btn {
+    width: 100%;
+    padding: 10px;
+}
+
+.dp-form {
+    padding: 10px;
+    margin-top: 10px;
+}
+
+.button-div {
+    margin-top: 10px;
+}
+
+.dp-label {
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+}
+
+ /*
+    -webkit-text-stroke-width: 0.5px; 
+    -webkit-text-stroke-color: black; 
+    */
