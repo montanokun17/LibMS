@@ -1,0 +1,24 @@
+.main-box {
+    margin-top: 200px;
+}
+
+.form-box {
+    padding: 10px;
+}
+
+input {
+    border-radius: 10px;
+    padding: 10px;
+    width: 100%;
+    margin-top: 10px;
+}
+
+button {
+    width: 40%;
+    margin-left: 60%;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}

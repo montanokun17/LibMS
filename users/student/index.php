@@ -118,7 +118,7 @@ if ($_SESSION['acctype'] === 'Student' || 'Guest') {
       <ul class="navbar-nav">
         <li class="nav-item">
           <a class="nav-link" href="#">
-            <img src="/LibMSv1/resources/images/user.png" 
+            <img src="/LibMS/resources/images/user.png" 
             width="40" height="40" style="border:1px solid #000000;" class="rounded-circle">
           </a>
         </li>
@@ -133,7 +133,7 @@ if ($_SESSION['acctype'] === 'Student' || 'Guest') {
             <ul>
                 <li></li>
                 <li>
-                    <a href="#">
+                    <a href="/LibMS/users/student/index.php">
                         <i class="fa fa-user fa-sm"></i>
                         <span class="sidebar-name">
                             Dashboard
@@ -160,7 +160,7 @@ if ($_SESSION['acctype'] === 'Student' || 'Guest') {
                 </li>
 
                 <li>
-                    <a href="#">
+                    <a href="/LibMS/users/student/books/books.php">
                         <i class="fa fa-book fa-sm"></i>
                         <span class="sidebar-name">
                             Books
@@ -172,7 +172,7 @@ if ($_SESSION['acctype'] === 'Student' || 'Guest') {
                     <a href="#">
                         <i class="fa fa-bookmark fa-sm"></i>
                         <span class="sidebar-name">
-                            Books Requests
+                            Pending Book Requests
                         </span>
                     </a>
                 </li>

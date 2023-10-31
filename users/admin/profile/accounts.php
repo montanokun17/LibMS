@@ -398,14 +398,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete'])) {
                                     echo '
                                     <form method="POST" action="">
                                         <input type="hidden" name="user_id" value="'.$user['id_no'].'">
-                                        <button type="submit" name="enable" style="padding: 3px; background-color: grey; color: white; margin-bottom: 3px;"><i class="fa-solid fa-shield"></i> Enable</button>
+                                        <button type="submit" name="enable" style="padding: 3px; background-color: grey; color: white; margin-bottom: 3px;">
+                                        <i class="fa-solid fa-shield"></i> Enable</button>
                                     </form>';
                                 } else {
                                     // Account is not disabled, display disable button
                                     echo '
                                     <form method="POST" action="">
                                         <input type="hidden" name="user_id" value="'.$user['id_no'].'">
-                                        <button type="submit" name="disable" style="padding: 3px; background-color: grey; color: white; margin-bottom: 3px;"><i class="fa-solid fa-shield"></i> Disable</button>
+                                        <button type="submit" name="disable" style="padding: 3px; background-color: grey; color: white; margin-bottom: 3px;">
+                                        <i class="fa-solid fa-shield"></i> Disable</button>
                                     </form>
                                     ';
                                 }
@@ -413,7 +415,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete'])) {
                                 echo '
                                 <form method="POST" action="">
                                     <input type="hidden" name="user_id" value="'.$user['id_no'].'">
-                                    <button type="submit" name="delete" style="padding: 3px; background-color: red; margin-bottom: 3px;"><i class="fa-solid fa-trash"></i> Delete</button>
+                                    <button type="submit" name="delete" style="padding: 3px; background-color: red; margin-bottom: 3px;">
+                                    <i class="fa-solid fa-trash"></i> Delete</button>
                                 </form>
                                 ';
                         }

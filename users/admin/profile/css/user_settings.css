@@ -44,14 +44,12 @@
 
 
 .box-1 {
-    border: 2px solid #ffffff;
     padding: 15px;
     width: 500px;
 
 }
 
 .box-2 {
-    border: 2px solid #ffffff;
     padding: 15px;
     width: 500px;
 
@@ -95,6 +93,7 @@ label {
     margin-bottom: 10px;
     padding-bottom: 10px;
 }
+
 
  /*
     -webkit-text-stroke-width: 0.5px; 

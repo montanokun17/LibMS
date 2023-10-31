@@ -71,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['username'] = $username;
 
             // Generate the QR code content
-            $qrCodeContent = "ID Number: $idNo\nName: $firstname $lastname\nUsername: $username\nAccount Type: $acctype";
+            $qrCodeContent = "ID Number: $idNo\nUsername: $username\nAccount Type: $acctype";
 
             // Generate the QR code image
             include_once('D:/xampp/htdocs/LibMS/resources/phpqrcode-master/phpqrcode-master/qrlib.php');
@@ -160,7 +160,7 @@ $conn->close();
                             <tr>
                                 <td class="signup-td">
                                     <div class="container-fluid">
-                                        <form action="" method="POST" class="signup-form">
+                                        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST" class="signup-form">
                                             <label for="firstname">Firstname:</label>
                                             <div class="form-group">
                                                 <input type="text" name="firstname" id="firstname" required="">

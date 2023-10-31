@@ -42,14 +42,6 @@ CREATE TABLE user_pics (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-
-/*CREATE TABLE qr_table (
-    id_no INT references users(id_no),
-    username VARCHAR(50) references users(username),
-    qr_code LONGBLOB
-);*/
-
-
 CREATE TABLE books (
     book_id INT PRIMARY KEY AUTO_INCREMENT,
     dewey varchar(100) NOT NULL,
@@ -63,6 +55,12 @@ CREATE TABLE books (
     status ENUM("GOOD","DAMAGED","LOST","DILAPITATED") NOT NULL,
     deleted INT NOT NULL
 );
+
+/*CREATE TABLE qr_table (
+    id_no INT references users(id_no),
+    username VARCHAR(50) references users(username),
+    qr_code LONGBLOB
+);*/
 
 INSERT INTO qr_table(id_no,username,qr_code)
 VALUES ('100001','admin', 'admin.png', LOAD_FILE'/LibMS/qr_bin/admin.png'),

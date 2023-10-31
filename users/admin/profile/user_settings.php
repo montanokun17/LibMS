@@ -308,31 +308,31 @@ if ($_SESSION['acctype'] === 'Admin') {
                                     <tbody>
                                         <tr>
                                             <td class="box-1">
-                                                <form class="dash-form" action="#" method="POST">
+                                                <form class="dash-form" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
 
                                                 <label for="firstname">Firstname:</label>
                                                 <div class="form-group">
-                                                    <input type="text" name="firstname" id="firstname" required="" placeholder="<?php echo $firstname;?>">
+                                                    <input type="text" name="firstname" id="firstname" required="" value="<?php echo $firstname;?>">
                                                 </div>
 
                                                 <label for="lastname">Lastname:</label>
                                                 <div class="form-group">
-                                                    <input type="text" name="lastname" id="lastname" required="" placeholder="<?php echo $lastname;?>">
+                                                    <input type="text" name="lastname" id="lastname" required="" value="<?php echo $lastname;?>">
                                                 </div>
 
                                                 <label for="username">Username:</label>
                                                 <div class="form-group">
-                                                    <input type="text" name="username" id="username" required="" placeholder="<?php echo $username;?>">
+                                                    <input type="text" name="username" id="username" required="" value="<?php echo $username;?>">
                                                 </div>
                                                 
                                                 <label for="email">Email Address:</label>
                                                 <div class="form-group">
-                                                    <input type="text" name="email" id="email" required="" placeholder="<?php echo $email;?>">
+                                                    <input type="text" name="email" id="email" required="" value="<?php echo $email;?>">
                                                 </div>
 
                                                 <label for="con_num">Contact Number:</label>
                                                 <div class="form-group">
-                                                    <input type="text" name="con_num" id="con_num" required="" placeholder="<?php echo $con_num;?>">
+                                                    <input type="text" name="con_num" id="con_num" required="" value="<?php echo $con_num;?>">
                                                 </div>
 
                                                 <label for="brgy">Barangay: </label>
@@ -432,7 +432,7 @@ if ($_SESSION['acctype'] === 'Admin') {
                                             
 
                                                 <!-- HTML form for image upload -->
-                                            <form action="#" method="post" enctype="multipart/form-data" class="dp-form">
+                                            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" enctype="multipart/form-data" class="dp-form">
                                                 <input type="file" name="image" style="font-size: 13px; margin-top: 10px; margin-bottom: 10px;">
                                                 <br>
                                                 <div class="button-div">

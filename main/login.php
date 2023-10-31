@@ -134,7 +134,7 @@ $conn->close();
                                     <br>
 
                                     <div class="container">
-                                        <p class="forgot"><i>Can't remember your Password?</i>&nbsp <a class="forgot-link" href="/LibMS/func/enter_email.php"> Forgot Password</a></p>
+                                        <p class="forgot"><i>Can't remember your Password?</i>&nbsp <a class="forgot-link" href="/LibMS/func/email_find.php"> Forgot Password</a></p>
                                     </div>
 
                                     <div class="btn-1">
