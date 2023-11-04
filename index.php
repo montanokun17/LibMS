@@ -32,6 +32,8 @@ exec("python3 qr_codes_import.py");
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
   <!--Link for Tab ICON-->
   <link rel="icon" type="image/x-icon" href="#">
+  <!--Link for Tab ICON-->
+  <link rel="icon" type="image/x-icon" href="/LibMS/resources/images/logov1.png">
   <!-- Site Metas -->
   <meta name="keywords" content="" />
   <meta name="description" content="" />

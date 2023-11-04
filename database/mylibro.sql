@@ -48,9 +48,10 @@ CREATE TABLE books (
     section VARCHAR(50) NOT NULL,
     book_title VARCHAR(100) NOT NULL,
     volume VARCHAR(50) NOT NULL,
+    edition VARCHAR(50) NOT NULL,
     year INT NOT NULL,
-    stocks INT NOT NULL,
     author VARCHAR(100) NOT NULL,
+    publisher VARCHAR(100) NOT NULL,
     isbn VARCHAR(100) NOT NULL,
     status ENUM("GOOD","DAMAGED","LOST","DILAPITATED") NOT NULL,
     deleted INT NOT NULL

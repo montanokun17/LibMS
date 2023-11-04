@@ -233,7 +233,6 @@ if ($_SESSION['acctype'] === 'Student') {
 
                             <div class="dropdown-1">
                                     <select name="section" id="section-dd">
-                                        <option></option>
                                         <option selected disabled>*Select Section*</option>
                                         <option value="Fiction">Fiction</option>
                                         <option value="Mystery Thriller">Mystery/Thriller</option>
@@ -369,12 +368,6 @@ if ($_SESSION['acctype'] === 'Student') {
                                     </select>
                                 
 
-                                    <form action="/LibMS/users/student/books/generate_pdf_report.php" method="post">
-                                        <button type="submit" name="search" class="btn btn-warning btn-sm" style="font-size: 13px;">
-                                            <i class="fa-solid fa-file-arrow-down"></i> Download Books Database Report
-                                        </button>
-                                    </form>
-
                             </div>
 
 
@@ -383,7 +376,7 @@ if ($_SESSION['acctype'] === 'Student') {
                 <?php
 
                     // Default query to fetch all books
-                    $query = "SELECT * FROM books WHERE 'deleted' = 0 AND status = 'GOOD' AND stocks <> 0 ORDER BY book_id DESC";
+                    $query = "SELECT * FROM books WHERE 'deleted' = 0 AND status = 'GOOD' AND stocks <> 0 ORDER BY title ASC";
 
                 function getBooksByPagination($conn, $query, $offset, $limit) {
                     $query .= " LIMIT $limit OFFSET $offset"; // Append the LIMIT and OFFSET to the query for pagination
@@ -398,7 +391,7 @@ if ($_SESSION['acctype'] === 'Student') {
 
 
                 // Number of books to display per page
-                $limit = 8;
+                $limit = 5;
 
                 // Get the current page number from the query parameter
                 $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
@@ -419,8 +412,8 @@ if ($_SESSION['acctype'] === 'Student') {
                         echo '<th>Author</th>';
                         echo '<th>Year</th>';
                         echo '<th>Volume</th>';
+                        echo '<th>Edition</th>';
                         echo '<th>Section</th>';
-                        echo '<th>Stocks</th>';
                         echo '<th>Status</th>';
                         echo '<th>Action</th>';
                         echo '</tr>';
@@ -433,8 +426,8 @@ if ($_SESSION['acctype'] === 'Student') {
                             echo '<td>' . $book['author'] . '</td>';
                             echo '<td>' . $book['year'] . '</td>';
                             echo '<td>' . $book['volume'] . '</td>';
+                            echo '<td>' . $book['edition'] . '</td>';
                             echo '<td>' . $book['section'] . '</td>';
-                            echo '<td>' . $book['stocks'] . '</td>';
                             if ($book['status'] == 'GOOD') {
                                 echo '<td style="color: green;"><b><i>' . $book['status'] . '</i></b></td>';
                             }
@@ -476,7 +469,7 @@ if ($_SESSION['acctype'] === 'Student') {
                         }
 
                     } else {
-                        echo "<tr><td colspan='10'>No books found.</td></tr>";
+                        echo "<tr><td colspan='10'><p class='container' style='margin-left:90px; margin-top:50px; font-size: 20px; font-weight:700;'>No Books Found.</p></td></tr>";
                     }
 
 

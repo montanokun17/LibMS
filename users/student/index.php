@@ -31,6 +31,7 @@ if (isset($_GET['logout']) && $_GET['logout'] === 'true') {
 $firstname = "";
 $lastname = "";
 $acctype = "";
+$schlvl = "";
 $email = "";
 $idNo = "";
 $username = "";
@@ -58,6 +59,7 @@ if ($_SESSION['acctype'] === 'Student' || 'Guest') {
         $lastname = $row['lastname'];
         $idNo = $row['id_no'];
         $acctype = $row['acctype'];
+        $schlvl = $row['schlvl'];
         $username = $row['username'];
         $email = $row['email'];
         $con_num = $row['con_num'];
@@ -241,6 +243,9 @@ if ($_SESSION['acctype'] === 'Student' || 'Guest') {
                         </li>
                         <li class="list-group-item">
                             <strong>Account Type:</strong> <?php echo "$acctype"; ?>
+                        </li>
+                        <li class="list-group-item">
+                            <strong>School Level:</strong> <?php echo "$schlvl"; ?>
                         </li>
                         <li class="list-group-item">
                             <strong>Barangay:</strong> <?php echo "$brgy"; ?>

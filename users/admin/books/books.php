@@ -254,7 +254,6 @@ if ($_SESSION['acctype'] === 'Admin') {
 
                             <div class="dropdown-1">
                                     <select name="section" id="section-dd">
-                                        <option></option>
                                         <option selected disabled>*Select Section*</option>
                                         <option value="Fiction">Fiction</option>
                                         <option value="Mystery Thriller">Mystery/Thriller</option>
@@ -390,6 +389,22 @@ if ($_SESSION['acctype'] === 'Admin') {
                                     </select>
                             </div>
 
+                            <div class="btns container-fluid" style="margin-top:5px; display: flex; flex-direction: column;">
+                                <form action="/LibMS/users/admin/books/generate_pdf_report.php" method="post">
+                                    <button type="submit" name="search" class="btn btn-warning btn-sm" style="font-size: 13px;">
+                                        <i class="fa-solid fa-file-arrow-down"></i> Download Books Database Report
+                                    </button>
+                                </form>
+
+                                <form action="/LibMS/users/admin/books/generate_spreadsheet_books.php" method="post" style="margin-top:5px;">
+                                    <button type="submit" name="search" class="btn btn-success btn-sm" style="font-size: 13px;">
+                                        <i class="fa-solid fa-file-arrow-down"></i> Download Books Database Report (Spreadsheet)
+                                    </button>
+                                </form>
+                            </div>
+
+                            
+
                         </div>
             
                 <?php
@@ -410,7 +425,7 @@ if ($_SESSION['acctype'] === 'Admin') {
 
 
                 // Number of books to display per page
-                $limit = 8;
+                $limit = 7;
 
                 // Get the current page number from the query parameter
                 $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
@@ -432,8 +447,8 @@ if ($_SESSION['acctype'] === 'Admin') {
                         echo '<th>Author</th>';
                         echo '<th>Year</th>';
                         echo '<th>Volume</th>';
+                        echo '<th>Edition</th>';
                         echo '<th>Section</th>';
-                        echo '<th>Stocks</th>';
                         echo '<th>Status</th>';
                         echo '<th>Action</th>';
                         echo '</tr>';
@@ -447,8 +462,8 @@ if ($_SESSION['acctype'] === 'Admin') {
                             echo '<td>' . $book['author'] . '</td>';
                             echo '<td>' . $book['year'] . '</td>';
                             echo '<td>' . $book['volume'] . '</td>';
+                            echo '<td>' . $book['edition'] . '</td>';
                             echo '<td>' . $book['section'] . '</td>';
-                            echo '<td>' . $book['stocks'] . '</td>';
                             if ($book['status'] == 'GOOD') {
                                 echo '<td style="color: green;"><b><i>' . $book['status'] . '</i></b></td>';
                             } else if ($book['status'] == 'DAMAGED') {
@@ -491,7 +506,7 @@ if ($_SESSION['acctype'] === 'Admin') {
                         }
 
                     } else {
-                        echo "<tr><td colspan='10'>No books found.</td></tr>";
+                        echo "<tr><td colspan='10'><p class='container' style='margin-left:90px; margin-top:50px; font-size: 20px; font-weight:700;'>No Books Found.</p></td></tr>";
                     }
 
 

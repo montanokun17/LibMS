@@ -14,6 +14,8 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
+$alert = '';
+
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $_POST['username'];
@@ -58,12 +60,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 exit();
             } else {
                 // Incorrect password
-                echo '<script>alert("Invalid Password!");</script>';
+                //echo '<script>alert("Invalid Password!");</script>';
+                $alert = '<p class="alert-box" style="padding:10px; border:2px solid red; border-radius:10px; width:60%; font-size:12px;">
+                <i class="fa-solid fa-x fa-md" style="color:red;"></i> Invalid Password, Try Again.
+                </p>';
             }
         }
     } else {
         // Invalid input, account does not exist
-        echo '<script>alert("Invalid Input, Account does not exist!");</script>';
+        //echo '<script>alert("Invalid Input, Account does not exist!");</script>';
+        $alert = '<p class="alert-box" style="padding:10px; border:2px solid #F1C232; border-radius:10px; width:60%; font-size:12px;">
+                <i class="fa-solid fa-triangle-exclamation fa-md" style="color:#F1C232;"></i> Invalid Input, User Account Does not Exist.
+                </p>';
     }
 
     // Close the prepared statement
@@ -115,6 +123,9 @@ $conn->close();
                         <tbody>
                             <tr>
                                 <td class="form-box">
+
+                                <?php echo $alert; ?>
+
                                     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
                                     
                                     <label for="id_no">Account's ID Number:</label>

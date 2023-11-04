@@ -70,12 +70,13 @@ if ($_SESSION['acctype'] === 'Admin') {
     }
 }
 
+$alert = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Check if the POST values are set
     if (isset($_POST["section"]) && isset($_POST["dewey"]) && isset($_POST["status"]) &&
-        isset($_POST["book_title"]) && isset($_POST["volume"]) && isset($_POST["year"]) &&
-        isset($_POST["author"]) && isset($_POST["stocks"]) && isset($_POST["isbn"])) {
+        isset($_POST["book_title"]) && isset($_POST["volume"]) && isset($_POST["edition"]) &&
+        isset($_POST["year"]) && isset($_POST["author"]) && isset($_POST["publisher"]) && isset($_POST["isbn"])) {
 
         // Assign POST values to variables
         $section = $_POST["section"];
@@ -83,31 +84,157 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $status = $_POST["status"];
         $book_title = $_POST["book_title"];
         $volume = $_POST["volume"];
+        $edition = $_POST["edition"];
         $year = $_POST["year"];
         $author = $_POST["author"];
-        $stocks = $_POST["stocks"];
+        $publisher = $_POST["publisher"];
         $isbn = $_POST["isbn"];
 
         // Prepare and bind the SQL statement
-        $stmt = $conn->prepare("INSERT INTO books (section, dewey, status, book_title, volume, year, stocks, author, isbn, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0)");
-        $stmt->bind_param("sssssssss", $section, $dewey, $status, $book_title, $volume, $year, $stocks, $author, $isbn);
+        $stmt = $conn->prepare("INSERT INTO books (section, dewey, status, book_title, volume, edition, year, author, publisher, isbn, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)");
+        
+        if ($stmt) {
+            $stmt->bind_param("ssssssssss", $section, $dewey, $status, $book_title, $volume, $edition, $year, $author, $publisher, $isbn);
 
-        // Execute the statement
-        if ($stmt->execute()) {
-            echo "<script>alert('Book was Successfully Added!');</script>";
-            //$clickcondition = "<script>successNotify();</script>";
+            // Execute the statement
+            if ($stmt->execute()) {
+                $alert = '<p class="alert-box center" style="margin-top:10px; margin-left:100px; padding:10px; border:2px solid green; border-radius:10px; width:60%; font-size:12px;">
+                    <i class="fa-solid fa-check fa-md" style="color:green;"></i> Book was Successfully Added.
+                    </p>';
+            } else {
+                $alert = '<p class="alert-box center" style="margin-top:10px; margin-left:100px; padding:10px; border:2px solid red; border-radius:10px; width:60%; font-size:12px;">
+                    <i class="fa-solid fa-triangle-exclamation fa-md" style="color:red;"></i> An Error Occurred, Try Again.
+                    </p>';
+            }
 
+            $stmt->close(); // Close the prepared statement
         } else {
-            echo "<script>alert('An Error Occurred!');</script>";
-            //$clickcondition = "<script>errorNotify();</script>";
+            // Handle a failed prepared statement
+            $alert = '<p class="alert-box center" style=" margin-top:10px; margin-left:100px; padding:10px; border:2px solid red; border-radius:10px; width:60%; font-size:12px;">
+                <i class="fa-solid fa-triangle-exclamation fa-md" style="color:red;"></i> An Error Occurred.
+                </p>';
+        }
+
+        // Close the database connection (if not already closed)
+        $conn->close();
+    } else {
+        $alert = '<p class="alert-box center" style="margin-top:10px; margin-left:100px; padding:10px; border:2px solid #F1C232; border-radius:10px; width:60%; font-size:12px;">
+            <i class="fa-solid fa-triangle-exclamation fa-md" style="color:#F1C232;"></i> Please Fill out All the Required Fields.
+            </p>';
+    }
+}
+
+
+/*
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Check if the POST values are set
+    $required_fields = ["section", "dewey", "status", "book_title", "volume", "edition", "year", "author", "publisher", "isbn"];
+    $missing_fields = [];
+
+    foreach ($required_fields as $field) {
+        if (!isset($_POST[$field]) || empty($_POST[$field])) {
+            $missing_fields[] = $field;
+        }
+    }
+
+    if (empty($missing_fields)) {
+        // Assign POST values to variables
+        $section = $_POST["section"];
+        $dewey = $_POST["dewey"];
+        $status = $_POST["status"];
+        $book_title = $_POST["book_title"];
+        $volume = $_POST["volume"];
+        $edition = $_POST["edition"];
+        $year = $_POST["year"];
+        $author = $_POST["author"];
+        $publisher = $_POST["publisher"];
+        $isbn = $_POST["isbn"];
+
+        // Assuming $conn is your database connection object
+        $stmt = $conn->prepare("INSERT INTO books (section, dewey, status, book_title, volume, edition, year, author, publisher, isbn, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)");
+
+        if ($stmt) {
+            $stmt->bind_param("ssssssssss", $section, $dewey, $status, $book_title, $volume, $edition, $year, $author, $publisher, $isbn);
+
+            // Execute the statement
+            if ($stmt->execute()) {
+                $alert = '<p class="alert-box center" style="margin-top:10px; margin-left:100px; padding:10px; border:2px solid green; border-radius:10px; width:60%; font-size:12px;">
+                    <i class="fa-solid fa-check fa-md" style="color:green;"></i> Book was Successfully Added.
+                    </p>';
+            } else {
+                $alert = '<p class="alert-box center" style="margin-top:10px; margin-left:100px; padding:10px; border:2px solid red; border-radius:10px; width:60%; font-size:12px;">
+                    <i class="fa-solid fa-triangle-exclamation fa-md" style="color:red;"></i> An Error Occurred, Try Again.
+                    </p>';
+            }
+
+            $stmt->close(); // Close the prepared statement
+        } else {
+            // Handle a failed prepared statement
+            $alert = '<p class="alert-box center" style=" margin-top:10px; margin-left:100px; padding:10px; border:2px solid red; border-radius:10px; width:60%; font-size:12px;">
+                <i class="fa-solid fa-triangle-exclamation fa-md" style="color:red;"></i> An Error Occurred.
+                </p>';
+        }
+    } else {
+        $alert = '<p class="alert-box center" style="margin-top:10px; margin-left:100px; padding:10px; border:2px solid #F1C232; border-radius:10px; width:60%; font-size:12px;">
+                <i class="fa-solid fa-triangle-exclamation fa-md" style="color:#F1C232;"></i> Please Fill out All the Required Fields: ' . implode(", ", $missing_fields) . '.
+                </p>';
+    }
+}
+
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Check if the POST values are set
+    if (isset($_POST["section"]) && isset($_POST["dewey"]) && isset($_POST["status"]) &&
+        isset($_POST["book_title"]) && isset($_POST["volume"]) && isset($_POST["edition"]) &&
+        isset($_POST["year"]) && isset($_POST["author"]) && isset($_POST["publisher"]) && isset($_POST["isbn"])) {
+
+        // Assign POST values to variables
+        $section = $_POST["section"];
+        $dewey = $_POST["dewey"];
+        $status = $_POST["status"];
+        $book_title = $_POST["book_title"];
+        $volume = $_POST["volume"];
+        $edition = $_POST["edition"]; // Fixed variable name
+        $year = $_POST["year"];
+        $author = $_POST["author"];
+        $publisher = $_POST["publisher"];
+        $isbn = $_POST["isbn"];
+
+        // Prepare and bind the SQL statement
+        $stmt = $conn->prepare("INSERT INTO books (section, dewey, status, book_title, volume, edition, year, author, publisher, isbn, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)");
+        
+        if ($stmt) {
+            $stmt->bind_param("sssssssss", $section, $dewey, $status, $book_title, $volume, $edition, $year, $author, $publisher, $isbn);
+
+            // Execute the statement
+            if ($stmt->execute()) {
+                $alert = '<p class="alert-box" style="padding:10px; border:2px solid green; border-radius:10px; width:60%; font-size:12px;">
+                    <i class="fa-solid fa-check fa-md" style="color:green;"></i> Book was Successfully Added.
+                    </p>';
+            } else {
+                $alert = '<p class="alert-box" style="padding:10px; border:2px solid red; border-radius:10px; width:60%; font-size:12px;">
+                    <i class="fa-solid fa-triangle-exclamation fa-md" style="color:red;"></i> An Error Occurred.
+                    </p>';
+            }
+
+            $stmt->close(); // Close the prepared statement
+        } else {
+            // Handle a failed prepared statement
+            $alert = '<p class="alert-box center" style=" margin-top:10px; margin-left:100px; padding:10px; border:2px solid red; border-radius:10px; width:60%; font-size:12px;">
+                <i class="fa-solid fa-triangle-exclamation fa-md" style="color:red;"></i> An Error Occurred.
+                </p>';
         }
 
         $conn->close();
     } else {
-        echo "<script>alert('Please Fill out all the Required Fields!');</script>";
-        //$clickcondition = "<script>document.write(warningNotify());</script>";
+       $alert = '<p class="alert-box center" style="margin-top:10px; margin-left:100px; padding:10px; border:2px solid #F1C232; border-radius:10px; width:60%; font-size:12px;">
+                <i class="fa-solid fa-triangle-exclamation fa-md" style="color:#F1C232;"></i> Please Fill out All the Required Fields: ' . implode(", ", $missing_fields) . '.
+                </p>';
     }
 }
+
+*/
 
 ?>
 
@@ -419,6 +546,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                     <option value="999">999 - Antarctic Region</option>
                                     <option class="option-title" value="920">920 - Biography and Collective Biography</option>
                                     <option value="920">920 - Biography and Collective Biography</option>
+                                    <option class="option-title" value="920">930 - Others</option>
+                                    <option value="930">930 - Others</option>
                             </select>
 
                             <label for="bookstatus" id="dropdown2">Select Book Status: </label>
@@ -446,6 +575,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         </div>
 
                         <div class="form-group">
+                            <label class="form-label">Edition:</label>
+                            <input type="text" class="form-control" id="edition" name="edition" placeholder="">
+                        </div>
+
+                        <div class="form-group">
                             <label class="form-label">Year:</label>
                             <input type="text" class="form-control" id="year" name="year" placeholder="">
                         </div>
@@ -456,8 +590,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label">Stocks:</label>
-                            <input type="text" class="form-control" id="stocks" name="stocks" placeholder="">
+                            <label class="form-label">Publisher:</label>
+                            <input type="text" class="form-control" id="publisher" name="publisher" placeholder="">
                         </div>
 
                         <div class="form-group">
@@ -468,6 +602,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <div class="form-button">
                             <button type="submit" class="btn btn-primary btn-sm" id="submit-btn"><i class="fa fa-solid fa-plus fa-sm"></i> Add Book</button>
                         </div>
+
+                        <?php echo $alert; ?>
 
                     </form>
                 </div>

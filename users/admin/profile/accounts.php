@@ -394,31 +394,62 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete'])) {
                             
                             echo "<td>";
 
+                            if ($user['acctype'] === 'Admin' || $user['acctype'] === 'Librarian') {
                                 if ($user['status'] == 'Disabled') {
                                     echo '
                                     <form method="POST" action="">
-                                        <input type="hidden" name="user_id" value="'.$user['id_no'].'">
+                                        <input type="hidden" name="user_id" value="' . $user['id_no'] . '">
                                         <button type="submit" name="enable" style="padding: 3px; background-color: grey; color: white; margin-bottom: 3px;">
-                                        <i class="fa-solid fa-shield"></i> Enable</button>
+                                            <i class="fa-solid fa-shield"></i> Enable
+                                        </button>
+                                    </form>';
+                                } else {
+                                    echo '
+                                    <form method="POST" action="">
+                                        <input type="hidden" name="user_id" value="' . $user['id_no'] . '">
+                                        <button type="submit" name="disable" style="padding: 3px; background-color: grey; color: white; margin-bottom: 3px;">
+                                            <i class="fa-solid fa-shield"></i> Disable
+                                        </button>
+                                    </form>';
+                                }
+                            } else {
+                                if ($user['status'] == 'Disabled') {
+                                    echo '
+                                    <form method="POST" action="">
+                                        <input type="hidden" name="user_id" value="' . $user['id_no'] . '">
+                                        <button type="submit" name="enable" style="padding: 3px; background-color: grey; color: white; margin-bottom: 3px;">
+                                            <i class="fa-solid fa-shield"></i> Enable
+                                        </button>
+                                    </form>';
+                            
+                                    echo '
+                                    <form method="POST" action="">
+                                        <input type="hidden" name="user_id" value="' . $user['id_no'] . '">
+                                        <button type="submit" name="delete" style="padding: 3px; background-color: red; margin-bottom: 3px;">
+                                            <i class="fa-solid fa-trash"></i> Delete
+                                        </button>
                                     </form>';
                                 } else {
                                     // Account is not disabled, display disable button
                                     echo '
                                     <form method="POST" action="">
-                                        <input type="hidden" name="user_id" value="'.$user['id_no'].'">
+                                        <input type="hidden" name="user_id" value="' . $user['id_no'] . '">
                                         <button type="submit" name="disable" style="padding: 3px; background-color: grey; color: white; margin-bottom: 3px;">
-                                        <i class="fa-solid fa-shield"></i> Disable</button>
-                                    </form>
-                                    ';
+                                            <i class="fa-solid fa-shield"></i> Disable
+                                        </button>
+                                    </form>';
+                            
+                                    echo '
+                                    <form method="POST" action="">
+                                        <input type="hidden" name="user_id" value="' . $user['id_no'] . '">
+                                        <button type="submit" name="delete" style="padding: 3px; background-color: red; margin-bottom: 3px;">
+                                            <i class="fa-solid fa-trash"></i> Delete
+                                        </button>
+                                    </form>';
                                 }
+                            }
+                            
 
-                                echo '
-                                <form method="POST" action="">
-                                    <input type="hidden" name="user_id" value="'.$user['id_no'].'">
-                                    <button type="submit" name="delete" style="padding: 3px; background-color: red; margin-bottom: 3px;">
-                                    <i class="fa-solid fa-trash"></i> Delete</button>
-                                </form>
-                                ';
                         }
 
                         echo "</td>";
