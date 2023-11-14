@@ -450,7 +450,7 @@ if ($_SESSION['acctype'] === 'Admin') {
                         echo '<th>Edition</th>';
                         echo '<th>Section</th>';
                         echo '<th>Status</th>';
-                        echo '<th>Action</th>';
+                        echo '<th style="width:10%;">Action</th>';
                         echo '</tr>';
                         echo '</thead>';
                         echo '<tbody>';
@@ -487,8 +487,8 @@ if ($_SESSION['acctype'] === 'Admin') {
                         $totalPages = ceil($totalBooks / $limit);
                         if ($totalPages > 1) {
                             echo '
-                            <div class="pagination-buttons" style="margin-top: 10px;
-                            margin-left: 70px;
+                            <div class="pagination-buttons container" style="margin-top: 10px;
+                            margin-left: 70px; width:90%;
                             ">
                                 ';
                     
@@ -497,7 +497,7 @@ if ($_SESSION['acctype'] === 'Admin') {
                             }
                     
                             if ($page < $totalPages) {
-                                echo '<a href="?page='.($page + 1).'" class="btn btn-primary btn-sm" id="next" style="padding: 10px; width:10%;"> '.($page + 1).' Next <i class="fa-solid fa-angle-right"></i></a>';
+                                echo '<a href="?page='.($page + 1).'" class="btn btn-primary btn-sm" id="next" style="padding: 10px; width:10%; margin-left:3px;"> '.($page + 1).' Next <i class="fa-solid fa-angle-right"></i></a>';
                             }
                     
                             echo '

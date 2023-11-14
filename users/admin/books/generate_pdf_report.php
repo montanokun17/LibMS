@@ -64,7 +64,7 @@ require_once('D:/xampp/htdocs/LibMS/resources/TCPDF-main/tcpdf.php'); // Include
 
                                     
 // Fetch data from the database, excluding "deleted" books
-$PDFquery = "SELECT * FROM books WHERE deleted = 0";
+$PDFquery = "SELECT * FROM books WHERE deleted = 0 ORDER BY book_id DESC";
 $result = mysqli_query($conn, $PDFquery);
 
 // Create a new PDF document
@@ -100,6 +100,7 @@ $html .= '<table border="1" style="font-size:8px;">
 <th>Year</th>
 <th>Volume</th>
 <th>Edition</th>
+<th>ISBN</th>
 <th>Status</th>
 </tr>';
 
@@ -113,6 +114,7 @@ while ($row = mysqli_fetch_assoc($result)) {
     <td>' . $row['year'] . '</td>
     <td>' . $row['volume'] . '</td>
     <td>' . $row['edition'] . '</td>
+    <td>' . $row['isbn'] . '</td>
     <td>' . $row['status'] . '</td>
     </tr>';
                                         

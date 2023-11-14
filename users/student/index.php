@@ -144,7 +144,7 @@ if ($_SESSION['acctype'] === 'Student' || 'Guest') {
                 </li>
 
                 <li>
-                    <a href="#">
+                    <a href="/LibMS/users/student/profile/user_settings.php">
                         <i class="fa fa-cogs fa-sm"></i>
                         <span class="sidebar-name">
                             User Options
@@ -174,7 +174,7 @@ if ($_SESSION['acctype'] === 'Student' || 'Guest') {
                     <a href="#">
                         <i class="fa fa-bookmark fa-sm"></i>
                         <span class="sidebar-name">
-                            Pending Book Requests
+                            Pending Borrow Requests
                         </span>
                     </a>
                 </li>
@@ -183,7 +183,7 @@ if ($_SESSION['acctype'] === 'Student' || 'Guest') {
                     <a href="#">
                         <i class="fa fa-clock-rotate-left fa-sm"></i>
                         <span class="sidebar-name">
-                            Books' Issuance/Return History
+                            Books Borrow Issuances/Return History
                         </span>
                     </a>
                 </li>
@@ -218,7 +218,9 @@ if ($_SESSION['acctype'] === 'Student' || 'Guest') {
         <div class="col-md-4">
             <div class="card">
                 <div class="card-header bg-dark text-white">
-                    <p class="text-center">MyLibro ID</p>
+                    <p class="text-center" style="margin-bottom:0;">
+                        <strong>MyLibro ID</strong>
+                    </p>
                 </div>
                 <div class="card-body">
                     <!-- User's Profile Image -->
@@ -253,12 +255,12 @@ if ($_SESSION['acctype'] === 'Student' || 'Guest') {
                     </ul>
 
                     <?php
-                    // Check if the user is logged in
+                    
                     if (isset($_SESSION['id_no']) && isset($_SESSION['username'])) {
                         $idNo = $_SESSION['id_no'];
                         $username = $_SESSION['username'];
 
-                        // Query to retrieve the necessary columns from the database
+                        
                         $qrCodePath = "SELECT qr_code_data, qr_code_type FROM qr_codes WHERE user_id = ? AND username = ?";
                         $statement = $conn->prepare($qrCodePath);
                         $statement->bind_param("is", $idNo, $username);
@@ -267,12 +269,10 @@ if ($_SESSION['acctype'] === 'Student' || 'Guest') {
                             $result = $statement->get_result();
 
                             if ($row = $result->fetch_assoc()) {
-                                // Define the desired width and height for the image
-                                $width = 150; // Set your desired width
-                                $height = 150; // Set your desired height
+                                $width = 150;
+                                $height = 150;
 
                                 echo '<div class="container col-sm-6 center">';
-                                // Use the "width" and "height" attributes to resize the image
                                 echo '<img src="data:image/png;base64,' . base64_encode($row["qr_code_data"]) . '" width="' . $width . '" height="' . $height . '"/>';
                                 echo '</div>';
                             } else {

@@ -91,7 +91,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $isbn = $_POST["isbn"];
 
         // Prepare and bind the SQL statement
-        $stmt = $conn->prepare("INSERT INTO books (section, dewey, status, book_title, volume, edition, year, author, publisher, isbn, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)");
+        $stmt = $conn->prepare("INSERT INTO books (section, dewey, status, book_title, volume, edition, year, author, publisher, isbn, book_borrow_status, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Available', 0)");
         
         if ($stmt) {
             $stmt->bind_param("ssssssssss", $section, $dewey, $status, $book_title, $volume, $edition, $year, $author, $publisher, $isbn);

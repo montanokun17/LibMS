@@ -36,7 +36,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $status = $row['status']; // Assuming you have a 'status' column for user status
 
         if ($status === 'Disabled') {
-            echo '<script>alert("Login Failed, User Account is Disabled. Please Contact the Admin or the Librarian.");</script>';
+            $alert = '<p class="alert-box" style="padding:10px; border:2px solid #7F8C8D; border-radius:10px; width:60%; font-size:12px;">
+            <i class="fa-solid fa-circle-exclamation fa-md" style="color:#7F8C8D;"></i> Login Failed. User Account is Currently Disabled. Please Contact Admin or Librarian.
+            </p>';;
         } else {
             // Check if the input password matches the hashed password
             if (password_verify($pass_word, $hashedPassword) || $pass_word === $hashedPassword) {

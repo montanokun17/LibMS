@@ -216,7 +216,7 @@ $conn->close();
 
                                                 <div id="barangayOptions" style="display: none;">
                                                     <label for="brgy">Barangay: </label>
-                                                        <select name="brgy" class="form-select" id="brgy">
+                                                        <select name="brgy" class="form-select" id="brgy" style="margin-bottom:10px;">
                                                             <option selected disabled>Select a Barangay</option>
                                                                 <option value="Bagong Ilog">Bagong Ilog</option>
                                                                 <option value="Bagong Katipunan">Bagong Katipunan</option>
@@ -256,7 +256,6 @@ $conn->close();
                                                     <div class="form-group brgy-2">
                                                         <input type="text" name="nonPasigbrgy" id="nonPasigbrgy" placeholder="Follow this Format: Barangay, City">
                                                     </div>
-
                                                     <br>
                                                 </div>
 
@@ -280,6 +279,12 @@ $conn->close();
                                                             <option value="Graduate">Graduate</option>
                                                         </select>
                                                         <br>
+
+                                                    <label for="termscondition" style="font-size:10px;">By Checking this, You Agree on our <a href="/LibMS/main/termsandconditions.php" style="text-decoration:none; font-style:italic;">Terms and Conditions/Policy Agreements.</a></label>
+                                                    <div class="form-group" style='font-size:11px; font-weight:700; margin-top:5px;'>
+                                                        <input type="checkbox" name="agree_terms" id="agree_terms" value="agree_terms" required=""> Yes, I Agree to the Terms and Conditions.
+                                                    </div>
+                                                    <br>
                                                 
 
 
@@ -309,8 +314,10 @@ $conn->close();
                                                 if (pasigResidentCheckbox.checked) {
                                                     barangayOptions.style.display = 'block';
                                                     nonPasigResidentOptions.style.display = 'none';
+                                                    notPasigResidentCheckbox.disabled = true;
                                                 } else {
                                                     barangayOptions.style.display = 'none';
+                                                    notPasigResidentCheckbox.disabled = false;
                                                 }
                                             });
 
@@ -318,8 +325,11 @@ $conn->close();
                                                 if (notPasigResidentCheckbox.checked) {
                                                     nonPasigResidentOptions.style.display = 'block';
                                                     barangayOptions.style.display = 'none';
-                                                } else {
+                                                    pasigResidentCheckbox.disabled = true;
+                                                } else{
                                                     nonPasigResidentOptions.style.display = 'none';
+                                                    notPasigResidentCheckbox.disabled = false;
+                                                    pasigResidentCheckbox.disabled = false;
                                                 }
                                             });
 
@@ -373,12 +383,6 @@ $conn->close();
                                     <div class="container-fluid">
                                         <h3><b>REMINDER!</b></h3>
                                         <p>Please Always Remember your Account's ID Number.</p>
-                                    </div>
-                                </td>
-
-                                <td>
-                                    <div class="container-fluid">
-                                        <p class="terms-link" style="font-size:12px;">By Signing Up/Creating an Account is an Clear Agreement to Our <a href="#" style="text-decoration:none;">Terms and Policy Agreements.</a></p>
                                     </div>
                                 </td>
                             </tr>

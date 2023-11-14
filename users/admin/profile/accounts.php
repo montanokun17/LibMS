@@ -387,9 +387,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete'])) {
                             echo '<td>' . $user['schlvl'] . '</td>';
                             echo '<td>' . $user['con_num'] . '</td>';
                             if ($user['status'] == 'Active') {
-                                echo '<td style="color: green;"><b><i>' . $user['status'] . '</i></b></td>';
+                                echo '<td style="color: green; text-transform:uppercase;"><b><i>' . $user['status'] . '</i></b></td>';
                             }else {
-                                echo '<td style="color: grey;"><b><i>' . $user['status'] . '</i></b></td>';
+                                echo '<td style="color: grey; text-transform:uppercase;"><b><i>' . $user['status'] . '</i></b></td>';
                             }
                             
                             echo "<td>";
@@ -399,7 +399,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete'])) {
                                     echo '
                                     <form method="POST" action="">
                                         <input type="hidden" name="user_id" value="' . $user['id_no'] . '">
-                                        <button type="submit" name="enable" style="padding: 3px; background-color: grey; color: white; margin-bottom: 3px;">
+                                        <button type="submit" class="btn btn-primary btn-sm" name="enable" style="font-size:12px; padding: 5px; color: white; margin-bottom: 3px;">
                                             <i class="fa-solid fa-shield"></i> Enable
                                         </button>
                                     </form>';
@@ -407,7 +407,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete'])) {
                                     echo '
                                     <form method="POST" action="">
                                         <input type="hidden" name="user_id" value="' . $user['id_no'] . '">
-                                        <button type="submit" name="disable" style="padding: 3px; background-color: grey; color: white; margin-bottom: 3px;">
+                                        <button type="submit" class="btn btn-secondary btn-sm" name="disable" style="font-size:12px; padding: 5px; background-color: grey; color: white; margin-bottom: 3px;">
                                             <i class="fa-solid fa-shield"></i> Disable
                                         </button>
                                     </form>';
@@ -417,7 +417,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete'])) {
                                     echo '
                                     <form method="POST" action="">
                                         <input type="hidden" name="user_id" value="' . $user['id_no'] . '">
-                                        <button type="submit" name="enable" style="padding: 3px; background-color: grey; color: white; margin-bottom: 3px;">
+                                        <button type="submit" class="btn btn-primary btn-sm" name="enable" style="font-size:12px; padding: 5px; color: white; margin-bottom: 3px;">
                                             <i class="fa-solid fa-shield"></i> Enable
                                         </button>
                                     </form>';
@@ -425,7 +425,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete'])) {
                                     echo '
                                     <form method="POST" action="">
                                         <input type="hidden" name="user_id" value="' . $user['id_no'] . '">
-                                        <button type="submit" name="delete" style="padding: 3px; background-color: red; margin-bottom: 3px;">
+                                        <button type="submit" class="btn btn-danger btn-sm" name="delete" style="font-size:12px; width:70%; padding: 5px; background-color: red; margin-bottom: 3px;">
                                             <i class="fa-solid fa-trash"></i> Delete
                                         </button>
                                     </form>';
@@ -434,7 +434,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete'])) {
                                     echo '
                                     <form method="POST" action="">
                                         <input type="hidden" name="user_id" value="' . $user['id_no'] . '">
-                                        <button type="submit" name="disable" style="padding: 3px; background-color: grey; color: white; margin-bottom: 3px;">
+                                        <button type="submit" class="btn btn-secondary btn-sm" name="disable" style="font-size:12px; padding: 5px; background-color: grey; color: white; margin-bottom: 3px;">
                                             <i class="fa-solid fa-shield"></i> Disable
                                         </button>
                                     </form>';
@@ -442,7 +442,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete'])) {
                                     echo '
                                     <form method="POST" action="">
                                         <input type="hidden" name="user_id" value="' . $user['id_no'] . '">
-                                        <button type="submit" name="delete" style="padding: 3px; background-color: red; margin-bottom: 3px;">
+                                        <button type="submit" class="btn btn-danger btn-sm" name="delete" style="font-size:12px; width:70%; padding: 5px; background-color: red; margin-bottom: 3px;">
                                             <i class="fa-solid fa-trash"></i> Delete
                                         </button>
                                     </form>';

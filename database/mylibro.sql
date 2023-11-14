@@ -54,8 +54,13 @@ CREATE TABLE books (
     publisher VARCHAR(100) NOT NULL,
     isbn VARCHAR(100) NOT NULL,
     status ENUM("GOOD","DAMAGED","LOST","DILAPITATED") NOT NULL,
+    book_borrow_status VARCHAR(50) NOT NULL,
     deleted INT NOT NULL
 );
+
+
+
+
 
 /*CREATE TABLE qr_table (
     id_no INT references users(id_no),

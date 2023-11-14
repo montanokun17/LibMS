@@ -63,7 +63,7 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 // Fetch data from the database, excluding "deleted" books
-$XLSXquery = "SELECT * FROM books WHERE deleted = 0";
+$XLSXquery = "SELECT * FROM books WHERE deleted = 0 ORDER BY book_id DESC";
 $result = mysqli_query($conn, $XLSXquery);
 
 // Create a new Excel spreadsheet
@@ -98,7 +98,8 @@ $worksheet->getCell('E6')->setValue('Publisher');
 $worksheet->getCell('F6')->setValue('Year');
 $worksheet->getCell('G6')->setValue('Volume');
 $worksheet->getCell('H6')->setValue('Edition');
-$worksheet->getCell('I6')->setValue('Status');
+$worksheet->getCell('I6')->setValue('ISBN');
+$worksheet->getCell('J6')->setValue('Status');
 
 $rowNumber = 7;
 
@@ -111,7 +112,8 @@ while ($row = mysqli_fetch_assoc($result)) {
     $worksheet->getCell('F' . $rowNumber)->setValue($row['year']);
     $worksheet->getCell('G' . $rowNumber)->setValue($row['volume']);
     $worksheet->getCell('H' . $rowNumber)->setValue($row['edition']);
-    $worksheet->getCell('I' . $rowNumber)->setValue($row['status']);
+    $worksheet->getCell('I' . $rowNumber)->setValue($row['isbn']);
+    $worksheet->getCell('J' . $rowNumber)->setValue($row['status']);
 
     // Count books by status
     switch ($row['status']) {

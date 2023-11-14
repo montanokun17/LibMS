@@ -113,7 +113,7 @@ if ($_SESSION['acctype'] === 'Student') {
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="#"><i class="fa-solid fa-cogs fa-xs"></i> Homepage Settings</a>
+          <a class="nav-link" aria-current="page" href="#"><i class="fa-solid fa-user fa-xs"></i> Dashboard</a>
         </li>
       </ul>
 
@@ -126,7 +126,7 @@ if ($_SESSION['acctype'] === 'Student') {
       <ul class="navbar-nav">
         <li class="nav-item">
           <a class="nav-link" href="#">
-            <img src="/LibMSv1/resources/images/user.png" 
+            <img src="/LibMS/resources/images/user.png" 
             width="40" height="40" style="border:1px solid #000000;" class="rounded-circle">
           </a>
         </li>
@@ -376,7 +376,7 @@ if ($_SESSION['acctype'] === 'Student') {
                 <?php
 
                     // Default query to fetch all books
-                    $query = "SELECT * FROM books WHERE 'deleted' = 0 AND status = 'GOOD' AND stocks <> 0 ORDER BY title ASC";
+                    $query = "SELECT * FROM books WHERE 'deleted' = 0 AND status = 'GOOD' AND book_borrow_status = 'Available' ORDER BY 'book_title' ASC";
 
                 function getBooksByPagination($conn, $query, $offset, $limit) {
                     $query .= " LIMIT $limit OFFSET $offset"; // Append the LIMIT and OFFSET to the query for pagination
@@ -391,7 +391,7 @@ if ($_SESSION['acctype'] === 'Student') {
 
 
                 // Number of books to display per page
-                $limit = 5;
+                $limit = 7;
 
                 // Get the current page number from the query parameter
                 $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
@@ -410,12 +410,13 @@ if ($_SESSION['acctype'] === 'Student') {
                         echo '<tr>';
                         echo '<th>Book Name</th>';
                         echo '<th>Author</th>';
+                        echo '<th>Pubisher</th>';
                         echo '<th>Year</th>';
                         echo '<th>Volume</th>';
                         echo '<th>Edition</th>';
                         echo '<th>Section</th>';
                         echo '<th>Status</th>';
-                        echo '<th>Action</th>';
+                        echo '<th style="width:18%;">Action</th>';
                         echo '</tr>';
                         echo '</thead>';
                         echo '<tbody>';
@@ -424,6 +425,7 @@ if ($_SESSION['acctype'] === 'Student') {
                             echo '<tr>';
                             echo '<td>' . $book['book_title'] . '</td>';
                             echo '<td>' . $book['author'] . '</td>';
+                            echo '<td>' . $book['publisher'] . '</td>';
                             echo '<td>' . $book['year'] . '</td>';
                             echo '<td>' . $book['volume'] . '</td>';
                             echo '<td>' . $book['edition'] . '</td>';
@@ -434,10 +436,10 @@ if ($_SESSION['acctype'] === 'Student') {
                             echo '<td>';
                             echo '<button type="button" class="btn btn-primary btn-sm"><i class="fa-solid fa-circle-info fa-sm"></i> Details</button>';
                             echo '
-                            <a href="/LibMS/users/student">
-                                <button type="button" class="btn btn-success btn-sm" style="margin-left:5px;" data-toggle="modal" data-target="#BorrowModal"><i class="fa-solid fa-bookmark fa-sm"></i> Borrow</button>
+                            <a href="/LibMS/users/student/requests/borrow/borrow.php?book_id=' .$book['book_id']. '">
+                                <button type="button" class="btn btn-success btn-sm" style="margin-left:5px;"><i class="fa-solid fa-bookmark fa-sm"></i> Borrow</button>
                             </a>
-                                ';
+                                '; //view_entry.php?id={$row['id']} /LibMS/users/student/requests/borrow/borrow.php
                             echo '</td>';
                             echo '</tr>';
                         }
@@ -477,7 +479,10 @@ if ($_SESSION['acctype'] === 'Student') {
                     mysqli_close($conn);
 
                 ?>
-
+                
+                <script>
+                    
+                </script>
 
                 <div class="modal fade" id="BorrowModal" tabindex="-1" role="dialog" aria-labelledby="borrowModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
