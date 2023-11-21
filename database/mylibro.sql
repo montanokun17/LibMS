@@ -58,7 +58,42 @@ CREATE TABLE books (
     deleted INT NOT NULL
 );
 
+CREATE TABLE borrow_requests (
+    borrow_id INT PRIMARY KEY AUTO_INCREMENT,
+    borrower_user_id INT references users(id_no),
+    borrower_username VARCHAR(255) references users(username),
+    book_id INT references books(book_id),
+    book_title VARCHAR(255) references books(book_title),
+    borrow_days INT NOT NULL,
+    borrow_status ENUM('Pending','Approved','Rejected') NOT NULL,
+    request_date DATE NOT NULL,
+    request_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
+CREATE TABLE notifications (
+    notif_id INT PRIMARY KEY AUTO_INCREMENT,
+    sender_user_id INT references users(id_no),
+    receiver_user_id INT references users(id_no),
+    notification_message VARCHAR(255) NOT NULL,
+    read_status ENUM('UNREAD','READ') NOT NULL,
+    notif_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE borrowed (
+    borrow_id INT PRIMARY KEY AUTO_INCREMENT,
+    borrower_user_id INT,
+    borrower_username VARCHAR(255),
+    book_id INT,
+    book_title VARCHAR(255),
+    borrow_days INT,
+    borrow_status ENUM('Approved') DEFAULT 'Approved', -- Set to 'Approved' since it's moved to the borrowed table
+    request_approval_date DATE,
+    due_date DATE,
+    approved_by VARCHAR(255),
+    FOREIGN KEY (borrower_user_id) REFERENCES users(id_no),
+    FOREIGN KEY (book_id) REFERENCES books(book_id),
+    CHECK (borrow_status = 'Approved' )
+);
 
 
 

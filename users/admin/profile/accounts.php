@@ -345,7 +345,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete'])) {
                     $totalUsers = mysqli_fetch_assoc($totalUsersResult)['total'];
 
                     // Number of users to display per page
-                    $limit = 4;
+                    $limit = 5;
 
                     // Get the current page number from the query parameter
                     $page = isset($_GET['page']) ? intval($_GET['page']) : 1;

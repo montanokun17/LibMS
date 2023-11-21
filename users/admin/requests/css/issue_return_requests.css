@@ -1,5 +1,4 @@
 
-
 /* Reset some default styles */
 body, h1, h2, h3, p, ul, li {
     margin: 0;
@@ -37,7 +36,7 @@ tbody tr:nth-child(even) {
 }
 
 /* Center the table */
-.books-box {
+.inner-box {
     display: flex;
     justify-content: center;
 }
@@ -57,40 +56,4 @@ tbody tr:nth-child(even) {
 
 .search-bar {
     margin-left: 55px;
-}
-
-.btn.btn-primary {
-    border-radius: 10px;
-}
-
-#section-dd {
-    width: 30%;
-    margin-top: 5px;
-    padding: 5px;
-    border-radius: 10px;
-    font-size: 11px;
-}
-
-#book-status {
-    width: 20%;
-    margin-top: 5px;
-    padding: 5px;
-    border-radius: 10px;
-    font-size: 11px;
-}
-
-#dewey-classification {
-    width: 20%;
-    margin-top: 5px;
-    padding: 5px;
-    border-radius: 10px;
-    font-size: 11px;
-}
-
-#book-avail {
-    width: 20%;
-    margin-top: 5px;
-    padding: 5px;
-    border-radius: 10px;
-    font-size: 11px;
 }

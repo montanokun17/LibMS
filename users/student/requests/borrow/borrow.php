@@ -70,25 +70,6 @@ if ($_SESSION['acctype'] === 'Student') {
     }
 }
 
-// Validate and process the form data
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $bookId = isset($_POST['book_id']) ? $_POST['book_id'] : null;
-    $borrowDays = isset($_POST['borrow_days']) ? $_POST['borrow_days'] : null;
-
-    
-    if (!is_numeric($bookId)) {
-        // Handle the error, e.g., redirect with an error message
-        header("Location: /LibMS/users/student/requests/borrow/borrow.php?error=InvalidBookId");
-        exit();
-    }
-
-    // Add your logic to store the borrow request, e.g., in a database
-
-    // Redirect back to the page with a success message
-    header("Location: /LibMS/users/student/requests/borrow/borrow.php?success=1");
-    exit();
-}
-
 // Fetch book information
 $book_title = "";
 $section = "";
@@ -126,21 +107,106 @@ if (isset($_GET['book_id'])) {
             $publisher = $row['publisher'];
             $isbn = $row['isbn'];
             $status = $row['status'];
+
+            /*// Create a link to the book_details.php page with the book information as URL parameters
+            $RequestLink = "/LibMS/users/student/requests/borrow/borrow_request.php?book_id=$bookId&title=$book_title&section=$section&volume=$volume&edition=$edition&author=$author&year=$year&publisher=$publisher&isbn=$isbn&status=$status";
+
+            // Now you have the link, you can use it as needed, for example, redirect to book_details.php
+            header("Location: $RequestLink");
+            exit();*/
+
+            // Now you have the book information, you can display it or use it as needed
         } else {
             // Handle the case when the book is not found
-            header("Location: /LibMS/users/student/requests/borrow/borrow.php?error=BookNotFound");
+            echo "<script>alert('Book Not Found');</script>";
+            header("Location: /LibMS/users/student/books/books.php");
             exit();
         }
     } else {
         // Handle the case when the book_id is not a valid number
-        header("Location: /LibMS/users/student/requests/borrow/borrow.php?error=InvalidBookId");
+        echo "<script>alert('Invalid Book ID');</script>";
+        header("Location: /LibMS/users/student/books/books.php");
         exit();
     }
 } else {
     // Handle the case when book_id is not set in the query parameters
-    header("Location: /LibMS/users/student/requests/borrow/borrow.php?error=BookIdNotSet");
+    echo "<script>alert('Book ID Not Set');</script>";
+    header("Location: /LibMS/users/student/books/books.php");
     exit();
 }
+
+
+/*
+
+// Check if the book_id is set in the query parameters
+if (isset($_GET['book_id'])) {
+    $bookId = $_GET['book_id'];
+
+    // Use prepared statements to prevent SQL injection
+    $bookQuery = "SELECT * FROM books WHERE book_id = ?";
+    $bookStmt = $conn->prepare($bookQuery);
+
+    // Validate bookId before binding
+    if (is_numeric($bookId)) {
+        $bookStmt->bind_param('i', $bookId);
+        $bookStmt->execute();
+        $bookResult = $bookStmt->get_result();
+
+        if ($bookResult->num_rows === 1) {
+            $row = $bookResult->fetch_assoc();
+
+            $book_title = $row['book_title'];
+            $section = $row['section'];
+            $volume = $row['volume'];
+            $edition = $row['edition'];
+            $author = $row['author'];
+            $year = $row['year'];
+            $publisher = $row['publisher'];
+            $isbn = $row['isbn'];
+            $status = $row['status'];
+        } else {
+            // Handle the case when the book is not found
+            echo "<script>alert('Book Not Found');</script>";
+            //header("Location: /LibMS/users/student/requests/borrow/borrow.php?error=BookNotFound");
+            exit();
+        }
+    } else {
+        // Handle the case when the book_id is not a valid number
+        echo "<script>alert('Invalid Book ID');</script>";
+        //header("Location: /LibMS/users/student/requests/borrow/borrow.php?error=InvalidBookId");
+        exit();
+    }
+} else {
+    // Handle the case when book_id is not set in the query parameters
+    echo "<script>alert('Book ID Not Set');</script>";
+    //header("Location: /LibMS/users/student/requests/borrow/borrow.php?error=BookIdNotSet");
+    exit();
+}
+
+*/
+
+/*
+// Validate and process the form data
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $bookId = isset($_POST['book_id']) ? $_POST['book_id'] : null;
+    $borrowDays = isset($_POST['borrow_days']) ? $_POST['borrow_days'] : null;
+
+    
+    if (!is_numeric($bookId)) {
+        // Handle the error, e.g., redirect with an error message
+        header("Location: /LibMS/users/student/requests/borrow/borrow.php?error=InvalidBookId");
+        echo "<script>alert('Book ID Not Set');</script>";
+        exit();
+    }
+
+    // Add your logic to store the borrow request, e.g., in a database
+
+    // Redirect back to the page with a success message
+    header("Location: /LibMS/users/student/requests/borrow/borrow.php?success=1");
+    echo "<script>alert('Book ID Not Set');</script>";
+    exit();
+}
+*/
 
 ?>
 
@@ -296,7 +362,7 @@ if (isset($_GET['book_id'])) {
             <div class="box-1 col-12">
                 <div class="card-body bg-dark">
                     <div class="col-md-8 mx-auto">
-                        <form class="form-box">
+                        <form class="form-box" method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
 
                             <div class="form-group" style="margin-top:20px;">
                                 <h2><i class="fa-solid fa-paper-plane"></i> Send Book Borrow Request:</h2>
@@ -336,7 +402,7 @@ if (isset($_GET['book_id'])) {
                             <div class="form-group">
                                 <label for="bookBorrow">How Many Days Do You Want to Borrow the Book?</label>
                                 <span id="bookBorrow" class="form-control-static">
-                                    <select name="borrowDays" id="borrowDays" class="borrowDD">
+                                    <select name="borrowDays" id="borrowDays" class="borrowDD" required="">
                                         <option value=""></option>
                                         <option selected disabled>**Select No. of Days of Book Loan**</option>
                                         <option value="1">1 Day</option>
@@ -350,7 +416,7 @@ if (isset($_GET['book_id'])) {
                             </div>
 
                             <div class="form-group" style="margin-bottom:10px; margin-top:10px;">
-                                <button class="btn btn-primary btn-md" style="width:80%;"><i class="fa-solid fa-paper-plane"></i> Send Borrow Request</button>
+                                <button class="btn btn-primary btn-md" style="width:80%;" onclick="sendBorrowRequest(<?php echo $bookId; ?>)"><i class="fa-solid fa-paper-plane"></i> Send Borrow Request</button>
                             </div>
 
 
@@ -369,6 +435,61 @@ if (isset($_GET['book_id'])) {
     </div>
 </div>
 
+<script>
+
+function sendBorrowRequest(bookId) {
+    var borrowDays = document.getElementById("borrowDays").value;
+
+    if (borrowDays === "") {
+        alert("Please select the number of days to borrow.");
+        return;
+    }
+
+    // You can perform an AJAX request to the server to handle the database operations
+    // For simplicity, let's assume there is a PHP script (borrow_request.php) to handle this
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/LibMS/users/student/requests/borrow/func/borrow_request.php", true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            alert(xhr.responseText); // You can customize this based on your response from the server
+        }
+    };
+
+    // Send data to the server, including the book ID
+    xhr.send("borrowDays=" + borrowDays + "&bookId=" + bookId);
+}
+
+
+
+/*
+    function sendBorrowRequest() {
+        var borrowDays = document.getElementById("borrowDays").value;
+
+        if (borrowDays === "") {
+            alert("Please select the number of days to borrow.");
+            return;
+        }
+
+        // You can perform an AJAX request to the server to handle the database operations
+        // For simplicity, let's assume there is a PHP script (borrow_request.php) to handle this
+
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "/LibMS/users/student/requests/borrow/func/borrow.php", true);///LibMS/users/student/requests/borrow/func/borrow_request.php?book_id=' .$bookId. '
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                alert(xhr.responseText); // You can customize this based on your response from the server
+            }
+        };
+
+        // Send data to the server
+        xhr.send("borrowDays=" + borrowDays);
+    }
+*/    
+
+</script>
 
 </body>
 </html>

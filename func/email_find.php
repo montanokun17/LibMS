@@ -15,7 +15,8 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-$fetchEmail = "";
+//$fetchEmail = "";
+$alert="";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email-input'];
@@ -34,18 +35,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         header("Location: /LibMS/func/enter_token.php");
         exit;
-
     } else {
-        // Use JavaScript to trigger SweetAlert
-        echo '<script>
-                Swal.fire({
-                    icon: "error",
-                    title: "Oops...",
-                    text: "No Accounts were matched with your given Email Address."
-                });
-              </script>';
+        // No match found, display error message
+        $alert = '<p class="alert-box" style="padding:10px; border:2px solid red; border-radius:10px; width:100%; font-size:12px;">
+                  <i class="fa-solid fa-x fa-md" style="color:red;"></i> No accounts were matched with the given email address.
+                  </p>';
     }
 }
+
 ?>
 
 
@@ -84,6 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="card-body">
                         <div class="form-box">
                             <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
+                                <?php echo $alert;?>
                                 <h2>Enter Account's Email</h2>
                                 <br>
                                 <label for="email-input">Enter the Registered Account's Email:</label>

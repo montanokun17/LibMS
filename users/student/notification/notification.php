@@ -80,14 +80,16 @@ if ($_SESSION['acctype'] === 'Student' || 'Guest') {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <?php echo '<title>'. $firstname .' '. $lastname .' / Student - MyLibro </title>'; ?>
+    <?php echo '<title>'. $firstname .' '. $lastname .' / Student: Notifications - MyLibro </title>'; ?>
     <!--Link for Tab ICON-->
     <link rel="icon" type="image/x-icon" href="/LibMS/resources/images/logov1.png">
     <!--Link for Bootstrap-->
     <link rel="stylesheet" type="text/css" href="/LibMS/resources/bootstrap/css/bootstrap.min.css"/>
     <script type="text/javascript" src="/LibMS/resources/bootstrap/js/bootstrap.min.js"></script>
     <!--Link for CSS File-->
-    <link rel="stylesheet" type="text/css" href="/LibMS/users/student/index.css">
+    <link rel="stylesheet" type="text/css" href="/LibMS/users/student/notification/css/notification.css">
+    <!--Link for NAVBAR and SIDEBAR styling-->
+    <link rel="stylesheet" type="text/css" href="/LibMS/users/student/css/navbar-sidebar.css">
     <!--Link for Font Awesome Icons-->
     <link rel="stylesheet" href="/LibMS/resources/icons/fontawesome-free-6.4.0-web/css/all.css">
     <!--Link for Google Font-->
@@ -212,94 +214,118 @@ if ($_SESSION['acctype'] === 'Student' || 'Guest') {
     </div>
 <!--SIDEBAR-->
 
-<!-- ID Card Container -->
-<div class="container mt-4">
-    <div class="row justify-content-center">
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-header bg-dark text-white">
-                    <p class="text-center" style="margin-bottom:0;">
-                        <strong>MyLibro ID</strong>
-                    </p>
-                </div>
-                <div class="card-body">
-                    <!-- User's Profile Image -->
-                    <div class="text-center mb-2">
-                        <img src="/LibMS/resources/images/logov1.png" 
-                            width="75" height="75" class="Idlogo">
-
-                        <img src="/LibMS/resources/images/user.png" 
-                            width="100" height="100" class="rounded-circle">
-                            
-                    </div>
-                    <!-- User's Details -->
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">
-                            <strong>Name:</strong> <?php echo "$firstname $lastname"; ?>
-                        </li>
-                        <li class="list-group-item">
-                            <strong>ID Number:</strong> <?php echo "$idNo"; ?>
-                        </li>
-                        <li class="list-group-item">
-                            <strong>Email:</strong> <?php echo "$email"; ?>
-                        </li>
-                        <li class="list-group-item">
-                            <strong>Account Type:</strong> <?php echo "$acctype"; ?>
-                        </li>
-                        <li class="list-group-item">
-                            <strong>School Level:</strong> <?php echo "$schlvl"; ?>
-                        </li>
-                        <li class="list-group-item">
-                            <strong>Barangay:</strong> <?php echo "$brgy"; ?>
-                        </li>
-                    </ul>
+<div class="table-box">
+    <div class="container col-12 col-md-10">
+        <div class="container">
+            <div class="row">
+                <div class="books-box">
+                    <div class="container-fluid">
 
                     <?php
+
+                    $query = "SELECT * FROM notifications WHERE sender_user_id = ? AND receiver_user_id = ? ORDER BY notif_id DESC";
                     
-                    if (isset($_SESSION['id_no']) && isset($_SESSION['username'])) {
-                        $idNo = $_SESSION['id_no'];
-                        $username = $_SESSION['username'];
-
-                        
-                        $qrCodePath = "SELECT qr_code_data, qr_code_type FROM qr_codes WHERE user_id = ? AND username = ?";
-                        $statement = $conn->prepare($qrCodePath);
-                        $statement->bind_param("is", $idNo, $username);
-
-                        if ($statement->execute()) {
-                            $result = $statement->get_result();
-
-                            if ($row = $result->fetch_assoc()) {
-                                $width = 150;
-                                $height = 150;
-
-                                echo '<div class="container col-sm-6 center">';
-                                echo '<img src="data:image/png;base64,' . base64_encode($row["qr_code_data"]) . '" width="' . $width . '" height="' . $height . '"/>';
-                                echo '</div>';
-                            } else {
-                                // QR code not found in the database
-                                echo '<div class="text-center mb-3">';
-                                echo '<p><i class="fa fa-solid fa-triangle-exclamation fa-sm"></i> QR Code not found.</p>';
-                                echo '</div>';
-                            }
-                        } else {
-                            // Error in executing the SQL query
-                            echo '<div class="text-center mb-3">';
-                            echo '<p>Error in executing the SQL query.</p>';
-                            echo '</div>';
-                        }
-
-                        $statement->close();
-                    } else {
-                        // User is not logged in
-                        echo '<div class="text-center mb-3">';
-                        echo '<p>You are not logged in.</p>';
-                        echo '</div>';
+                    function getNotifsByPagination($conn, $query, $offset, $limit) {
+                    $query .= " LIMIT $limit OFFSET $offset"; // Append the LIMIT and OFFSET to the query for pagination
+                    $result = mysqli_query($conn, $query);
+                    
+                    return $result;
                     }
-
-                    ?>
-
-
-
+                    
+                    $totalNotifsQuery = "SELECT COUNT(*) as total FROM books";
+                    $totalNotifsResult = mysqli_query($conn, $totalNotifsQuery);
+                    $totalNotifs = mysqli_fetch_assoc($totalNotifsResult)['total'];
+                    
+                    
+                    // Number of books to display per page
+                    $limit = 7;
+                    
+                    // Get the current page number from the query parameter
+                    $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
+                    
+                    // Calculate the offset for the current page
+                    $offset = ($page - 1) * $limit;
+                    
+                    // Get the books for the current page
+                    $result = getNotifsByPagination($conn, $query, $offset, $limit);
+                    
+                    // Check if the query executed successfully
+                    if ($result && mysqli_num_rows($result) > 0) {
+                        echo '<div id="notifs-list-container">';
+                        echo '<table id="dataTable">';
+                        echo '<thead>';
+                        echo '<tr>';
+                        echo '</tr>';
+                        echo '</thead>';
+                        echo '<tbody>';
+                    
+                        while ($notifs = mysqli_fetch_assoc($result)) {
+                            echo '<tr>';
+                            if ($notifs['read_status']==='UNREAD') {
+                                echo '<td class="indicator" style="width:5%;"><i class="fa-solid fa-circle fa-sm" style="color: #b12525;"></i></td>';
+                                echo '<td style="background-color:#CCD1D1; font-weight:800;">' . $notifs['sender_user_id'] . '</td>';
+                                echo '<td style="background-color:#CCD1D1; font-weight:800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 500px;">' 
+                                . $notifs['notification_message'] . '</td>';
+                                echo '<td style="background-color:#CCD1D1; font-weight:800; width:15%;">';
+                                echo '
+                                <a href="/LibMS/users/student/notification/open-notif.php?notif_id=' .$notifs['notif_id']. '">
+                                    <button type="button" class="btn btn-primary btn-sm"><i class="fa-solid fa-turn-down fa-sm"></i> Open</button>
+                                </a>';
+                                echo '<button type="button" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash-can fa-sm"></i> Delete</button>';
+                                echo '</td>';
+                            } else {
+                                echo '<td class="indicator" style="width:5%;"></td>';
+                                echo '<td style="">' . $notifs['sender_user_id'] . '</td>';
+                                echo '<td style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 500px;">' 
+                                . $notifs['notification_message'] . '</td>';
+                                echo '<td style="width:15%;">';
+                                echo '
+                                <a href="/LibMS/users/student/notification/open-notif.php?notif_id=' .$notifs['notif_id']. '">
+                                    <button type="button" class="btn btn-primary btn-sm"><i class="fa-solid fa-turn-down fa-sm"></i> Open</button>
+                                </a>';
+                                echo '<button type="button" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash-can fa-sm"></i> Delete</button>';
+                                echo '</td>';
+                            }
+                            echo '</tr>';
+                        }
+                    
+                        echo '</tbody>';
+                        echo '</table>';
+                    
+                    
+                        // Calculate the total number of pages
+                        $totalPages = ceil($totalNotifs / $limit);
+                        if ($totalPages > 1) {
+                            echo '
+                            <div class="pagination-buttons" style="margin-top: 10px;
+                            margin-left: 70px;
+                            ">
+                                ';
+                    
+                            if ($page > 1) {
+                                echo '<a href="?page='.($page - 1).'" class="btn btn-primary btn-sm" id="previous" style="padding: 10px; width:10%;"><i class="fa-solid fa-angle-left"></i>'.($page - 1).' Previous</a>';
+                            }
+                    
+                            if ($page < $totalPages) {
+                                echo '<a href="?page='.($page + 1).'" class="btn btn-primary btn-sm" id="next" style="padding: 10px; width:10%; margin-left:5px;"> '.($page + 1).' Next <i class="fa-solid fa-angle-right"></i></a>';
+                            }
+                    
+                            echo '
+                            </div>
+                            ';
+                        }
+                    
+                    } else {
+                        echo "<tr><td colspan='10'><p class='container' style='margin-left:90px; margin-top:50px; font-size: 20px; font-weight:700;'>There Are No Notifications.</p></td></tr>";
+                    }
+                    
+                    
+                // Close the database connection
+                mysqli_close($conn);
+                    
+                    
+                ?>
+                    </div>
                 </div>
             </div>
         </div>

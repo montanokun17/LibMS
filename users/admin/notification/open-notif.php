@@ -80,14 +80,16 @@ if ($_SESSION['acctype'] === 'Student' || 'Guest') {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <?php echo '<title>'. $firstname .' '. $lastname .' / Student - MyLibro </title>'; ?>
+    <?php echo '<title>'. $firstname .' '. $lastname .' / Student: Notifications - MyLibro </title>'; ?>
     <!--Link for Tab ICON-->
     <link rel="icon" type="image/x-icon" href="/LibMS/resources/images/logov1.png">
     <!--Link for Bootstrap-->
     <link rel="stylesheet" type="text/css" href="/LibMS/resources/bootstrap/css/bootstrap.min.css"/>
     <script type="text/javascript" src="/LibMS/resources/bootstrap/js/bootstrap.min.js"></script>
     <!--Link for CSS File-->
-    <link rel="stylesheet" type="text/css" href="/LibMS/users/student/index.css">
+    <link rel="stylesheet" type="text/css" href="/LibMS/users/student/notification/css/open-notif.css">
+    <!--Link for NAVBAR and SIDEBAR styling-->
+    <link rel="stylesheet" type="text/css" href="/LibMS/users/student/css/navbar-sidebar.css">
     <!--Link for Font Awesome Icons-->
     <link rel="stylesheet" href="/LibMS/resources/icons/fontawesome-free-6.4.0-web/css/all.css">
     <!--Link for Google Font-->
@@ -212,100 +214,31 @@ if ($_SESSION['acctype'] === 'Student' || 'Guest') {
     </div>
 <!--SIDEBAR-->
 
-<!-- ID Card Container -->
-<div class="container mt-4">
-    <div class="row justify-content-center">
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-header bg-dark text-white">
-                    <p class="text-center" style="margin-bottom:0;">
-                        <strong>MyLibro ID</strong>
-                    </p>
-                </div>
-                <div class="card-body">
-                    <!-- User's Profile Image -->
-                    <div class="text-center mb-2">
-                        <img src="/LibMS/resources/images/logov1.png" 
-                            width="75" height="75" class="Idlogo">
+<div class="main-box">
+    <div class="container">
+        <div class="row">
+            <div class="box-1 col-12">
+                <div class="card-body bg-dark">
+                    <div class="col-md-8 mx-auto">
 
-                        <img src="/LibMS/resources/images/user.png" 
-                            width="100" height="100" class="rounded-circle">
-                            
+                        <div class="container head-title">
+                            <h3></h3>
+                        </div>
+
+                        <div class="container message-body">
+                            <p></p>
+                        </div>
+
+                        <div class="action-box">
+                            <buttton></button>
+                        </div>
+
                     </div>
-                    <!-- User's Details -->
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">
-                            <strong>Name:</strong> <?php echo "$firstname $lastname"; ?>
-                        </li>
-                        <li class="list-group-item">
-                            <strong>ID Number:</strong> <?php echo "$idNo"; ?>
-                        </li>
-                        <li class="list-group-item">
-                            <strong>Email:</strong> <?php echo "$email"; ?>
-                        </li>
-                        <li class="list-group-item">
-                            <strong>Account Type:</strong> <?php echo "$acctype"; ?>
-                        </li>
-                        <li class="list-group-item">
-                            <strong>School Level:</strong> <?php echo "$schlvl"; ?>
-                        </li>
-                        <li class="list-group-item">
-                            <strong>Barangay:</strong> <?php echo "$brgy"; ?>
-                        </li>
-                    </ul>
-
-                    <?php
-                    
-                    if (isset($_SESSION['id_no']) && isset($_SESSION['username'])) {
-                        $idNo = $_SESSION['id_no'];
-                        $username = $_SESSION['username'];
-
-                        
-                        $qrCodePath = "SELECT qr_code_data, qr_code_type FROM qr_codes WHERE user_id = ? AND username = ?";
-                        $statement = $conn->prepare($qrCodePath);
-                        $statement->bind_param("is", $idNo, $username);
-
-                        if ($statement->execute()) {
-                            $result = $statement->get_result();
-
-                            if ($row = $result->fetch_assoc()) {
-                                $width = 150;
-                                $height = 150;
-
-                                echo '<div class="container col-sm-6 center">';
-                                echo '<img src="data:image/png;base64,' . base64_encode($row["qr_code_data"]) . '" width="' . $width . '" height="' . $height . '"/>';
-                                echo '</div>';
-                            } else {
-                                // QR code not found in the database
-                                echo '<div class="text-center mb-3">';
-                                echo '<p><i class="fa fa-solid fa-triangle-exclamation fa-sm"></i> QR Code not found.</p>';
-                                echo '</div>';
-                            }
-                        } else {
-                            // Error in executing the SQL query
-                            echo '<div class="text-center mb-3">';
-                            echo '<p>Error in executing the SQL query.</p>';
-                            echo '</div>';
-                        }
-
-                        $statement->close();
-                    } else {
-                        // User is not logged in
-                        echo '<div class="text-center mb-3">';
-                        echo '<p>You are not logged in.</p>';
-                        echo '</div>';
-                    }
-
-                    ?>
-
-
-
                 </div>
             </div>
         </div>
     </div>
 </div>
-
 
 </body>
 </html>

@@ -91,13 +91,17 @@ if ($_SESSION['acctype'] === 'Student') {
     <link rel="stylesheet" type="text/css" href="/LibMS/resources/jquery ui/jquery-ui.min.css"/>
     <script type="text/javascript" src="/LibMS/resources/jquery/jquery-3.7.1.min.js"></script>
     <!--Link for CSS File-->
-    <link rel="stylesheet" type="text/css" href="/LibMS/users/admin/books/css/books.css">
+    <link rel="stylesheet" type="text/css" href="/LibMS/users/student/books/css/books.css">
     <!--Link for NAVBAR and SIDEBAR styling-->
     <link rel="stylesheet" type="text/css" href="/LibMS/users/student/css/navbar-sidebar.css">
     <!--Link for Font Awesome Icons-->
     <link rel="stylesheet" href="/LibMS/resources/icons/fontawesome-free-6.4.0-web/css/all.css">
     <!--Link for Google Font-->
     <link rel="stylesheet" href="/LibMS/resources/fonts/fonts.css"/>
+    <!--Link For JQuery AJAX-->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="/LibMS/resources/jquery/jquery-3.7.1.min.js"></script>
+    <script src="/LibMS/users/student/books/js/filter.js"></script>
 
 </head>
 
@@ -225,302 +229,354 @@ if ($_SESSION['acctype'] === 'Student') {
                 <div class="books-box">
                     <div class="container-fluid">
 
-                        <div class="search-bar">
+                        <div class="search-bar" id="searchForm">
                             <form method ="GET">
-                                <input type="text" class="search" placeholder ="Enter Book Section, Book Name, or Book's Status..">
-                                <button type="submit" name="search" class="btn btn-primary bg-dark btn-sm"><i class="fa-solid fa-search fa-sm"></i> Search</button>
+                                <input type="text" class="search" id="searchInput" placeholder ="Enter Book Section, Book Name, or Book's Status..">
+                                <button type="submit" value="search" name="search" class="btn btn-primary btn-sm"><i class="fa-solid fa-search fa-sm"></i> Search</button>
                             </form>
 
                             <div class="dropdown-1">
-                                    <select name="section" id="section-dd">
+                                    <select name="section" id="section-dd" onchange="filterBooks()">
                                         <option selected disabled>*Select Section*</option>
-                                        <option value="Fiction">Fiction</option>
-                                        <option value="Mystery Thriller">Mystery/Thriller</option>
-                                        <option value="Romance">Romance</option>
-                                        <option value="Science Fiction">Science Fiction/Fantasy</option>
-                                        <option value="Horror">Horror</option>
-                                        <option value="Historical Fiction">Historical Fiction</option>
-                                        <option value="Biography/Autobiography">Biography/Autobiography</option>
-                                        <option value="Memoir">Memoir</option>
-                                        <option value="History">History</option>
-                                        <option value="Politics">Politics and Current Events</option>
-                                        <option value="Science and Technology">Science and Technology</option>
-                                        <option value="Business and Finance">Business and Finance</option>
-                                        <option value="Self-Help and Personal Development">Self-Help and Personal Development</option>
-                                        <option value="Art and Architecture">Art and Architecture</option>
-                                        <option value="Travel and Adventure">Travel and Adventure</option>
-                                        <option value="Cookbooks and Food Writing">Cookbooks and Food Writing</option>
-                                        <option value="Young Adult Fiction">Young Adult Fiction</option>
-                                        <option value="Graphic Novels and Comics">Graphic Novels and Comics</option>
-                                        <option value="Poetry">Poetry</option>
-                                        <option value="Religion and Spiritually">Religion and Spiritually</option>
-                                        <option value="Philosophy">Philosophy</option>
-                                        <option value="Reference and Dictionary">Reference and Dictionary</option>
-                                        <option value="Foreign Languages">Foreign Languages</option>
-                                        <option value="Others">Others</option>
+                                        <option onClick="filterSection('Fiction')">Fiction</option>
+                                        <option onClick="filterSection('Mystery Thriller')">Mystery/Thriller</option>
+                                        <option onClick="filterSection('Romance')">Romance</option>
+                                        <option onClick="filterSection('Science Fiction')">Science Fiction/Fantasy</option>
+                                        <option onClick="filterSection('Horror')">Horror</option>
+                                        <option onClick="filterSection('Historical Fiction')">Historical Fiction</option>
+                                        <option onClick="filterSection('Biography/Autobiography')">Biography/Autobiography</option>
+                                        <option onClick="filterSection('Memoir')">Memoir</option>
+                                        <option onClick="filterSection('History')">History</option>
+                                        <option onClick="filterSection('Politics')">Politics and Current Events</option>
+                                        <option onClick="filterSection('Science and Technology')">Science and Technology</option>
+                                        <option onClick="filterSection('Business and Finance')">Business and Finance</option>
+                                        <option onClick="filterSection('Self-Help an')d Personal Development')">Self-Help and Personal Development</option>
+                                        <option onClick="filterSection('Art and Architecture')">Art and Architecture</option>
+                                        <option onClick="filterSection('Travel and Adventure')">Travel and Adventure</option>
+                                        <option onClick="filterSection('Cookbooks and Food Writing')">Cookbooks and Food Writing</option>
+                                        <option onClick="filterSection('Young Adult Fiction')">Young Adult Fiction</option>
+                                        <option onClick="filterSection('Graphic Novels and Comics')">Graphic Novels and Comics</option>
+                                        <option onClick="filterSection('Poetry')">Poetry</option>
+                                        <option onClick="filterSection('Religion and Spiritually')">Religion and Spiritually</option>
+                                        <option onClick="filterSection('Philosophy')">Philosophy</option>
+                                        <option onClick="filterSection('Reference and Dictionary')">Reference and Dictionary</option>
+                                        <option onClick="filterSection('Foreign Languages')">Foreign Languages</option>
+                                        <option onClick="filterSection('Others')">Others</option>
                                     </select>
 
-                                    <select name="status" id="book-status">
+                                    <select name="status" id="book-status" onchange="filterBooks()">
                                         <option selected disabled>*Select Book Status*</option>
-                                        <option value="GOOD">GOOD</option>
-                                        <option value="DAMAGED">DAMAGED</option>
-                                        <option value="DILAPITATED">DILAPITATED</option>
-                                        <option value="LOST">LOST</option>
+                                        <option onClick="('GOOD')">GOOD</option>
+                                        <option onClick="('DAMAGED')">DAMAGED</option>
+                                        <option onClick="('DILAPITATED')">DILAPITATED</option>
+                                        <option onClick="('LOST')">LOST</option>
                                     </select>
 
-                                    <select name="dewey" id="book-status">
+                                    <select name="dewey" id="dewey-classification" onchange="filterBooks()">
                                         <option selected disabled>*Select Dewey Classification*</option>
-                                        <option class="option-title" value="000" >000 - General Works</option>
-                                        <option value="020">020 - Library and Information Science</option>
-                                        <option value="030">030 - General Encylopedias</option>
-                                        <option value="050">050 - General Periodicals</option>
-                                        <option value="060">060 - General Organizations</option>
-                                        <option class="option-title" value="100">100 - Philosophy</option>
-                                        <option value="110">110 - Metaphysics</option>
-                                        <option value="120">120 - Speculative Philosophy</option>
-                                        <option value="130">130 - Psychology and Occultism</option>
-                                        <option value="140">140 - Philosophy (Gen.)</option>
-                                        <option value="150">150 - Psychology (Gen.)</option>
-                                        <option value="160">160 - Logic</option>
-                                        <option class="option-title" value="200">200 - Religion</option>
-                                        <option value="220">220 - The Bible</option>
-                                        <option value="230">230 - Christian Doctrine</option>
-                                        <option value="290">290 - Comparative and Other Religions</option>
-                                        <option class="option-title" value="300">300 - Social Sciences</option>
-                                        <option value="310">310 - Statistics</option>
-                                        <option value="320">320 - Political Science</option>
-                                        <option value="330">330 - Economics</option>
-                                        <option value="340">340 - Law</option>
-                                        <option value="350">350 - Public Administration</option>
-                                        <option value="360">360 - Social Welfare</option>
-                                        <option value="370">370 - Education</option>
-                                        <option value="380">380 - Public Service</option>
-                                        <option value="390">390 - Customs and Folklores</option>
-                                        <option class="option-title" value="400">400 - Language</option>
-                                        <option value="410">410 - Comparative Lingustics</option>
-                                        <option value="420">420 - English and Anglo Saxon</option>
-                                        <option value="430">430 - German Language</option>
-                                        <option value="440">440 - French</option>
-                                        <option value="450">450 - Italian, Romanian</option>
-                                        <option value="460">460 - Spanish, Portuguese</option>
-                                        <option value="470">470 - Latin and Other Italic Languages</option>
-                                        <option value="480">480 - Classical and Modern Greek</option>
-                                        <option value="490">490 - Other Langauges</option>
-                                        <option class="option-title" value="500">500 - Science</option>
-                                        <option value="510">510 - Mathematics</option>
-                                        <option value="520">520 - Astronomy</option>
-                                        <option value="530">530 - Physics</option>
-                                        <option value="540">540 - Chemistry</option>
-                                        <option value="550">550 - Earth Sciences</option>
-                                        <option value="560">560 - Paleontology</option>
-                                        <option value="570">570 - Life Sciences</option>
-                                        <option value="580">580 - Botanical Sciences</option>
-                                        <option value="590">590 - Zoological Sciences</option>
-                                        <option class="option-title" value="600">600 - Technology</option>
-                                        <option value="610">610 - Medical Services</option>
-                                        <option value="620">620 - Engineering</option>
-                                        <option value="630">630 - Agriculture</option>
-                                        <option value="640">640 - Domestic Sciences</option>
-                                        <option value="650">650 - Business and Management</option>
-                                        <option value="660">660 - Chemical Technology</option>
-                                        <option value="670">670 - Manufacturers</option>
-                                        <option value="690">690 - Buidling Construction</option>
-                                        <option class="option-title" value="700">700 - The Arts</option>
-                                        <option value="710">710 - Landscape and Civic Art</option>
-                                        <option value="720">720 - Architecture</option>
-                                        <option value="730">730 - Sculpture, Plastics</option>
-                                        <option value="740">740 - Drawing, Decorative Arts</option>
-                                        <option value="750">750 - Painting</option>
-                                        <option value="760">760 - Prints and Print Making </option>
-                                        <option value="770">770 - Photography</option>
-                                        <option value="780">780 - Music</option>
-                                        <option value="790">790 - Recreation, Performing Arts</option>
-                                        <option class="option-title" value="800">800 - Literature</option>
-                                        <option value="810">810 -  American Literature</option>
-                                        <option value="820">820 - English Literature</option>
-                                        <option value="830">830 - German Literature</option>
-                                        <option value="840">840 - French Literature</option>
-                                        <option value="850">850 - Italian Literature</option>
-                                        <option value="860">860 - Spanish, Portuguese Literature</option>
-                                        <option value="870">870 - Latin and Other Italic Literature</option>
-                                        <option value="880">880 - Classical and Modern Greek Literature</option>
-                                        <option value="890">890 - Other Literature</option>
-                                        <option class="option-title" value="900">900 - History and Geography</option>
-                                        <option value="910">910 - Geography Travel</option>
-                                        <option value="920">920 - Genealogy</option>
-                                        <option value="930">930 - Ancient History</option>
-                                        <option value="940">940 - Europe</option>
-                                        <option value="950">950 - Asia</option>
-                                        <option value="960">960 - Africa</option>
-                                        <option value="970">970 - North America</option>
-                                        <option value="980">980 - South America</option>
-                                        <option value="990">990 - Pacific Ocean Islands</option>
-                                        <option value="991">991 - Indonesia</option>
-                                        <option value="993">993 - New Zealand and Melanesia</option>
-                                        <option value="994">994 - Australia</option>
-                                        <option value="995">995 - New Guinea (Papua)</option>
-                                        <option value="996">996 - Polynesia</option>
-                                        <option value="997">997 - Atlantic Ocean Islands</option>
-                                        <option value="998">998 - Arctic Region</option>
-                                        <option value="999">999 - Antarctic Region</option>
-                                        <option class="option-title" value="920">920 - Biography and Collective Biography</option>
-                                        <option value="920">920 - Biography and Collective Biography</option>
+                                        <option class="option-title" onClick="filterDewey('000')" >000 - General Works</option>
+                                        <option onClick="filterDewey('020')">020 - Library and Information Science</option>
+                                        <option onClick="filterDewey('030')">030 - General Encylopedias</option>
+                                        <option onClick="filterDewey('050')">050 - General Periodicals</option>
+                                        <option onClick="filterDewey('060')">060 - General Organizations</option>
+                                        <option class="option-title" onClick="filterDewey('100')">100 - Philosophy</option>
+                                        <option onClick="filterDewey('110')">110 - Metaphysics</option>
+                                        <option onClick="filterDewey('120')">120 - Speculative Philosophy</option>
+                                        <option onClick="filterDewey('130')">130 - Psychology and Occultism</option>
+                                        <option onClick="filterDewey('140')">140 - Philosophy (Gen.)</option>
+                                        <option onClick="filterDewey('150')">150 - Psychology (Gen.)</option>
+                                        <option onClick="filterDewey('160')">160 - Logic</option>
+                                        <option class="option-title" onClick="filterDewey('200')">200 - Religion</option>
+                                        <option onClick="filterDewey('220')">220 - The Bible</option>
+                                        <option onClick="filterDewey('230')">230 - Christian Doctrine</option>
+                                        <option onClick="filterDewey('290')">290 - Comparative and Other Religions</option>
+                                        <option class="option-title" onClick="filterDewey('300')">300 - Social Sciences</option>
+                                        <option onClick="filterDewey('310')">310 - Statistics</option>
+                                        <option onClick="filterDewey('320')">320 - Political Science</option>
+                                        <option onClick="filterDewey('330')">330 - Economics</option>
+                                        <option onClick="filterDewey('340')">340 - Law</option>
+                                        <option onClick="filterDewey('350')">350 - Public Administration</option>
+                                        <option onClick="filterDewey('360')">360 - Social Welfare</option>
+                                        <option onClick="filterDewey('370')">370 - Education</option>
+                                        <option onClick="filterDewey('380')">380 - Public Service</option>
+                                        <option onClick="filterDewey('390')">390 - Customs and Folklores</option>
+                                        <option class="option-title" onClick="filterDewey('400')">400 - Language</option>
+                                        <option onClick="filterDewey('410')">410 - Comparative Lingustics</option>
+                                        <option onClick="filterDewey('420')">420 - English and Anglo Saxon</option>
+                                        <option onClick="filterDewey('430')">430 - German Language</option>
+                                        <option onClick="filterDewey('440')">440 - French</option>
+                                        <option onClick="filterDewey('450')">450 - Italian, Romanian</option>
+                                        <option onClick="filterDewey('460')">460 - Spanish, Portuguese</option>
+                                        <option onClick="filterDewey('470')">470 - Latin and Other Italic Languages</option>
+                                        <option onClick="filterDewey('480')">480 - Classical and Modern Greek</option>
+                                        <option onClick="filterDewey('490')">490 - Other Langauges</option>
+                                        <option class="option-title" onClick="filterDewey('500')">500 - Science</option>
+                                        <option onClick="filterDewey('510')">510 - Mathematics</option>
+                                        <option onClick="filterDewey('520')">520 - Astronomy</option>
+                                        <option onClick="filterDewey('530')">530 - Physics</option>
+                                        <option onClick="filterDewey('540')">540 - Chemistry</option>
+                                        <option onClick="filterDewey('550')">550 - Earth Sciences</option>
+                                        <option onClick="filterDewey('560')">560 - Paleontology</option>
+                                        <option onClick="filterDewey('570')">570 - Life Sciences</option>
+                                        <option onClick="filterDewey('580')">580 - Botanical Sciences</option>
+                                        <option onClick="filterDewey('590')">590 - Zoological Sciences</option>
+                                        <option class="option-title" onClick="filterDewey('600')">600 - Technology</option>
+                                        <option onClick="filterDewey('610')">610 - Medical Services</option>
+                                        <option onClick="filterDewey('620')">620 - Engineering</option>
+                                        <option onClick="filterDewey('630')">630 - Agriculture</option>
+                                        <option onClick="filterDewey('640')">640 - Domestic Sciences</option>
+                                        <option onClick="filterDewey('650')">650 - Business and Management</option>
+                                        <option onClick="filterDewey('660')">660 - Chemical Technology</option>
+                                        <option onClick="filterDewey('670')">670 - Manufacturers</option>
+                                        <option onClick="filterDewey('690')">690 - Buidling Construction</option>
+                                        <option class="option-title" onClick="filterDewey('700')">700 - The Arts</option>
+                                        <option onClick="filterDewey('710')">710 - Landscape and Civic Art</option>
+                                        <option onClick="filterDewey('720')">720 - Architecture</option>
+                                        <option onClick="filterDewey('730')">730 - Sculpture, Plastics</option>
+                                        <option onClick="filterDewey('740')">740 - Drawing, Decorative Arts</option>
+                                        <option onClick="filterDewey('750')">750 - Painting</option>
+                                        <option onClick="filterDewey('760')">760 - Prints and Print Making </option>
+                                        <option onClick="filterDewey('770')">770 - Photography</option>
+                                        <option onClick="filterDewey('780')">780 - Music</option>
+                                        <option onClick="filterDewey('790')">790 - Recreation, Performing Arts</option>
+                                        <option class="option-title" onClick="filterDewey('800')">800 - Literature</option>
+                                        <option onClick="filterDewey('810')">810 -  American Literature</option>
+                                        <option onClick="filterDewey('820')">820 - English Literature</option>
+                                        <option onClick="filterDewey('830')">830 - German Literature</option>
+                                        <option onClick="filterDewey('840')">840 - French Literature</option>
+                                        <option onClick="filterDewey('850')">850 - Italian Literature</option>
+                                        <option onClick="filterDewey('860')">860 - Spanish, Portuguese Literature</option>
+                                        <option onClick="filterDewey('870')">870 - Latin and Other Italic Literature</option>
+                                        <option onClick="filterDewey('880')">880 - Classical and Modern Greek Literature</option>
+                                        <option onClick="filterDewey('890')">890 - Other Literature</option>
+                                        <option class="option-title" onClick="filterDewey('900')">900 - History and Geography</option>
+                                        <option onClick="filterDewey('910')">910 - Geography Travel</option>
+                                        <option onClick="filterDewey('920')">920 - Genealogy</option>
+                                        <option onClick="filterDewey('930')">930 - Ancient History</option>
+                                        <option onClick="filterDewey('940')">940 - Europe</option>
+                                        <option onClick="filterDewey('950')">950 - Asia</option>
+                                        <option onClick="filterDewey('960')">960 - Africa</option>
+                                        <option onClick="filterDewey('970')">970 - North America</option>
+                                        <option onClick="filterDewey('980')">980 - South America</option>
+                                        <option onClick="filterDewey('990')">990 - Pacific Ocean Islands</option>
+                                        <option onClick="filterDewey('991')">991 - Indonesia</option>
+                                        <option onClick="filterDewey('993')">993 - New Zealand and Melanesia</option>
+                                        <option onClick="filterDewey('994')">994 - Australia</option>
+                                        <option onClick="filterDewey('995')">995 - New Guinea (Papua)</option>
+                                        <option onClick="filterDewey('996')">996 - Polynesia</option>
+                                        <option onClick="filterDewey('997')">997 - Atlantic Ocean Islands</option>
+                                        <option onClick="filterDewey('998')">998 - Arctic Region</option>
+                                        <option onClick="filterDewey('999')">999 - Antarctic Region</option>
+                                        <option class="option-title" onClick="filterDewey('920')">920 - Biography and Collective Biography</option>
+                                        <option value="filterDewey('920')">920 - Biography and Collective Biography</option>
                                     </select>
-                                
+
+                                    <select name="book_borrow_status" id="book-avail" onchange="filterBooks()">
+                                        <option selected disabled>*Select Availability*</option>
+                                        <option onClick="filterBorrowStatus('Available')">Available</option>
+                                        <option onClick="filterBorrowStatus('Pending Requests')">Pending Requests</option>
+                                    </select>
+
 
                             </div>
-
-
-                        </div>
             
-                <?php
+                        <?php
+                        
 
-                    // Default query to fetch all books
-                    $query = "SELECT * FROM books WHERE 'deleted' = 0 AND status = 'GOOD' AND book_borrow_status = 'Available' ORDER BY 'book_title' ASC";
+                        $query = "SELECT * FROM books WHERE 'deleted' = 0 AND status = 'GOOD' ORDER BY 'book_title' ASC";
 
-                function getBooksByPagination($conn, $query, $offset, $limit) {
-                    $query .= " LIMIT $limit OFFSET $offset"; // Append the LIMIT and OFFSET to the query for pagination
-                    $result = mysqli_query($conn, $query);
+                       /*// Add the following code at the beginning to handle AJAX requests
+                        if (isset($_POST['section']) && isset($_POST['status']) && isset($_POST['dewey']) && isset($_POST['book_borrow_status'])) {
+                            $section = $_POST['section'];
+                            $status = $_POST['status'];
+                            $dewey = $_POST['dewey'];
+                            $bookBorrowStatus = $_POST['book_borrow_status'];
 
-                    return $result;
-                }
+                            $query = "SELECT * FROM books WHERE `deleted` = 0 AND `status` = '$status'";
 
-                $totalBooksQuery = "SELECT COUNT(*) as total FROM books";
-                $totalBooksResult = mysqli_query($conn, $totalBooksQuery);
-                $totalBooks = mysqli_fetch_assoc($totalBooksResult)['total'];
-
-
-                // Number of books to display per page
-                $limit = 7;
-
-                // Get the current page number from the query parameter
-                $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
-
-                // Calculate the offset for the current page
-                $offset = ($page - 1) * $limit;
-
-                // Get the books for the current page
-                $result = getBooksByPagination($conn, $query, $offset, $limit);
-
-                    // Check if the query executed successfully
-                    if ($result && mysqli_num_rows($result) > 0) {
-                        echo '<div class="container">';
-                        echo '<table>';
-                        echo '<thead>';
-                        echo '<tr>';
-                        echo '<th>Book Name</th>';
-                        echo '<th>Author</th>';
-                        echo '<th>Pubisher</th>';
-                        echo '<th>Year</th>';
-                        echo '<th>Volume</th>';
-                        echo '<th>Edition</th>';
-                        echo '<th>Section</th>';
-                        echo '<th>Status</th>';
-                        echo '<th style="width:18%;">Action</th>';
-                        echo '</tr>';
-                        echo '</thead>';
-                        echo '<tbody>';
-
-                        while ($book = mysqli_fetch_assoc($result)) {
-                            echo '<tr>';
-                            echo '<td>' . $book['book_title'] . '</td>';
-                            echo '<td>' . $book['author'] . '</td>';
-                            echo '<td>' . $book['publisher'] . '</td>';
-                            echo '<td>' . $book['year'] . '</td>';
-                            echo '<td>' . $book['volume'] . '</td>';
-                            echo '<td>' . $book['edition'] . '</td>';
-                            echo '<td>' . $book['section'] . '</td>';
-                            if ($book['status'] == 'GOOD') {
-                                echo '<td style="color: green;"><b><i>' . $book['status'] . '</i></b></td>';
+                            // Append additional conditions based on the selected filters
+                            if ($section !== "*Select Section*") {
+                                $query .= " AND `section` = '$section'";
                             }
-                            echo '<td>';
-                            echo '<button type="button" class="btn btn-primary btn-sm"><i class="fa-solid fa-circle-info fa-sm"></i> Details</button>';
-                            echo '
-                            <a href="/LibMS/users/student/requests/borrow/borrow.php?book_id=' .$book['book_id']. '">
-                                <button type="button" class="btn btn-success btn-sm" style="margin-left:5px;"><i class="fa-solid fa-bookmark fa-sm"></i> Borrow</button>
-                            </a>
-                                '; //view_entry.php?id={$row['id']} /LibMS/users/student/requests/borrow/borrow.php
-                            echo '</td>';
-                            echo '</tr>';
-                        }
 
-                        echo '</tbody>';
-                        echo '</table>';
-
-
-                        // Calculate the total number of pages
-                        $totalPages = ceil($totalBooks / $limit);
-                        if ($totalPages > 1) {
-                            echo '
-                            <div class="pagination-buttons" style="margin-top: 10px;
-                            margin-left: 70px;
-                            ">
-                                ';
-                    
-                            if ($page > 1) {
-                                echo '<a href="?page='.($page - 1).'" class="btn btn-primary btn-sm" id="previous" style="padding: 10px; width:10%;"><i class="fa-solid fa-angle-left"></i>'.($page - 1).' Previous</a>';
+                            if ($dewey !== "*Select Dewey Classification*") {
+                                $query .= " AND `dewey` = '$dewey'";
                             }
-                    
-                            if ($page < $totalPages) {
-                                echo '<a href="?page='.($page + 1).'" class="btn btn-primary btn-sm" id="next" style="padding: 10px; width:10%; margin-left:5px;"> '.($page + 1).' Next <i class="fa-solid fa-angle-right"></i></a>';
+
+                            if ($bookBorrowStatus !== "*Select Availability*") {
+                                $query .= " AND `book_borrow_status` = '$bookBorrowStatus'";
                             }
+
+                            $query .= " ORDER BY `book_title` ASC";
+                        } else {
+                            $query = "SELECT * FROM books WHERE 'deleted' = 0 AND status = 'GOOD' ORDER BY 'book_title' ASC";
+                        }*/
                     
-                            echo '
-                            </div>
-                            ';
-                        }
 
-                    } else {
-                        echo "<tr><td colspan='10'><p class='container' style='margin-left:90px; margin-top:50px; font-size: 20px; font-weight:700;'>No Books Found.</p></td></tr>";
-                    }
-
-
-                    // Close the database connection
-                    mysqli_close($conn);
-
-                ?>
+                        function getBooksByPagination($conn, $query, $offset, $limit) {
+                            $query .= " LIMIT $limit OFFSET $offset"; // Append the LIMIT and OFFSET to the query for pagination
+                            $result = mysqli_query($conn, $query);
+                            
+                            return $result;
+                            }
+                            
+                            $totalBooksQuery = "SELECT COUNT(*) as total FROM books";
+                            $totalBooksResult = mysqli_query($conn, $totalBooksQuery);
+                            $totalBooks = mysqli_fetch_assoc($totalBooksResult)['total'];
+                            
+                            
+                            // Number of books to display per page
+                            $limit = 7;
+                            
+                            // Get the current page number from the query parameter
+                            $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
+                            
+                            // Calculate the offset for the current page
+                            $offset = ($page - 1) * $limit;
+                            
+                            // Get the books for the current page
+                            $result = getBooksByPagination($conn, $query, $offset, $limit);
+                            
+                            // Check if the query executed successfully
+                            if ($result && mysqli_num_rows($result) > 0) {
+                                echo '<div class="container" id="book-list-container">';
+                                echo '<table id="dataTable">';
+                                echo '<thead>';
+                                echo '<tr>';
+                                echo '<th>Book Name</th>';
+                                echo '<th>Author</th>';
+                                echo '<th>Pubisher</th>';
+                                echo '<th>Year</th>';
+                                echo '<th>Volume</th>';
+                                echo '<th>Edition</th>';
+                                echo '<th>Section</th>';
+                                echo '<th>Availability</th>';
+                                echo '<th>Status</th>';
+                                echo '<th style="width:18%;">Action</th>';
+                                echo '</tr>';
+                                echo '</thead>';
+                                echo '<tbody>';
+                            
+                                while ($book = mysqli_fetch_assoc($result)) {
+                                    echo '<tr>';
+                                    echo '<td>' . $book['book_title'] . '</td>';
+                                    echo '<td>' . $book['author'] . '</td>';
+                                    echo '<td>' . $book['publisher'] . '</td>';
+                                    echo '<td>' . $book['year'] . '</td>';
+                                    echo '<td>' . $book['volume'] . '</td>';
+                                    echo '<td>' . $book['edition'] . '</td>';
+                                    echo '<td>' . $book['section'] . '</td>';
+                                    if($book['book_borrow_status'] === 'Available') {
+                                        echo '<td style="color:green; text-transform:uppercase;"><b>' . $book['book_borrow_status'] . '</b></td>';
+                                    } else {
+                                        echo '<td style="color:#FFBD33; text-transform:uppercase;"><b>' . $book['book_borrow_status'] . '</b></td>';
+                                    }
+                            
+                                    if ($book['status'] == 'GOOD') {
+                                        echo '<td style="color: green;"><b><i>' . $book['status'] . '</i></b></td>';
+                                    }
+                                    echo '<td>';
+                                    echo '<button type="button" class="btn btn-primary btn-sm"><i class="fa-solid fa-circle-info fa-sm"></i> Details</button>';
+                                    echo '
+                                    <a href="/LibMS/users/student/requests/borrow/borrow.php?book_id=' .$book['book_id']. '">
+                                        <button type="button" class="btn btn-success btn-sm" style="margin-left:5px;"><i class="fa-solid fa-bookmark fa-sm"></i> Borrow</button>
+                                    </a>
+                                        ';
+                                    echo '</td>';
+                                    echo '</tr>';
+                                }
+                            
+                                echo '</tbody>';
+                                echo '</table>';
+                            
+                            
+                                // Calculate the total number of pages
+                                $totalPages = ceil($totalBooks / $limit);
+                                if ($totalPages > 1) {
+                                    echo '
+                                    <div class="pagination-buttons" style="margin-top: 10px;
+                                    margin-left: 70px;
+                                    ">
+                                        ';
+                            
+                                    if ($page > 1) {
+                                        echo '<a href="?page='.($page - 1).'" class="btn btn-primary btn-sm" id="previous" style="padding: 10px; width:10%;"><i class="fa-solid fa-angle-left"></i>'.($page - 1).' Previous</a>';
+                                    }
+                            
+                                    if ($page < $totalPages) {
+                                        echo '<a href="?page='.($page + 1).'" class="btn btn-primary btn-sm" id="next" style="padding: 10px; width:10%; margin-left:5px;"> '.($page + 1).' Next <i class="fa-solid fa-angle-right"></i></a>';
+                                    }
+                            
+                                    echo '
+                                    </div>
+                                    ';
+                                }
+                            
+                            } else {
+                                echo "<tr><td colspan='10'><p class='container' style='margin-left:90px; margin-top:50px; font-size: 20px; font-weight:700;'>No Books Found.</p></td></tr>";
+                            }
+                            
+                            
+                            // Close the database connection
+                            mysqli_close($conn);
+                            
+                            
+                            
+                            ?>
                 
                 <script>
                     
+                    function filterBooks() {
+                    var section = $("#section-dd").val();
+                    var status = $("#book-status").val();
+                    var dewey = $("#dewey-classification").val();
+                    var bookBorrowStatus = $("#book-avail").val();
+
+                    $.ajax({
+                        type: "POST",
+                        url: "/LibMS/users/student/books/books-table.php",
+                        data: {
+                            section: section,
+                            status: status,
+                            dewey: dewey,
+                            book_borrow_status: bookBorrowStatus
+                        },
+                        success: function(response) {
+                            $("#book-list-container").html(response);
+                        },
+                        error: function(xhr, status, error) {
+                            console.error("Error filtering books:", error);
+                        }
+                    });
+                }
+
+                $(document).ready(function() {
+                    // Intercept the form submission
+                    $('#searchForm').submit(function(event) {
+                        // Prevent the default form submission
+                        event.preventDefault();
+                        
+                        // Get the search query from the input field
+                        var searchQuery = $('#searchInput').val();
+                        
+                        // Make an AJAX request to the server
+                        $.ajax({
+                            type: 'GET',
+                            url: '/LibMS/users/student/books/books-table.php',
+                            data: { search: searchQuery },
+                            success: function(response) {
+                                // Display the search results in the #searchResults div
+                                $('#book-list-container').html(response);
+                            }
+                            error: function(xhr, status, error) {
+                            console.error("Error filtering books:", error);
+                        }
+                        });
+                    });
+                });
+
+
                 </script>
-
-                <div class="modal fade" id="BorrowModal" tabindex="-1" role="dialog" aria-labelledby="borrowModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="modal-title">Modal title</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                                </button>
-
-                                    <div class="modal-body">
-                                        <form>
-                                            <label>Title:</label>
-                                            <p>Title</p>
-
-                                            <label>Year:</label>
-                                            <p>Year</p>
-
-                                            <label>Author:</label>
-                                            <p>Author</p>
-
-                                            <label>Volume:</label>
-                                            <p>Volume</p>
-
-                                            <label>Edition:</label>
-                                            <p>Edition</p>
-
-                                            <label>Section:</label>
-                                            <p>Section</p>
-                                            
-                                            <label></label>
-                                            <button type="button" class="btn btn-primary btn-sm" id="borrow-btn"><i class="fa-solid fa-share-from-square"></i> Send Borrow Request</button>
-                                        </form>
-                                    </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
             </div>
 

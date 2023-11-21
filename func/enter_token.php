@@ -15,8 +15,11 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
+$fetchEmail = "";
+$alert="";
+
 $data = $_SESSION['data'];
-$email = $data['email'];
+$fetchEmail = $data['email'];
 
 
 // Check if the form is submitted
@@ -50,11 +53,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             exit();
         } else {
             // PIN is correct but has expired
-            echo "<p style='padding:5px; border: 1px, solid, yellow'>The PIN has expired. Please request a new PIN.</p>";
+            //echo "<p style='padding:5px; border: 1px, solid, yellow'>The PIN has expired. Please request a new PIN.</p>";
+            $alert = '<p class="alert-box" style="padding:10px; border:2px solid red; border-radius:10px; width:100%; font-size:12px;">
+                  <i class="fa-solid fa-triangle-exclamation fa-md" style="color:#F1C232;"></i> The PIN has expired. Please request a new PIN.
+                  </p>';
         }
     } else {
         // PIN is incorrect
-        echo "<p style='padding:5px; border: 1px, solid, red'>Invalid PIN. Please try again.</p>";
+        //echo "<p style='padding:5px; border: 1px, solid, red'>Invalid PIN. Please try again.</p>";
+        $alert = '<p class="alert-box" style="padding:10px; border:2px solid red; border-radius:10px; width:100%; font-size:12px;">
+                  <i class="fa-solid fa-x fa-md" style="color:red;"></i> Invalid PIN. Please try again.
+                  </p>';
     }
 }
 
@@ -97,6 +106,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <div class="card-body">
                         <div class="form-box">
                             <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
+
+                            <?php echo $alert; ?>
+
                                 <h2>Email Token PIN</h2>
                                 <br>
                                 <label for="email-input">Enter Token PIN Sent on the Email:</label>
@@ -150,6 +162,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
      $mail->setFrom('mylibrolibrarymanagementsystem@outlook.com', 'MyLibro - Virtual Library Management System');  // Set the sender's email address and name
      $mail->addAddress($userEmail);  // Add recipient email address
+     //$mail->addEmbeddedImage('/LibMS/resources/images/logov1.png', 'my-image');
 
      $mail->isHTML(true);
      $mail->Subject = 'Token PIN Verification';  // Set the email subject
@@ -166,7 +179,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
              <table align="center" cellpadding="0" cellspacing="0" width="600" style="border-collapse: collapse;">
                  <tr>
                      <td align="center" bgcolor="#4ca847" style="padding: 40px 0 30px 0;">
-                         <img src="https://ibb.co/JjVXDFs" alt="MyLibro - Virtual LMS" width="200" style="display: block;">
+                         <img src="https://i.ibb.co/7tP7sN1/logov1.png" alt="MyLibro - Virtual LMS" width="200" height="200" style="display: block;">
                          <h2 style="font-size: 24px; color: #333333; margin-top: 10px;">MyLibro - Library Management System</h2>
                          <h2 style="font-size: 32px; color: #333333; margin-top: 30px;">Password PIN Verification</h2>
                      </td>
@@ -193,10 +206,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
      // Send the email
      if ($mail->send()) {
-         echo '<div class="card"><div class="card-body"><p>TokenPIN Email Sent Successfully to the Email Address.</p></div></div>';
+        $alert = '<p class="alert-box" style="padding:10px; border:2px solid red; border-radius:10px; width:100%; font-size:12px;">
+        <i class="fa-solid fa-check fa-md" style="color:green;"></i> Email Sent Successfully
+        </p>';
          
      } else {
-         echo '<div class="card"><div class="card-body"><p>Error Sending Email. ' . $mail->ErrorInfo . '</p></div></div>';
+         //echo '<div class="card"><div class="card-body"><p>Error Sending Email. ' . $mail->ErrorInfo . '</p></div></div>';
+         $alert = '<p class="alert-box" style="padding:10px; border:2px solid red; border-radius:10px; width:100%; font-size:12px;">
+                   Error Sending Email. ' .$mail->ErrorInfo . '
+                  </p>';
      }
 
 ?>

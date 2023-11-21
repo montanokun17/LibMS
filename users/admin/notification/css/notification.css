@@ -1,5 +1,4 @@
 
-
 /* Reset some default styles */
 body, h1, h2, h3, p, ul, li {
     margin: 0;
@@ -45,52 +44,4 @@ tbody tr:nth-child(even) {
 /* Add some space at the top */
 .mt-4 {
     margin-top: 1rem;
-}
-
-.search {
-    width: 40%;
-    padding: 5px;
-    font-size: 11px;
-    border-radius: 10px;
-    font-weight: 500;
-}
-
-.search-bar {
-    margin-left: 55px;
-}
-
-.btn.btn-primary {
-    border-radius: 10px;
-}
-
-#section-dd {
-    width: 30%;
-    margin-top: 5px;
-    padding: 5px;
-    border-radius: 10px;
-    font-size: 11px;
-}
-
-#book-status {
-    width: 20%;
-    margin-top: 5px;
-    padding: 5px;
-    border-radius: 10px;
-    font-size: 11px;
-}
-
-#dewey-classification {
-    width: 20%;
-    margin-top: 5px;
-    padding: 5px;
-    border-radius: 10px;
-    font-size: 11px;
-}
-
-#book-avail {
-    width: 20%;
-    margin-top: 5px;
-    padding: 5px;
-    border-radius: 10px;
-    font-size: 11px;
 }
