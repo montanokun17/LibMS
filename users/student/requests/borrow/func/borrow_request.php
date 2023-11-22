@@ -147,10 +147,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             echo "<script>alert('Book ID Not Set');</script>";
         }
 
-    
 
-    // Perform database operations to insert into borrow_requests table
-    // For simplicity, let's assume $conn is your database connection
 
     $borrowerUserId = $idNo;
     $borrowerUsername = $username;
@@ -167,12 +164,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $updateBookStatusSql = "UPDATE books SET book_borrow_status = 'Request Pending' WHERE book_id = '$bookId'";
         mysqli_query($conn, $updateBookStatusSql);
 
+         // Insert into book_log_history table
+        $logAction = "Borrow Request Sent";
+        $logSql = "INSERT INTO book_log_history (borrower_user_id, borrower_username, book_id, book_title, borrow_days, borrow_status, request_date, action_performed, action_performed_by) 
+                VALUES ('$borrowerUserId', '$borrowerUsername', '$bookId', '$bookTitle', '$borrowDays', '$borrowStatus', '$requestDate', '$logAction', '$borrowerUsername')";
+
+        mysqli_query($conn, $logSql);
+
         echo 'Borrow request sent successfully';
     } else {
         echo "Error: ' . $sql . '<br>' . 'mysqli_error($conn)";
     }
 
-    $notificationMessage = "A new borrow request from $borrowerUsername for the book: " . $bookTitle . ", for $borrowDays days was sent.";
+    $notificationMessage = "A new borrow request from user: $borrowerUsername for the book: " . $bookTitle . ", for $borrowDays days, was sent.";
     $readStatus = "UNREAD";
 
     // Query users table to find admins and librarians
@@ -193,20 +197,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "Error: " . $sqlAdminsLibrarians . "<br>" . mysqli_error($conn);
     }
 }
-
-
-    // You can also send a notification to admins or librarians (update notifications table)
-    // This part is just an example, and you may customize it based on your needs
-
-    /*$adminUserId = 2; // Replace with the actual admin user ID
-    $notificationMessage = "New borrow request from $borrowerUsername for $borrowDays days.";
-    $readStatus = "UNREAD";
-
-    $sqlNotification = "INSERT INTO notifications (sender_user_id, receiver_user_id, notification_message, read_status) 
-                        VALUES ('$borrowerUserId', '$adminUserId', '$notificationMessage', '$readStatus')";
-
-    mysqli_query($conn, $sqlNotification);
-}*/
 
 // Close the database connection if needed
 mysqli_close($conn);

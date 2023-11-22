@@ -327,15 +327,14 @@ if ($_SESSION['acctype'] === 'Admin') {
                         while ($notifs = mysqli_fetch_assoc($result)) {
                             echo '<tr>';
                             if ($notifs['read_status']==='UNREAD') {
-                                echo '<td class="indicator" style="width:5%;"><i class="fa-solid fa-circle fa-lg" style="color: #b12525;"></i></td>';
+                                echo '<td class="indicator" style="background-color:#CCD1D1; width:5%;"><i class="fa-solid fa-circle fa-lg" style="color: #b12525;"></i></td>';
                                 echo '<td style="background-color:#CCD1D1; font-weight:800;">' . $notifs['sender_user_id'] . '</td>';
                                 echo '<td style="background-color:#CCD1D1; font-weight:800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 500px;">' 
                                 . $notifs['notification_message'] . '</td>';
                                 echo '<td style="background-color:#CCD1D1; font-weight:800; width:15%;">';
-                                echo '
-                                <a href="/LibMS/users/student/notification/open-notif.php?notif_id=' .$notifs['notif_id']. '">
-                                    <button type="button" class="btn btn-primary btn-sm"><i class="fa-solid fa-turn-down fa-sm"></i> Open</button>
-                                </a>';
+                                echo '<a href="/LibMS/users/admin/notification/open-notif.php?notif_id=' .$notifs['notif_id']. '" onclick="markNotificationAsRead(' . $notifs['notif_id'] . ')" class="btn btn-primary btn-sm">
+                                        <i class="fa-solid fa-turn-down fa-sm"></i> Open
+                                    </a>';
                                 echo '<button type="button" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash-can fa-sm"></i> Delete</button>';
                                 echo '</td>';
                             } else {
@@ -344,10 +343,9 @@ if ($_SESSION['acctype'] === 'Admin') {
                                 echo '<td style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 500px;">' 
                                 . $notifs['notification_message'] . '</td>';
                                 echo '<td style="width:15%;">';
-                                echo '
-                                <a href="/LibMS/users/student/notification/open-notif.php?notif_id=' .$notifs['notif_id']. '">
-                                    <button type="button" class="btn btn-primary btn-sm"><i class="fa-solid fa-turn-down fa-sm"></i> Open</button>
-                                </a>';
+                                echo '<a href="/LibMS/users/admin/notification/open-notif.php?notif_id=' .$notifs['notif_id']. '" onclick="markNotificationAsRead(' . $notifs['notif_id'] . ')" class="btn btn-primary btn-sm" style="margin-right:3px;">
+                                        <i class="fa-solid fa-turn-down fa-sm"></i> Open
+                                    </a>';
                                 echo '<button type="button" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash-can fa-sm"></i> Delete</button>';
                                 echo '</td>';
                             }
@@ -396,6 +394,26 @@ if ($_SESSION['acctype'] === 'Admin') {
         </div>
     </div>
 </div>
+
+<script>
+function markNotificationAsRead(notifId) {
+    // Send an asynchronous request to the server-side script
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "/LibMS/users/admin/notification/open-notif.php?notif_id=" + notifId, true);
+
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            // Handle the response from the server (optional)
+            var response = xhr.responseText;
+            console.log(response);
+
+            // You can add additional logic here if needed
+        }
+    };
+
+    xhr.send();
+}
+</script>
 
 
 </body>

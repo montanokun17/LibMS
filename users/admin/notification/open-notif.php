@@ -38,7 +38,7 @@ $username = "";
 $con_num = "";
 $brgy = "";
 
-if ($_SESSION['acctype'] === 'Student' || 'Guest') {
+if ($_SESSION['acctype'] === 'Admin') {
 
     $idNo = $_SESSION['id_no'];
     $username = $_SESSION['username'];
@@ -72,6 +72,59 @@ if ($_SESSION['acctype'] === 'Student' || 'Guest') {
     }
 }
 
+if (isset($_GET['notif_id'])) {
+    $notifId = $_GET['notif_id'];
+
+    // Use prepared statement to prevent SQL injection
+    $stmt = $conn->prepare("UPDATE notifications SET read_status = 'READ' WHERE notif_id = ?");
+    $stmt->bind_param("i", $notifId); // 'i' represents integer, adjust accordingly if notif_id is of a different type
+
+    // Execute the update
+    if ($stmt->execute()) {
+        // Update successful
+        // echo 'Notification marked as read successfully';
+    } else {
+        // Update failed
+        echo 'Error updating notification: ' . $stmt->error;
+    }
+
+    // Close the statement
+    $stmt->close();
+
+    // Retrieve additional information about the notification
+    $notif_sender = "";
+    $notif_receiver = "";
+    $notif_message = "";
+    $notif_timestamp = "";
+
+    // Use a different variable name for the statement to avoid conflicts
+    $notifStmt = $conn->prepare("SELECT * FROM notifications WHERE notif_id = ?");
+    if ($notifStmt) {
+        $notifStmt->bind_param('i', $notifId);
+        $notifStmt->execute();
+        $notifResult = $notifStmt->get_result();
+
+        if ($notifResult->num_rows === 1) {
+            $row = $notifResult->fetch_assoc();
+
+            $notif_sender = $row['sender_user_id'];
+            $notif_receiver = $row['receiver_user_id'];
+            $notif_message = $row['notification_message'];
+            $notif_timestamp = $row['notif_timestamp'];
+        } else {
+            echo "Notification was not found.";
+        }
+
+        // Close the statement for retrieving additional information
+        $notifStmt->close();
+    } else {
+        echo "Error preparing statement: " . $conn->error;
+    }
+} else {
+    // Handle the case where notif_id is not provided
+    echo 'Invalid request';
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -80,16 +133,16 @@ if ($_SESSION['acctype'] === 'Student' || 'Guest') {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <?php echo '<title>'. $firstname .' '. $lastname .' / Student: Notifications - MyLibro </title>'; ?>
+    <?php echo '<title>'. $firstname .' '. $lastname .' / Admin: Notifications - MyLibro </title>'; ?>
     <!--Link for Tab ICON-->
     <link rel="icon" type="image/x-icon" href="/LibMS/resources/images/logov1.png">
     <!--Link for Bootstrap-->
     <link rel="stylesheet" type="text/css" href="/LibMS/resources/bootstrap/css/bootstrap.min.css"/>
     <script type="text/javascript" src="/LibMS/resources/bootstrap/js/bootstrap.min.js"></script>
     <!--Link for CSS File-->
-    <link rel="stylesheet" type="text/css" href="/LibMS/users/student/notification/css/open-notif.css">
+    <link rel="stylesheet" type="text/css" href="/LibMS/users/admin/notification/css/open-notif.css">
     <!--Link for NAVBAR and SIDEBAR styling-->
-    <link rel="stylesheet" type="text/css" href="/LibMS/users/student/css/navbar-sidebar.css">
+    <link rel="stylesheet" type="text/css" href="/LibMS/users/admin/css/navbar-sidebar.css">
     <!--Link for Font Awesome Icons-->
     <link rel="stylesheet" href="/LibMS/resources/icons/fontawesome-free-6.4.0-web/css/all.css">
     <!--Link for Google Font-->
@@ -287,16 +340,24 @@ if ($_SESSION['acctype'] === 'Student' || 'Guest') {
                 <div class="card-body bg-dark">
                     <div class="col-md-8 mx-auto">
 
-                        <div class="container head-title">
-                            <h3></h3>
+                        <div class="container head-title bg-dark">
+                            <p class="sender-head">From: <?php echo $notif_sender; ?></p>
                         </div>
+                        <br>
 
-                        <div class="container message-body">
-                            <p></p>
+                        <div class="container message-body bg-dark">
+                            <label for="message-box">Notification Content:</label>
+                            <p class="message-box"><?php echo $notif_message; ?></p>
                         </div>
 
                         <div class="action-box">
-                            <buttton></button>
+                            <a href="/LibMS/users/admin/notification/notification.php">
+                                <button class="btn btn-primary btn-sm" style="width:50%; margin-bottom:10px;"><i class="fa fa-solid fa-arrow-left fa-sm"></i> Go Back</button>
+                            </a>
+
+                            <a href="/LibMS/users/admin/requests/issue_return_requests.php">
+                                <button class="btn btn-primary btn-sm" style="width:50%; margin-bottom:10px;"><i class="fa-solid fa-arrow-right-to-bracket fa-sm"></i> Go to Requests Pages</button>
+                            </a>
                         </div>
 
                     </div>

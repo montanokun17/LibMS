@@ -95,6 +95,25 @@ CREATE TABLE borrowed (
     CHECK (borrow_status = 'Approved' )
 );
 
+CREATE TABLE book_log_history (
+    log_id INT PRIMARY KEY AUTO_INCREMENT,
+    borrow_id INT,
+    borrower_user_id INT,
+    borrower_username VARCHAR(255),
+    book_id INT,
+    book_title VARCHAR(255),
+    borrow_days INT,
+    borrow_status ENUM('Pending','Approved','Rejected') NOT NULL,
+    request_date DATE NOT NULL,
+    request_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    action_performed VARCHAR(50) NOT NULL,
+    action_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    action_performed_by VARCHAR(255),
+    FOREIGN KEY (borrow_id) REFERENCES borrow_requests(borrow_id),
+    FOREIGN KEY (borrower_user_id) REFERENCES users(id_no),
+    FOREIGN KEY (book_id) REFERENCES books(book_id)
+);
+
 
 
 /*CREATE TABLE qr_table (

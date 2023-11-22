@@ -169,7 +169,7 @@ if ($_SESSION['acctype'] === 'Student') {
 <!--NAVBAR-->
 
 <!--SIDEBAR-->
-    <div id="sidebar">
+<div id="sidebar">
             <ul>
                 <li></li>
                 <li>
@@ -218,10 +218,10 @@ if ($_SESSION['acctype'] === 'Student') {
                 </li>
 
                 <li>
-                    <a href="#">
+                    <a href="/LibMS/users/student/history/history.php">
                         <i class="fa fa-clock-rotate-left fa-sm"></i>
                         <span class="sidebar-name">
-                            Books Borrow Issuances/Return History
+                            History
                         </span>
                     </a>
                 </li>

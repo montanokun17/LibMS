@@ -292,13 +292,6 @@ if ($_SESSION['acctype'] === 'Student') {
                 <div class="inner-box">
                     <div class="container-fluid">
 
-                        <div class="search-bar">
-                            <form method ="GET">
-                                <input type="text" class="search" placeholder ="Enter Your Query Here...">
-                                <button type="submit" name="search" class="btn btn-primary bg-dark btn-sm"><i class="fa-solid fa-search fa-sm"></i> Search</button>
-                            </form>
-                        </div>
-
                         <?php
                             // Default query to fetch all books
                             $query = "SELECT * FROM borrow_requests ORDER BY borrow_id ASC";
@@ -333,46 +326,34 @@ if ($_SESSION['acctype'] === 'Student') {
                                     echo '<table>';
                                     echo '<thead>';
                                     echo '<tr>';
-                                    echo '<th>Book Name</th>';
-                                    echo '<th>Author</th>';
-                                    echo '<th>Pubisher</th>';
-                                    echo '<th>Year</th>';
-                                    echo '<th>Volume</th>';
-                                    echo '<th>Edition</th>';
-                                    echo '<th>Section</th>';
-                                    echo '<th>Availability</th>';
-                                    echo '<th>Status</th>';
+                                    echo '<th>Borrower User ID</th>';
+                                    echo '<th>Username</th>';
+                                    echo '<th>Book Title</th>';
+                                    echo '<th>Requested Borrow Days</th>';
+                                    echo '<th>Borrow Status</th>';
+                                    echo '<th>Date of Request</th>';
+                                    echo '<th>Time Stamp</th>';
                                     echo '<th style="width:18%;">Action</th>';
                                     echo '</tr>';
                                     echo '</thead>';
                                     echo '<tbody>';
 
-                                    while ($book = mysqli_fetch_assoc($result)) {
+                                    while ($request = mysqli_fetch_assoc($result)) {
                                         echo '<tr>';
-                                        echo '<td>' . $book['book_title'] . '</td>';
-                                        echo '<td>' . $book['author'] . '</td>';
-                                        echo '<td>' . $book['publisher'] . '</td>';
-                                        echo '<td>' . $book['year'] . '</td>';
-                                        echo '<td>' . $book['volume'] . '</td>';
-                                        echo '<td>' . $book['edition'] . '</td>';
-                                        echo '<td>' . $book['section'] . '</td>';
-                                        if($book['book_borrow_status'] === 'Available') {
-                                            echo '<td style="color:green; text-transform:uppercase;"><b>' . $book['book_borrow_status'] . '</b></td>';
-                                        } else {
-                                            echo '<td style="color:#FFBD33; text-transform:uppercase;"><b>' . $book['book_borrow_status'] . '</b></td>';
-                                        }
+                                        echo '<td>' . $request['borrower_user_id'] . '</td>';
+                                        echo '<td>' . $request['borrower_username'] . '</td>';
+                                        echo '<td>' . $request['book_title'] . '</td>';
+                                        echo '<td>' . $request['borrow_days'] . '</td>';
+                                        echo '<td>' . $request['borrow_status'] . '</td>';
+                                        echo '<td>' . $request['request_date'] . '</td>';
+                                        echo '<td>' . $request['request_timestamp'] . '</td>';
+                                        echo '<td>
 
-                                        if ($book['status'] == 'GOOD') {
-                                            echo '<td style="color: green;"><b><i>' . $book['status'] . '</i></b></td>';
-                                        }
-                                        echo '<td>';
-                                        echo '<button type="button" class="btn btn-primary btn-sm"><i class="fa-solid fa-circle-info fa-sm"></i> Details</button>';
-                                        echo '
-                                        <a href="/LibMS/users/student/requests/borrow/borrow.php?book_id=' .$book['book_id']. '">
-                                            <button type="button" class="btn btn-success btn-sm" style="margin-left:5px;"><i class="fa-solid fa-bookmark fa-sm"></i> Borrow</button>
-                                        </a>
-                                            '; //view_entry.php?id={$row['id']} /LibMS/users/student/requests/borrow/borrow.php
-                                        echo '</td>';
+                                            <button class="btn btn-success btn-sm"><i class="fa fa-solid fa-check fa-sm"></i> Accept</button>
+                                            <button class="btn btn-danger btn-sm"><i class="fa fa-solid fa-x fa-sm"></i> Reject</button>
+
+                                        </td>';
+
                                         echo '</tr>';
                                     }
 

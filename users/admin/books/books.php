@@ -488,6 +488,7 @@ if ($_SESSION['acctype'] === 'Admin') {
                         echo '<th>Volume</th>';
                         echo '<th>Edition</th>';
                         echo '<th>Section</th>';
+                        echo '<th>Availability</th>';
                         echo '<th>Status</th>';
                         echo '<th style="width:10%;">Action</th>';
                         echo '</tr>';
@@ -503,6 +504,12 @@ if ($_SESSION['acctype'] === 'Admin') {
                             echo '<td>' . $book['volume'] . '</td>';
                             echo '<td>' . $book['edition'] . '</td>';
                             echo '<td>' . $book['section'] . '</td>';
+                            if($book['book_borrow_status'] === 'Available') {
+                                echo '<td style="color:green; text-transform:uppercase;"><b>' . $book['book_borrow_status'] . '</b></td>';
+                            } else {
+                                echo '<td style="color:#FFBD33; text-transform:uppercase;"><b>' . $book['book_borrow_status'] . '</b></td>';
+                            }
+
                             if ($book['status'] == 'GOOD') {
                                 echo '<td style="color: green;"><b><i>' . $book['status'] . '</i></b></td>';
                             } else if ($book['status'] == 'DAMAGED') {

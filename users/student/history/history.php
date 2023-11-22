@@ -1,10 +1,10 @@
 <?php
 session_start();
 
-$servername = "localhost"; // Replace with your server name if different
-$user_name = "root"; // Replace with your database username
-$Password = ""; // Replace with your database password
-$database = "mylibro"; // Replace with your database name
+$servername = "localhost";
+$user_name = "root";
+$Password = "";
+$database = "mylibro";
 
 // Create a connection
 $conn = new mysqli($servername, $user_name, $Password, $database);
@@ -31,14 +31,13 @@ if (isset($_GET['logout']) && $_GET['logout'] === 'true') {
 $firstname = "";
 $lastname = "";
 $acctype = "";
-$schlvl = "";
 $email = "";
 $idNo = "";
 $username = "";
 $con_num = "";
 $brgy = "";
 
-if ($_SESSION['acctype'] === 'Student' || 'Guest') {
+if ($_SESSION['acctype'] === 'Student') {
 
     $idNo = $_SESSION['id_no'];
     $username = $_SESSION['username'];
@@ -59,7 +58,6 @@ if ($_SESSION['acctype'] === 'Student' || 'Guest') {
         $lastname = $row['lastname'];
         $idNo = $row['id_no'];
         $acctype = $row['acctype'];
-        $schlvl = $row['schlvl'];
         $username = $row['username'];
         $email = $row['email'];
         $con_num = $row['con_num'];
@@ -80,14 +78,20 @@ if ($_SESSION['acctype'] === 'Student' || 'Guest') {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <?php echo '<title>'. $firstname .' '. $lastname .' / Student: Notifications - MyLibro </title>'; ?>
+    <?php echo '<title>'. $firstname .' '. $lastname .' /History - MyLibro </title>'; ?>
     <!--Link for Tab ICON-->
     <link rel="icon" type="image/x-icon" href="/LibMS/resources/images/logov1.png">
     <!--Link for Bootstrap-->
     <link rel="stylesheet" type="text/css" href="/LibMS/resources/bootstrap/css/bootstrap.min.css"/>
     <script type="text/javascript" src="/LibMS/resources/bootstrap/js/bootstrap.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <!--Link for JQuery-->
+    <script type="text/javascript" src="/LibMS/resources/jquery ui/jquery-ui.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/LibMS/resources/jquery ui/jquery-ui.min.css"/>
+    <script type="text/javascript" src="/LibMS/resources/jquery/jquery-3.7.1.min.js"></script>
     <!--Link for CSS File-->
-    <link rel="stylesheet" type="text/css" href="/LibMS/users/student/notification/css/open-notif.css">
+    <link rel="stylesheet" type="text/css" href="/LibMS/users/student/history/css/history.css">
     <!--Link for NAVBAR and SIDEBAR styling-->
     <link rel="stylesheet" type="text/css" href="/LibMS/users/student/css/navbar-sidebar.css">
     <!--Link for Font Awesome Icons-->
@@ -242,24 +246,111 @@ if ($_SESSION['acctype'] === 'Student' || 'Guest') {
     </div>
 <!--SIDEBAR-->
 
-<div class="main-box">
-    <div class="container">
-        <div class="row">
-            <div class="box-1 col-12">
-                <div class="card-body bg-dark">
-                    <div class="col-md-8 mx-auto">
+<div class="table-box">
+    <div class="container col-12 col-md-10">
+        <div class="container">
+            <div class="row">
+                <div class="books-box">
+                    <div class="container-fluid">
 
-                        <div class="container head-title">
-                            <h3></h3>
-                        </div>
+                        <?php
 
-                        <div class="container message-body">
-                            <p></p>
-                        </div>
+                        $query = "SELECT * FROM book_log_history WHERE borrower_user_id = $idNo  ORDER BY log_id DESC";
 
-                        <div class="action-box">
-                            <buttton></button>
-                        </div>
+                        function getHistoryByPagination($conn, $query, $offset, $limit) {
+                        $query .= " LIMIT $limit OFFSET $offset"; // Append the LIMIT and OFFSET to the query for pagination
+                        $result = mysqli_query($conn, $query);
+
+                        return $result;
+                        }
+
+                        $totalHistoryQuery = "SELECT COUNT(*) as total FROM book_log_history";
+                        $totalHistoryResult = mysqli_query($conn, $totalHistoryQuery);
+                        $totalHistory = mysqli_fetch_assoc($totalHistoryResult)['total'];
+
+
+                        // Number of books to display per page
+                        $limit = 7;
+
+                        // Get the current page number from the query parameter
+                        $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
+
+                        // Calculate the offset for the current page
+                        $offset = ($page - 1) * $limit;
+
+                        // Get the books for the current page
+                        $result = getHistoryByPagination($conn, $query, $offset, $limit);
+
+                        // Check if the query executed successfully
+                        if ($result && mysqli_num_rows($result) > 0) {
+                            echo '<div id="notifs-list-container">';
+                            echo '<table id="dataTable">';
+                            echo '<thead>';
+                            echo '<tr>';
+                            echo '<th>User ID</th>';
+                            echo '<th>Username</th>';
+                            echo '<th>Book Title</th>';
+                            echo '<th>Borrow Days</th>';
+                            echo '<th>Availability Status</th>';
+                            echo '<th>Request Date</th>';
+                            echo '<th>Action Performed</th>';
+                            echo '<th>Action Performed By</th>';
+                            echo '<th>Timestamp</th>';
+                            //echo '<th style="width:18%;">Action</th>';
+                            echo '</tr>';
+                            echo '</thead>';
+                            echo '<tbody>';
+
+                            while ($history = mysqli_fetch_assoc($result)) {
+                                echo '<tr>';
+                                echo '<td>' . $history['borrower_user_id'] . '</td>';
+                                echo '<td>' . $history['borrower_username'] . '</td>';
+                                echo '<td>' . $history['book_title'] . '</td>';
+                                echo '<td>' . $history['borrow_days'] . '</td>';
+                                echo '<td>' . $history['borrow_status'] . '</td>';
+                                echo '<td>' . $history['request_date'] . '</td>';
+                                echo '<td>' . $history['action_performed'] . '</td>';
+                                echo '<td>' . $history['action_performed_by'] . '</td>';
+                                echo '<td>' . $history['action_timestamp'] . '</td>';
+                                echo '</tr>';
+                            }
+
+                            echo '</tbody>';
+                            echo '</table>';
+
+
+                            // Calculate the total number of pages
+                            $totalPages = ceil($totalHistory / $limit);
+                            if ($totalPages > 1) {
+                                echo '
+                                <div class="pagination-buttons" style="margin-top: 10px;
+                                margin-left: 70px;
+                                ">
+                                    ';
+
+                                if ($page > 1) {
+                                    echo '<a href="?page='.($page - 1).'" class="btn btn-primary btn-sm" id="previous" style="padding: 10px; width:10%;"><i class="fa-solid fa-angle-left"></i>'.($page - 1).' Previous</a>';
+                                }
+
+                                if ($page < $totalPages) {
+                                    echo '<a href="?page='.($page + 1).'" class="btn btn-primary btn-sm" id="next" style="padding: 10px; width:10%; margin-left:5px;"> '.($page + 1).' Next <i class="fa-solid fa-angle-right"></i></a>';
+                                }
+
+                                echo '
+                                </div>
+                                ';
+                            }
+
+                        } else {
+                            echo "<tr><td colspan='10'><p class='container' style='margin-left:90px; margin-top:50px; font-size: 20px; font-weight:700;'>Unavailable. History is Empty.</p></td></tr>";
+                        }
+
+
+                        // Close the database connection
+                        mysqli_close($conn);
+
+
+                        ?>
 
                     </div>
                 </div>
