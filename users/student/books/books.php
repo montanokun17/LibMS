@@ -130,8 +130,36 @@ if ($_SESSION['acctype'] === 'Student') {
       <ul class="navbar-nav">
         <li class="nav-item">
           <a class="nav-link" href="#">
-            <img src="/LibMS/resources/images/user.png" 
-            width="40" height="40" style="border:1px solid #000000;" class="rounded-circle">
+            <?php
+                    if (isset($_SESSION['id_no']) && isset($_SESSION['username'])) {
+                        $idNo = $_SESSION['id_no'];
+                        $username = $_SESSION['username'];
+                                                    
+                        // Query to retrieve the necessary columns from the database
+                        $UserPicPath = "SELECT user_pic_data, user_pic_type FROM user_pics WHERE user_id = ? AND username = ?";
+                        $statement = $conn->prepare($UserPicPath);
+                        $statement->bind_param("is", $idNo, $username);
+                                                    
+                            if ($statement->execute()) {
+                                $result = $statement->get_result();
+                                                    
+                                if ($row = $result->fetch_assoc()) {
+
+                                    echo '<div class="container col-sm-6 center">';
+                                    // Use the "width" and "height" attributes to resize the image
+                                    echo '<img src="data:image/png;base64,' . base64_encode($row["user_pic_data"]) . '" width="40" height="40" class="rounded-circle"/>';
+                                    echo '</div>';
+                                } else {
+                                    // If not found in the database, display the default image
+                                    echo '<img src="/LibMS/resources/images/user.png" width=40" height="40" class="rounded-circle" style="margin-top: 10px; margin-bottom: 10px;">';
+                                }
+                            } else {
+                                // Error in executing the SQL query
+                                echo '<img src="/LibMS/resources/images/user.png" width="200" height="200" class="rounded-circle" style="margin-top: 10px; margin-bottom: 10px;">';
+                                                        }
+                        }
+                                                        
+                ?>
           </a>
         </li>
       </ul>
@@ -141,7 +169,7 @@ if ($_SESSION['acctype'] === 'Student') {
 <!--NAVBAR-->
 
 <!--SIDEBAR-->
-<div id="sidebar">
+    <div id="sidebar">
             <ul>
                 <li></li>
                 <li>
@@ -154,7 +182,7 @@ if ($_SESSION['acctype'] === 'Student') {
                 </li>
 
                 <li>
-                    <a href="#">
+                    <a href="/LibMS/users/student/profile/user_settings.php">
                         <i class="fa fa-cogs fa-sm"></i>
                         <span class="sidebar-name">
                             User Options
@@ -184,7 +212,7 @@ if ($_SESSION['acctype'] === 'Student') {
                     <a href="#">
                         <i class="fa fa-bookmark fa-sm"></i>
                         <span class="sidebar-name">
-                            Pending Book Requests
+                            Pending Borrow Requests
                         </span>
                     </a>
                 </li>
@@ -193,13 +221,13 @@ if ($_SESSION['acctype'] === 'Student') {
                     <a href="#">
                         <i class="fa fa-clock-rotate-left fa-sm"></i>
                         <span class="sidebar-name">
-                            Books' Issuance/Return History
+                            Books Borrow Issuances/Return History
                         </span>
                     </a>
                 </li>
 
                 <li>
-                    <a href="#">
+                    <a href="/LibMS/users/student/notification/notification.php">
                         <i class="fa fa-bell fa-sm"></i>
                         <span class="sidebar-name">
                             Notifications

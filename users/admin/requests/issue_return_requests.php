@@ -234,6 +234,15 @@ if ($_SESSION['acctype'] === 'Student') {
                 </li>
 
                 <li>
+                    <a href="/LibMS/users/admin/notification/notification.php">
+                        <i class="fa fa-bell fa-sm"></i>
+                        <span class="sidebar-name">
+                            Notifications
+                        </span>
+                    </a>
+                </li>
+
+                <li>
                     <a href="/LibMS/users/admin/requests/issue_return_requests.php">
                         <i class="fa fa-bars fa-sm"></i>
                         <span class="sidebar-name">

@@ -291,7 +291,8 @@ if ($_SESSION['acctype'] === 'Admin') {
                             width="75" height="75" class="Idlogo">
 
                         <?php
-                    if (isset($_SESSION['id_no']) && isset($_SESSION['username'])) {
+                        
+                        if (isset($_SESSION['id_no']) && isset($_SESSION['username'])) {
                         $idNo = $_SESSION['id_no'];
                         $username = $_SESSION['username'];
                                                     
@@ -317,7 +318,7 @@ if ($_SESSION['acctype'] === 'Admin') {
                                                         }
                         }
                                                     
-            ?>
+                        ?>
                             
                     </div>
                     <!-- User's Details -->

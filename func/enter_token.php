@@ -17,6 +17,7 @@ if ($conn->connect_error) {
 
 $fetchEmail = "";
 $alert="";
+$userEmail="";
 
 $data = $_SESSION['data'];
 $fetchEmail = $data['email'];
@@ -29,10 +30,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Retrieve the user's email address
     // Replace $email, $firstname, $lastname with the actual variables containing the email and user details
-    $userEmail = $email;
+    //$userEmail = $email;
+    $fetchEmail = $userEmail;
 
     // Retrieve the saved token PIN and timestamp from the database
-    // Here, assume you have columns named 'token_pin' and 'pin_timestamp' in the 'users' table
+    // Assume you have columns named 'token_pin' and 'pin_timestamp' in the 'users' table
     $stmt = $conn->prepare("SELECT token_pin, pin_timestamp FROM users WHERE email = ?");
     $stmt->bind_param("s", $userEmail);
     $stmt->execute();
@@ -49,18 +51,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($currentTime <= $tokenExpirationTime) {
             // PIN is correct and within the allowed timeframe
             // Redirect the user to the designated page
-            header("Location: /LibMSv1/func/change_pass.php");
+            header("Location: /LibMS/func/change_password.php");
             exit();
         } else {
             // PIN is correct but has expired
-            //echo "<p style='padding:5px; border: 1px, solid, yellow'>The PIN has expired. Please request a new PIN.</p>";
             $alert = '<p class="alert-box" style="padding:10px; border:2px solid red; border-radius:10px; width:100%; font-size:12px;">
-                  <i class="fa-solid fa-triangle-exclamation fa-md" style="color:#F1C232;"></i> The PIN has expired. Please request a new PIN.
-                  </p>';
+                      <i class="fa-solid fa-triangle-exclamation fa-md" style="color:#F1C232;"></i> The PIN has expired. Please request a new PIN.
+                      </p>';
         }
     } else {
         // PIN is incorrect
-        //echo "<p style='padding:5px; border: 1px, solid, red'>Invalid PIN. Please try again.</p>";
         $alert = '<p class="alert-box" style="padding:10px; border:2px solid red; border-radius:10px; width:100%; font-size:12px;">
                   <i class="fa-solid fa-x fa-md" style="color:red;"></i> Invalid PIN. Please try again.
                   </p>';
@@ -111,7 +111,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                                 <h2>Email Token PIN</h2>
                                 <br>
-                                <label for="email-input">Enter Token PIN Sent on the Email:</label>
+                                <label for="pin">Enter Token PIN Sent on the Email:</label>
                                     <div class="form-group">
                                         <input type="text" name="pin" id="pin" required="">
                                     </div>
@@ -136,7 +136,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <?php
 
-     //PHPMailer library
+     /*//PHPMailer library
      require 'D:/xampp/htdocs/LibMSv1/resources/mail/phpmailer/PHPMailerAutoload.php';
 
      // Generate random 6-digit token PIN
@@ -215,6 +215,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
          $alert = '<p class="alert-box" style="padding:10px; border:2px solid red; border-radius:10px; width:100%; font-size:12px;">
                    Error Sending Email. ' .$mail->ErrorInfo . '
                   </p>';
-     }
+     }*/
 
 ?>

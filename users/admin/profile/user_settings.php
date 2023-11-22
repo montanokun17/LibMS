@@ -121,7 +121,7 @@ if ($_SESSION['acctype'] === 'Admin') {
         <li class="nav-item">
           <a class="nav-link" href="#">
 
-            <?php
+          <?php
                 if (isset($_SESSION['id_no']) && isset($_SESSION['username'])) {
                     $idNo = $_SESSION['id_no'];
                     $username = $_SESSION['username'];
@@ -135,10 +135,7 @@ if ($_SESSION['acctype'] === 'Admin') {
                             $result = $statement->get_result();
                                                 
                             if ($row = $result->fetch_assoc()) {
-                                // Define the desired width and height for the image
-                                $width = 200; // Set your desired width
-                                $height = 200; // Set your desired height
-                                                
+
                                 echo '<div class="container col-sm-6 center">';
                                 // Use the "width" and "height" attributes to resize the image
                                 echo '<img src="data:image/png;base64,' . base64_encode($row["user_pic_data"]) . '" width="40" height="40" class="rounded-circle"/>';
@@ -231,7 +228,16 @@ if ($_SESSION['acctype'] === 'Admin') {
                 </li>
 
                 <li>
-                    <a href="#">
+                    <a href="/LibMS/users/admin/notification/notification.php">
+                        <i class="fa fa-bell fa-sm"></i>
+                        <span class="sidebar-name">
+                            Notifications
+                        </span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="/LibMS/users/admin/requests/issue_return_requests.php">
                         <i class="fa fa-bars fa-sm"></i>
                         <span class="sidebar-name">
                             Issue/Return Requests
@@ -243,7 +249,7 @@ if ($_SESSION['acctype'] === 'Admin') {
                     <a href="#">
                         <i class="fa fa-book fa-sm"></i>
                         <span class="sidebar-name">
-                            Issued/Returned Books Log
+                            Issued Request/Returned Books Log
                         </span>
                     </a>
                 </li>
