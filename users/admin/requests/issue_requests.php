@@ -1,10 +1,10 @@
 <?php
 session_start();
 
-$servername = "localhost"; // Replace with your server name if different
-$user_name = "root"; // Replace with your database username
-$Password = ""; // Replace with your database password
-$database = "mylibro"; // Replace with your database name
+$servername = "localhost";
+$user_name = "root";
+$Password = "";
+$database = "mylibro";
 
 // Create a connection
 $conn = new mysqli($servername, $user_name, $Password, $database);
@@ -78,14 +78,20 @@ if ($_SESSION['acctype'] === 'Admin') {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <?php echo '<title>'. $firstname .' '. $lastname .' /Admin: Notifications - MyLibro </title>'; ?>
+    <?php echo '<title>'. $firstname .' '. $lastname .' / Issue Requests - MyLibro </title>'; ?>
     <!--Link for Tab ICON-->
     <link rel="icon" type="image/x-icon" href="/LibMS/resources/images/logov1.png">
     <!--Link for Bootstrap-->
     <link rel="stylesheet" type="text/css" href="/LibMS/resources/bootstrap/css/bootstrap.min.css"/>
     <script type="text/javascript" src="/LibMS/resources/bootstrap/js/bootstrap.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <!--Link for JQuery-->
+    <script type="text/javascript" src="/LibMS/resources/jquery ui/jquery-ui.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/LibMS/resources/jquery ui/jquery-ui.min.css"/>
+    <script type="text/javascript" src="/LibMS/resources/jquery/jquery-3.7.1.min.js"></script>
     <!--Link for CSS File-->
-    <link rel="stylesheet" type="text/css" href="/LibMS/users/admin/notification/css/notification.css">
+    <link rel="stylesheet" type="text/css" href="/LibMS/users/admin/requests/css/issue_requests.css">
     <!--Link for NAVBAR and SIDEBAR styling-->
     <link rel="stylesheet" type="text/css" href="/LibMS/users/admin/css/navbar-sidebar.css">
     <!--Link for Font Awesome Icons-->
@@ -107,7 +113,19 @@ if ($_SESSION['acctype'] === 'Admin') {
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="#"><i class="fa-solid fa-cogs fa-xs"></i> Homepage Settings</a>
+          <a class="nav-link" aria-current="page" href="#"><i class="fa-solid fa-cogs fa-xs"></i> Page Banner Settings</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" aria-current="page" href="/LibMS/users/admin/requests/issue_requests.php"><i class="fa-solid fa-bookmark fa-xs"></i> Issue Requests</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" aria-current="page" href="/LibMS/users/admin/requests/return_requests.php"><i class="fa-solid fa-rotate-left fa-xs"></i> Return Requests</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" aria-current="page" href="/LibMS/users/admin/requests/renew_requests.php"><i class="fa-solid fa-clock-rotate-left fa-xs"></i> Renewal Requests</a>
         </li>
       </ul>
 
@@ -283,138 +301,122 @@ if ($_SESSION['acctype'] === 'Admin') {
     <div class="container col-12 col-md-10">
         <div class="container">
             <div class="row">
-                <div class="books-box">
+                <div class="inner-box">
                     <div class="container-fluid">
 
-                    <?php
+                        <?php
+                            // Default query to fetch all books
+                            $query = "SELECT * FROM borrow_requests ORDER BY borrow_id ASC";
 
-                    $query = "SELECT * FROM notifications WHERE receiver_user_id = $idNo ORDER BY notif_id DESC";
-                    
-                    function getNotifsByPagination($conn, $query, $offset, $limit) {
-                    $query .= " LIMIT $limit OFFSET $offset"; // Append the LIMIT and OFFSET to the query for pagination
-                    $result = mysqli_query($conn, $query);
-                    
-                    return $result;
-                    }
-                    
-                    $totalNotifsQuery = "SELECT COUNT(*) as total FROM notifications";
-                    $totalNotifsResult = mysqli_query($conn, $totalNotifsQuery);
-                    $totalNotifs = mysqli_fetch_assoc($totalNotifsResult)['total'];
-                    
-                    
-                    // Number of books to display per page
-                    $limit = 7;
-                    
-                    // Get the current page number from the query parameter
-                    $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
-                    
-                    // Calculate the offset for the current page
-                    $offset = ($page - 1) * $limit;
-                    
-                    // Get the books for the current page
-                    $result = getNotifsByPagination($conn, $query, $offset, $limit);
-                    
-                    // Check if the query executed successfully
-                    if ($result && mysqli_num_rows($result) > 0) {
-                        echo '<div id="notifs-list-container">';
-                        echo '<table id="dataTable">';
-                        echo '<thead>';
-                        echo '<tr>';
-                        echo '</tr>';
-                        echo '</thead>';
-                        echo '<tbody>';
-                    
-                        while ($notifs = mysqli_fetch_assoc($result)) {
-                            echo '<tr>';
-                            if ($notifs['read_status']==='UNREAD') {
-                                echo '<td class="indicator" style="background-color:#CCD1D1; width:5%;"><i class="fa-solid fa-circle fa-lg" style="color: #b12525;"></i></td>';
-                                echo '<td style="background-color:#CCD1D1; font-weight:800;">' . $notifs['sender_user_id'] . '</td>';
-                                echo '<td style="background-color:#CCD1D1; font-weight:800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 500px;">' 
-                                . $notifs['notification_message'] . '</td>';
-                                echo '<td style="background-color:#CCD1D1; font-weight:800; width:15%;">';
-                                echo '<a href="/LibMS/users/admin/notification/open-notif.php?notif_id=' .$notifs['notif_id']. '" onclick="markNotificationAsRead(' . $notifs['notif_id'] . ')" class="btn btn-primary btn-sm">
-                                        <i class="fa-solid fa-turn-down fa-sm"></i> Open
-                                    </a>';
-                                echo '<button type="button" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash-can fa-sm"></i> Delete</button>';
-                                echo '</td>';
-                            } else {
-                                echo '<td class="indicator" style="width:5%;"></td>';
-                                echo '<td style="">' . $notifs['sender_user_id'] . '</td>';
-                                echo '<td style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 500px;">' 
-                                . $notifs['notification_message'] . '</td>';
-                                echo '<td style="width:15%;">';
-                                echo '<a href="/LibMS/users/admin/notification/open-notif.php?notif_id=' .$notifs['notif_id']. '" onclick="markNotificationAsRead(' . $notifs['notif_id'] . ')" class="btn btn-primary btn-sm" style="margin-right:3px;">
-                                        <i class="fa-solid fa-turn-down fa-sm"></i> Open
-                                    </a>';
-                                echo '<button type="button" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash-can fa-sm"></i> Delete</button>';
-                                echo '</td>';
+                            function getRequestsByPagination($conn, $query, $offset, $limit) {
+                                $query .= " LIMIT $limit OFFSET $offset"; // Append the LIMIT and OFFSET to the query for pagination
+                                $result = mysqli_query($conn, $query);
+            
+                                return $result;
                             }
-                            echo '</tr>';
-                        }
-                    
-                        echo '</tbody>';
-                        echo '</table>';
-                    
-                    
-                        // Calculate the total number of pages
-                        $totalPages = ceil($totalNotifs / $limit);
-                        if ($totalPages > 1) {
-                            echo '
-                            <div class="pagination-buttons" style="margin-top: 10px;
-                            margin-left: 70px;
-                            ">
-                                ';
-                    
-                            if ($page > 1) {
-                                echo '<a href="?page='.($page - 1).'" class="btn btn-primary btn-sm" id="previous" style="padding: 10px; width:10%;"><i class="fa-solid fa-angle-left"></i>'.($page - 1).' Previous</a>';
-                            }
-                    
-                            if ($page < $totalPages) {
-                                echo '<a href="?page='.($page + 1).'" class="btn btn-primary btn-sm" id="next" style="padding: 10px; width:10%; margin-left:5px;"> '.($page + 1).' Next <i class="fa-solid fa-angle-right"></i></a>';
-                            }
-                    
-                            echo '
-                            </div>
-                            ';
-                        }
-                    
-                    } else {
-                        echo "<tr><td colspan='10'><p class='container' style='margin-left:90px; margin-top:50px; font-size: 20px; font-weight:700;'>There Are No Notifications.</p></td></tr>";
-                    }
-                    
-                    
-                // Close the database connection
-                mysqli_close($conn);
-                    
-                    
-                ?>
+            
+                            $totalRequestsQuery = "SELECT COUNT(*) as total FROM borrow_requests";
+                            $totalRequestsResult = mysqli_query($conn, $totalRequestsQuery);
+                            $totalRequests = mysqli_fetch_assoc($totalRequestsResult)['total'];
+            
+            
+                            // Number of books to display per page
+                            $limit = 7;
+
+                            // Get the current page number from the query parameter
+                            $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
+
+                            // Calculate the offset for the current page
+                            $offset = ($page - 1) * $limit;
+
+                            // Get the books for the current page
+                            $result = getRequestsByPagination($conn, $query, $offset, $limit);
+
+                                // Check if the query executed successfully
+                                if ($result && mysqli_num_rows($result) > 0) {
+                                    echo '<div class="container">';
+                                    echo '<table>';
+                                    echo '<thead>';
+                                    echo '<tr>';
+                                    echo '<th>Borrower User ID</th>';
+                                    echo '<th>Username</th>';
+                                    echo '<th>Book Title</th>';
+                                    echo '<th>Requested Borrow Days</th>';
+                                    echo '<th>Borrow Status</th>';
+                                    echo '<th>Date of Request</th>';
+                                    echo '<th>Time Stamp</th>';
+                                    echo '<th style="width:18%;">Action</th>';
+                                    echo '</tr>';
+                                    echo '</thead>';
+                                    echo '<tbody>';
+
+                                    while ($request = mysqli_fetch_assoc($result)) {
+                                        echo '<tr>';
+                                        echo '<td>' . $request['borrower_user_id'] . '</td>';
+                                        echo '<td>' . $request['borrower_username'] . '</td>';
+                                        echo '<td>' . $request['book_title'] . '</td>';
+                                        echo '<td>' . $request['borrow_days'] . '</td>';
+                                        echo '<td>' . $request['borrow_status'] . '</td>';
+                                        echo '<td>' . $request['request_date'] . '</td>';
+                                        echo '<td>' . $request['request_timestamp'] . '</td>';
+                                        echo '<td>
+
+                                            <a href="/LibMS/users/admin/requests/accept_request.php?borrow_id=' .$request['borrow_id']. '">
+                                                <button class="btn btn-success btn-sm"><i class="fa fa-solid fa-check fa-sm"></i> Accept</button>
+                                            </a>
+
+                                            <a href="#">
+                                                <button class="btn btn-danger btn-sm"><i class="fa fa-solid fa-x fa-sm"></i> Reject</button>
+                                            </a>
+
+                                        </td>';
+
+                                        echo '</tr>';
+                                    }
+
+                                    echo '</tbody>';
+                                    echo '</table>';
+
+
+                                    // Calculate the total number of pages
+                                    $totalPages = ceil($totalRequests / $limit);
+                                    if ($totalPages > 1) {
+                                        echo '
+                                        <div class="pagination-buttons" style="margin-top: 10px;
+                                        margin-left: 70px;
+                                        ">
+                                            ';
+                                
+                                        if ($page > 1) {
+                                            echo '<a href="?page='.($page - 1).'" class="btn btn-primary btn-sm" id="previous" style="padding: 10px; width:10%;"><i class="fa-solid fa-angle-left"></i>'.($page - 1).' Previous</a>';
+                                        }
+                                
+                                        if ($page < $totalPages) {
+                                            echo '<a href="?page='.($page + 1).'" class="btn btn-primary btn-sm" id="next" style="padding: 10px; width:10%; margin-left:5px;"> '.($page + 1).' Next <i class="fa-solid fa-angle-right"></i></a>';
+                                        }
+                                
+                                        echo '
+                                        </div>
+                                        ';
+                                    }
+
+                                } else {
+                                    echo "<tr><td colspan='10'><p class='container' style='margin-left:90px; margin-top:50px; font-size: 20px; font-weight:700;'>No Requests Found.</p></td></tr>";
+                                }
+
+
+                                // Close the database connection
+                                mysqli_close($conn);
+
+
+                        ?>
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-<script>
-function markNotificationAsRead(notifId) {
-    // Send an asynchronous request to the server-side script
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", "/LibMS/users/admin/notification/open-notif.php?notif_id=" + notifId, true);
-
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            // Handle the response from the server (optional)
-            var response = xhr.responseText;
-            console.log(response);
-
-            // You can add additional logic here if needed
-        }
-    };
-
-    xhr.send();
-}
-</script>
-
 
 </body>
 </html>

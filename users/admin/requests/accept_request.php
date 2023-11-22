@@ -1,4 +1,5 @@
 <?php
+
 session_start();
 
 $servername = "localhost";
@@ -37,7 +38,7 @@ $username = "";
 $con_num = "";
 $brgy = "";
 
-if ($_SESSION['acctype'] === 'Student') {
+if ($_SESSION['acctype'] === 'Admin') {
 
     $idNo = $_SESSION['id_no'];
     $username = $_SESSION['username'];
@@ -70,6 +71,57 @@ if ($_SESSION['acctype'] === 'Student') {
     }
 }
 
+$borrower_user_id = "";
+$borrower_username = "";
+$book_id = "";
+$book_title = "";
+$borrow_days = "";
+$borrow_status = "";
+$request_date = "";
+$request_timestamp = "";
+
+if (isset($_GET['borrow_id'])) {
+        $borrow_id = $_GET['borrow_id'];
+
+        $borrowQuery = "SELECT * FROM borrow_requests WHERE borrow_id = ?";
+        $borrowStmt = $conn->prepare($borrowQuery);
+
+        if (is_numeric($borrow_id)) {
+            $borrowStmt->bind_param('i', $borrow_id);
+            $borrowStmt->execute();
+            $borrowResult = $borrowStmt->get_result();
+
+            if($borrowResult->num_rows === 1) {
+                $row = $borrowResult->fetch_assoc();
+
+                $borrower_user_id = $row['borrower_user_id'];
+                $borrower_username = $row['borrower_username'];
+                $book_id = $row['book_id'];
+                $book_title = $row['book_title'];
+                $borrow_days = $row['borrow_days'];
+                $borrow_status = $row['borrow_status'];
+                $request_date = $row['request_date'];
+                $request_timestamp = $row['request_timestamp'];
+            } else {
+                echo "<script>alert('Request Not Found');</script>";
+            }
+        } else {
+            echo "<script>alert('Invalid Borrow ID');</script>";
+        }
+    } else {
+        echo "<script>alert('Borrow ID Not Set');</script>";
+    }
+
+
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $pickup_date = $_POST['pickup-date'];
+
+    $approveQuery = "INSERT INTO borrowed (borrower_user_id, borrower_username, book_id, book_title, borrow_days, borrow_status, )";
+
+} 
+
+
 ?>
 
 <!DOCTYPE html>
@@ -78,20 +130,14 @@ if ($_SESSION['acctype'] === 'Student') {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <?php echo '<title>'. $firstname .' '. $lastname .' /Books - MyLibro </title>'; ?>
+    <?php echo '<title>'. $firstname .' '. $lastname .' / Accept Request - MyLibro </title>'; ?>
     <!--Link for Tab ICON-->
     <link rel="icon" type="image/x-icon" href="/LibMS/resources/images/logov1.png">
     <!--Link for Bootstrap-->
     <link rel="stylesheet" type="text/css" href="/LibMS/resources/bootstrap/css/bootstrap.min.css"/>
     <script type="text/javascript" src="/LibMS/resources/bootstrap/js/bootstrap.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-    <!--Link for JQuery-->
-    <script type="text/javascript" src="/LibMS/resources/jquery ui/jquery-ui.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="/LibMS/resources/jquery ui/jquery-ui.min.css"/>
-    <script type="text/javascript" src="/LibMS/resources/jquery/jquery-3.7.1.min.js"></script>
     <!--Link for CSS File-->
-    <link rel="stylesheet" type="text/css" href="/LibMS/users/admin/requests/css/issue_return_requests.css">
+    <link rel="stylesheet" type="text/css" href="/LibMS/users/admin/requests/css/accept_request.css">
     <!--Link for NAVBAR and SIDEBAR styling-->
     <link rel="stylesheet" type="text/css" href="/LibMS/users/admin/css/navbar-sidebar.css">
     <!--Link for Font Awesome Icons-->
@@ -167,14 +213,14 @@ if ($_SESSION['acctype'] === 'Student') {
 <!--NAVBAR-->
 
 <!--SIDEBAR-->
-    <div id="sidebar">
+<div id="sidebar">
             <ul>
                 <li></li>
                 <li>
                     <a href="/LibMS/users/admin/index.php">
-                        <i class="fa fa-user fa-sm"></i>
+                        <i class="fa fa-house fa-sm"></i>
                         <span class="sidebar-name">
-                            Dashboard
+                            Home
                         </span>
                     </a>
                 </li>
@@ -243,10 +289,10 @@ if ($_SESSION['acctype'] === 'Student') {
                 </li>
 
                 <li>
-                    <a href="/LibMS/users/admin/requests/issue_return_requests.php">
-                        <i class="fa fa-bars fa-sm"></i>
+                    <a href="/LibMS/users/admin/requests/issue_requests.php">
+                        <i class="fa fa-bookmark fa-sm"></i>
                         <span class="sidebar-name">
-                            Issue/Return Requests
+                            Issue Requests
                         </span>
                     </a>
                 </li>
@@ -255,7 +301,7 @@ if ($_SESSION['acctype'] === 'Student') {
                     <a href="#">
                         <i class="fa fa-book fa-sm"></i>
                         <span class="sidebar-name">
-                            Issued Request/Returned Books Log
+                            Books Log
                         </span>
                     </a>
                 </li>
@@ -284,115 +330,35 @@ if ($_SESSION['acctype'] === 'Student') {
     </div>
 <!--SIDEBAR-->
 
+<div class="main-box">
+    <div class="container">
+        <div class="row">
+            <div class="box-1 col-12">
+                <div class="card-body bg-dark">
+                    <div class="col-md-8 mx-auto">
 
-<div class="table-box">
-    <div class="container col-12 col-md-10">
-        <div class="container">
-            <div class="row">
-                <div class="inner-box">
-                    <div class="container-fluid">
+                        <form method="POST">
 
-                        <?php
-                            // Default query to fetch all books
-                            $query = "SELECT * FROM borrow_requests ORDER BY borrow_id ASC";
-
-                            function getRequestsByPagination($conn, $query, $offset, $limit) {
-                                $query .= " LIMIT $limit OFFSET $offset"; // Append the LIMIT and OFFSET to the query for pagination
-                                $result = mysqli_query($conn, $query);
-            
-                                return $result;
-                            }
-            
-                            $totalRequestsQuery = "SELECT COUNT(*) as total FROM borrow_requests";
-                            $totalRequestsResult = mysqli_query($conn, $totalRequestsQuery);
-                            $totalRequests = mysqli_fetch_assoc($totalRequestsResult)['total'];
-            
-            
-                            // Number of books to display per page
-                            $limit = 7;
-
-                            // Get the current page number from the query parameter
-                            $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
-
-                            // Calculate the offset for the current page
-                            $offset = ($page - 1) * $limit;
-
-                            // Get the books for the current page
-                            $result = getRequestsByPagination($conn, $query, $offset, $limit);
-
-                                // Check if the query executed successfully
-                                if ($result && mysqli_num_rows($result) > 0) {
-                                    echo '<div class="container">';
-                                    echo '<table>';
-                                    echo '<thead>';
-                                    echo '<tr>';
-                                    echo '<th>Borrower User ID</th>';
-                                    echo '<th>Username</th>';
-                                    echo '<th>Book Title</th>';
-                                    echo '<th>Requested Borrow Days</th>';
-                                    echo '<th>Borrow Status</th>';
-                                    echo '<th>Date of Request</th>';
-                                    echo '<th>Time Stamp</th>';
-                                    echo '<th style="width:18%;">Action</th>';
-                                    echo '</tr>';
-                                    echo '</thead>';
-                                    echo '<tbody>';
-
-                                    while ($request = mysqli_fetch_assoc($result)) {
-                                        echo '<tr>';
-                                        echo '<td>' . $request['borrower_user_id'] . '</td>';
-                                        echo '<td>' . $request['borrower_username'] . '</td>';
-                                        echo '<td>' . $request['book_title'] . '</td>';
-                                        echo '<td>' . $request['borrow_days'] . '</td>';
-                                        echo '<td>' . $request['borrow_status'] . '</td>';
-                                        echo '<td>' . $request['request_date'] . '</td>';
-                                        echo '<td>' . $request['request_timestamp'] . '</td>';
-                                        echo '<td>
-
-                                            <button class="btn btn-success btn-sm"><i class="fa fa-solid fa-check fa-sm"></i> Accept</button>
-                                            <button class="btn btn-danger btn-sm"><i class="fa fa-solid fa-x fa-sm"></i> Reject</button>
-
-                                        </td>';
-
-                                        echo '</tr>';
-                                    }
-
-                                    echo '</tbody>';
-                                    echo '</table>';
+                            <div class="form-group">
+                                    <h3>Designate a Pick up Date for the Borrowed Book of the Student:</h3>
+                            </div>
 
 
-                                    // Calculate the total number of pages
-                                    $totalPages = ceil($totalRequests / $limit);
-                                    if ($totalPages > 1) {
-                                        echo '
-                                        <div class="pagination-buttons" style="margin-top: 10px;
-                                        margin-left: 70px;
-                                        ">
-                                            ';
-                                
-                                        if ($page > 1) {
-                                            echo '<a href="?page='.($page - 1).'" class="btn btn-primary btn-sm" id="previous" style="padding: 10px; width:10%;"><i class="fa-solid fa-angle-left"></i>'.($page - 1).' Previous</a>';
-                                        }
-                                
-                                        if ($page < $totalPages) {
-                                            echo '<a href="?page='.($page + 1).'" class="btn btn-primary btn-sm" id="next" style="padding: 10px; width:10%; margin-left:5px;"> '.($page + 1).' Next <i class="fa-solid fa-angle-right"></i></a>';
-                                        }
-                                
-                                        echo '
-                                        </div>
-                                        ';
-                                    }
+                            <div class="info-box">
+                                <p>Book: <?php echo $book_title; ?></p>
+                                <p>Status: <?php echo $borrow_status; ?></p>
+                                <p>Borrower: <?php echo $borrower_username; ?></p>
+                                <p>Borrow Days: <?php echo $borrow_days; ?></p>
+                                <p>Sent Request Date: <?php echo $request_date; ?></p>
+                            </div>
 
-                                } else {
-                                    echo "<tr><td colspan='10'><p class='container' style='margin-left:90px; margin-top:50px; font-size: 20px; font-weight:700;'>No Requests Found.</p></td></tr>";
-                                }
+                            <div class="form-group" style="margin-top:10px; margin-bottom:10px;">
+                                <input type="date" name="pickup-date" id="pickup-date" onchange="validateDate()" required style="width:50%;">
+                            </div>
 
+                            <button class="btn btn-success btn-sm" type="submit" style="width:50%;"><i class="fa fa-solid fa-calendar-days fa-sm"></i> Set & Grant</button>
 
-                                // Close the database connection
-                                mysqli_close($conn);
-
-
-                        ?>
+                        </form>
 
                     </div>
                 </div>
@@ -400,6 +366,33 @@ if ($_SESSION['acctype'] === 'Student') {
         </div>
     </div>
 </div>
+
+<script>
+        // Set the default value to the current date in the format "YYYY-MM-DD"
+        function setDefaultDate() {
+            var today = new Date();
+            var dd = String(today.getDate()).padStart(2, '0');
+            var mm = String(today.getMonth() + 1).padStart(2, '0'); // January is 0!
+            var yyyy = today.getFullYear();
+
+            var currentDate = yyyy + '-' + mm + '-' + dd;
+            document.getElementById('pickup-date').value = currentDate;
+        }
+
+        // Call the function to set the default date when the page loads
+        window.onload = setDefaultDate;
+
+        // Optional: You can add a validation function to ensure the selected date is not in the past
+        function validateDate() {
+            var selectedDate = document.getElementById('pickup-date').value;
+            var today = new Date().toISOString().split('T')[0];
+
+            if (selectedDate < today) {
+                alert("Please select a future date.");
+                document.getElementById('pickup-date').value = today;
+            }
+        }
+    </script>
 
 
 </body>

@@ -79,7 +79,7 @@ CREATE TABLE notifications (
     notif_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE borrowed (
+CREATE TABLE approved_borrow_requests (
     borrow_id INT PRIMARY KEY AUTO_INCREMENT,
     borrower_user_id INT,
     borrower_username VARCHAR(255),
@@ -103,7 +103,7 @@ CREATE TABLE book_log_history (
     book_id INT,
     book_title VARCHAR(255),
     borrow_days INT,
-    borrow_status ENUM('Pending','Approved','Rejected') NOT NULL,
+    borrow_status VARCHAR(100) NOT NULL,
     request_date DATE NOT NULL,
     request_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     action_performed VARCHAR(50) NOT NULL,

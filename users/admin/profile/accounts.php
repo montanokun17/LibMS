@@ -218,14 +218,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete'])) {
 <!--NAVBAR-->
 
 <!--SIDEBAR-->
-    <div id="sidebar">
+<div id="sidebar">
             <ul>
                 <li></li>
                 <li>
                     <a href="/LibMS/users/admin/index.php">
-                        <i class="fa fa-user fa-sm"></i>
+                        <i class="fa fa-house fa-sm"></i>
                         <span class="sidebar-name">
-                            Dashboard
+                            Home
                         </span>
                     </a>
                 </li>
@@ -294,10 +294,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete'])) {
                 </li>
 
                 <li>
-                    <a href="/LibMS/users/admin/requests/issue_return_requests.php">
-                        <i class="fa fa-bars fa-sm"></i>
+                    <a href="/LibMS/users/admin/requests/issue_requests.php">
+                        <i class="fa fa-bookmark fa-sm"></i>
                         <span class="sidebar-name">
-                            Issue/Return Requests
+                            Issue Requests
                         </span>
                     </a>
                 </li>
@@ -306,7 +306,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete'])) {
                     <a href="#">
                         <i class="fa fa-book fa-sm"></i>
                         <span class="sidebar-name">
-                            Issued Request/Returned Books Log
+                            Books Log
                         </span>
                     </a>
                 </li>

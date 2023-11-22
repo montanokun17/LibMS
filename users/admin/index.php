@@ -105,7 +105,7 @@ if ($_SESSION['acctype'] === 'Admin') {
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="#"><i class="fa-solid fa-cogs fa-xs"></i> Homepage Settings</a>
+          <a class="nav-link" aria-current="page" href="#"><i class="fa-solid fa-cogs fa-xs"></i> Page Banner Settings</a>
         </li>
       </ul>
 
@@ -119,7 +119,7 @@ if ($_SESSION['acctype'] === 'Admin') {
         <li class="nav-item">
           <a class="nav-link" href="#">
 
-          <?php
+            <?php
                 if (isset($_SESSION['id_no']) && isset($_SESSION['username'])) {
                     $idNo = $_SESSION['id_no'];
                     $username = $_SESSION['username'];
@@ -164,9 +164,9 @@ if ($_SESSION['acctype'] === 'Admin') {
                 <li></li>
                 <li>
                     <a href="/LibMS/users/admin/index.php">
-                        <i class="fa fa-user fa-sm"></i>
+                        <i class="fa fa-house fa-sm"></i>
                         <span class="sidebar-name">
-                            Dashboard
+                            Home
                         </span>
                     </a>
                 </li>
@@ -235,10 +235,10 @@ if ($_SESSION['acctype'] === 'Admin') {
                 </li>
 
                 <li>
-                    <a href="/LibMS/users/admin/requests/issue_return_requests.php">
-                        <i class="fa fa-bars fa-sm"></i>
+                    <a href="/LibMS/users/admin/requests/issue_requests.php">
+                        <i class="fa fa-bookmark fa-sm"></i>
                         <span class="sidebar-name">
-                            Issue/Return Requests
+                            Issue Requests
                         </span>
                     </a>
                 </li>
@@ -247,7 +247,7 @@ if ($_SESSION['acctype'] === 'Admin') {
                     <a href="#">
                         <i class="fa fa-book fa-sm"></i>
                         <span class="sidebar-name">
-                            Issued Request/Returned Books Log
+                            Books Log
                         </span>
                     </a>
                 </li>
