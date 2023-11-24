@@ -299,12 +299,6 @@ if ($_SESSION['acctype'] === 'Admin') {
                     </span>
                 </li>
 
-                <li class="mini-item">
-                    <span class="item-content">
-                        My ID Card
-                    </span>
-                </li>
-
                 <div class="dash-box-1">
                     <div class="container">
                         <div class="dash-content">

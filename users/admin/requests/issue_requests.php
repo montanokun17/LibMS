@@ -306,7 +306,7 @@ if ($_SESSION['acctype'] === 'Admin') {
 
                         <?php
                             // Default query to fetch all books
-                            $query = "SELECT * FROM borrow_requests ORDER BY borrow_id ASC";
+                            $query = "SELECT * FROM borrow_requests WHERE borrow_status = 'Pending' ORDER BY borrow_id ASC";
 
                             function getRequestsByPagination($conn, $query, $offset, $limit) {
                                 $query .= " LIMIT $limit OFFSET $offset"; // Append the LIMIT and OFFSET to the query for pagination

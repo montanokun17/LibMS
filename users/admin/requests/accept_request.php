@@ -116,10 +116,45 @@ if (isset($_GET['borrow_id'])) {
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $pickup_date = $_POST['pickup-date'];
+    $request_approval_date = date('Y-m-d');
 
-    $approveQuery = "INSERT INTO borrowed (borrower_user_id, borrower_username, book_id, book_title, borrow_days, borrow_status, )";
+    $approveQuery = "INSERT INTO approved_borrow_request (borrower_user_id, borrower_username, book_id, book_title, borrow_days, borrow_status, request_approval_date, pickup_date, approved_by)
+                    VALUES('$borrower_user_id', '$borrower_username', '$book_id', '$book_title', '$borrow_days', '$borrow_status', '$request_approval_date', '$pickup_date', '$username')";
 
-} 
+    if (mysqli_query($conn, $approveQuery)) {
+
+        $updateBookStatusSql = "UPDATE books SET book_borrow_status = 'Approved(Ready to Pickup)' WHERE book_id = '$book_id'";
+        mysqli_query($conn, $updateBookStatusSql);
+
+        $logAction = "Approved(Ready to Pickup)";
+        $logSql = "INSERT INTO book_log_history (borrower_user_id, borrower_username, book_id, book_title, borrow_days, borrow_status, request_date, action_performed, action_performed_by)
+                    VALUES ('$borrower_user_id','$borrower_username', '$book_id', '$book_title', '$borrow_days', '$borrow_status', '$request_date', '$logAction', '$username')";
+        mysqli_query($conn, $logSql);
+
+        echo 'Request Approved!, User is Notified for Book Pickup.';
+    } else {
+        echo 'Error: ' . $approveQuery . '<br>' . mysqli_error($conn);
+    }
+
+    $notificationMessage = "Dear User, Your Borrow Request for the book: " . $book_title . " is approved by " . $acctype . " " . $username . ". Your Book is Ready to Pickup in the Library on Date: " . $pickup_date . ".";
+    $readStatus = "UNREAD";
+
+    $sqlStudent = "SELECT id_no = '$borrower_user_id' FROM users WHERE acctype IN ('Student')";
+    $resultStudent = mysqli_query($conn, $sqlStudent);
+
+    if ($resultStudent) {
+        while ($row = myssqli_fetch_assoc($resultStudent)) {
+            $student_userId = $row['id_no'];
+
+            $sqlNotification = "INSERT INTO notifications (sender_user_id, receiver_user_id, notification_message, read_status)
+                                VALUES ('$idNo', '$borrower_user_id', '$notificationMessage', '$readStatus')";
+            mysqli_query($conn, $sqlNotification);
+        }
+    } else {
+        echo "Error: " . $sqlStudent . "<br>" . mysqli_error($conn). "";
+    }
+
+}
 
 
 ?>
@@ -356,7 +391,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <input type="date" name="pickup-date" id="pickup-date" onchange="validateDate()" required style="width:50%;">
                             </div>
 
-                            <button class="btn btn-success btn-sm" type="submit" style="width:50%;"><i class="fa fa-solid fa-calendar-days fa-sm"></i> Set & Grant</button>
+                            <button class="btn btn-success btn-sm" type="submit" style="width:50%;" onclick="sendApproveRequest(<?php echo $book_id; ?>)"><i class="fa fa-solid fa-calendar-days fa-sm"></i> Set & Grant</button>
 
                         </form>
 
@@ -392,6 +427,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 document.getElementById('pickup-date').value = today;
             }
         }
+
+        function sendApproveRequest(book_id) {
+        var xhr = new XMLHttpRequest();
+        var url = "/LibMS/users/admin/requests/accept_request.php";
+        var params = "book_id=" + book_id; // Add other parameters as needed
+
+        xhr.open("POST", url, true);
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                // Handle the response from the server
+                alert(xhr.responseText);
+            }
+        };
+
+        xhr.send(params);
+    }
+
     </script>
 
 

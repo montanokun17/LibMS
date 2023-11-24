@@ -288,7 +288,7 @@ if ($_SESSION['acctype'] === 'Admin') {
 
                     <?php
 
-                    $query = "SELECT * FROM notifications WHERE receiver_user_id = $idNo ORDER BY notif_id DESC";
+                    $query = "SELECT * FROM notifications WHERE receiver_user_id = $idNo ORDER BY notif_timestamp DESC";
                     
                     function getNotifsByPagination($conn, $query, $offset, $limit) {
                     $query .= " LIMIT $limit OFFSET $offset"; // Append the LIMIT and OFFSET to the query for pagination
