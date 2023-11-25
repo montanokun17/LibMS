@@ -260,7 +260,7 @@ if ($_SESSION['acctype'] === 'Student' || 'Guest') {
                     return $result;
                     }
                     
-                    $totalNotifsQuery = "SELECT COUNT(*) as total FROM books";
+                    $totalNotifsQuery = "SELECT COUNT(*) as total FROM notifications";
                     $totalNotifsResult = mysqli_query($conn, $totalNotifsQuery);
                     $totalNotifs = mysqli_fetch_assoc($totalNotifsResult)['total'];
                     

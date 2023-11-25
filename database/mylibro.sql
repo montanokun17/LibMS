@@ -95,21 +95,6 @@ CREATE TABLE approved_borrow_requests (
     FOREIGN KEY (book_id) REFERENCES books(book_id)
 );
 
-/*CREATE TABLE approved_borrow_requests (
-    borrow_id INT PRIMARY KEY AUTO_INCREMENT,
-    borrower_user_id INT,
-    borrower_username VARCHAR(255),
-    book_id INT,
-    book_title VARCHAR(255),
-    borrow_days INT,
-    borrow_status ENUM('Approved') DEFAULT 'Approved', -- Set to 'Approved' since it's moved to the borrowed table
-    request_approval_date DATE,
-    due_date DATE,
-    approved_by VARCHAR(255),
-    FOREIGN KEY (borrower_user_id) REFERENCES users(id_no),
-    FOREIGN KEY (book_id) REFERENCES books(book_id),
-    CHECK (borrow_status = 'Approved' )
-);*/
 
 CREATE TABLE book_log_history (
     log_id INT PRIMARY KEY AUTO_INCREMENT,
@@ -129,6 +114,23 @@ CREATE TABLE book_log_history (
     FOREIGN KEY (borrower_user_id) REFERENCES users(id_no),
     FOREIGN KEY (book_id) REFERENCES books(book_id)
 );
+
+
+/*CREATE TABLE approved_borrow_requests (
+    borrow_id INT PRIMARY KEY AUTO_INCREMENT,
+    borrower_user_id INT,
+    borrower_username VARCHAR(255),
+    book_id INT,
+    book_title VARCHAR(255),
+    borrow_days INT,
+    borrow_status ENUM('Approved') DEFAULT 'Approved', -- Set to 'Approved' since it's moved to the borrowed table
+    request_approval_date DATE,
+    due_date DATE,
+    approved_by VARCHAR(255),
+    FOREIGN KEY (borrower_user_id) REFERENCES users(id_no),
+    FOREIGN KEY (book_id) REFERENCES books(book_id),
+    CHECK (borrow_status = 'Approved' )
+);*/
 
 
 

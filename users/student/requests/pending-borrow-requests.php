@@ -80,14 +80,16 @@ if ($_SESSION['acctype'] === 'Student' || 'Guest') {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <?php echo '<title>'. $firstname .' '. $lastname .' / Student - MyLibro </title>'; ?>
+    <?php echo '<title>'. $firstname .' '. $lastname .' / Student: Pending Borrow Requests - MyLibro </title>'; ?>
     <!--Link for Tab ICON-->
     <link rel="icon" type="image/x-icon" href="/LibMS/resources/images/logov1.png">
     <!--Link for Bootstrap-->
     <link rel="stylesheet" type="text/css" href="/LibMS/resources/bootstrap/css/bootstrap.min.css"/>
     <script type="text/javascript" src="/LibMS/resources/bootstrap/js/bootstrap.min.js"></script>
     <!--Link for CSS File-->
-    <link rel="stylesheet" type="text/css" href="/LibMS/users/student/index.css">
+    <link rel="stylesheet" type="text/css" href="/LibMS/users/student/requests/css/pending-borrow-requests.css">
+    <!--Link for NAVBAR and SIDEBAR styling-->
+    <link rel="stylesheet" type="text/css" href="/LibMS/users/student/css/navbar-sidebar.css">
     <!--Link for Font Awesome Icons-->
     <link rel="stylesheet" href="/LibMS/resources/icons/fontawesome-free-6.4.0-web/css/all.css">
     <!--Link for Google Font-->
@@ -159,7 +161,7 @@ if ($_SESSION['acctype'] === 'Student' || 'Guest') {
 <!--NAVBAR-->
 
 <!--SIDEBAR-->
-    <div id="sidebar">
+<div id="sidebar">
             <ul>
                 <li></li>
                 <li>
@@ -199,7 +201,7 @@ if ($_SESSION['acctype'] === 'Student' || 'Guest') {
                 </li>
 
                 <li>
-                    <a href="/LibMS/users/student/requests/pending-borrow-requests.php">
+                    <a href="#">
                         <i class="fa fa-bookmark fa-sm"></i>
                         <span class="sidebar-name">
                             Pending Borrow Requests
@@ -240,127 +242,140 @@ if ($_SESSION['acctype'] === 'Student' || 'Guest') {
     </div>
 <!--SIDEBAR-->
 
-<!-- ID Card Container -->
-<div class="container mt-4">
-    <div class="row justify-content-center">
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-header bg-dark text-white">
-                    <p class="text-center" style="margin-bottom:0;">
-                        <strong>MyLibro ID</strong>
-                    </p>
-                </div>
-                <div class="card-body">
-                    <!-- User's Profile Image -->
-                    <div class="text-center mb-2">
-                        <img src="/LibMS/resources/images/logov1.png" 
-                            width="75" height="75" class="Idlogo">
-
-                            <?php
-                        
-                            if (isset($_SESSION['id_no']) && isset($_SESSION['username'])) {
-                            $idNo = $_SESSION['id_no'];
-                            $username = $_SESSION['username'];
-                                                        
-                            // Query to retrieve the necessary columns from the database
-                            $UserPicPath = "SELECT user_pic_data, user_pic_type FROM user_pics WHERE user_id = ? AND username = ?";
-                            $statement = $conn->prepare($UserPicPath);
-                            $statement->bind_param("is", $idNo, $username);
-                                                        
-                                if ($statement->execute()) {
-                                    $result = $statement->get_result();
-                                                        
-                                    if ($row = $result->fetch_assoc()) {
-                                        // Use the "width" and "height" attributes to resize the image
-                                        echo '<img src="data:image/png;base64,' . base64_encode($row["user_pic_data"]) . '" width="100" height="100" class="rounded-circle"/>';
-                                        
-                                    } else {
-                                        // If not found in the database, display the default image
-                                        echo '<img src="/LibMS/resources/images/user.png" width=100" height="100" class="rounded-circle" style="margin-top: 10px; margin-bottom: 10px;">';
-                                    }
-                                } else {
-                                    // Error in executing the SQL query
-                                    echo '<img src="/LibMS/resources/images/user.png" width="100" height="100" class="rounded-circle" style="margin-top: 10px; margin-bottom: 10px;">';
-                                                            }
-                            }
-                                                        
-                            ?>
-                            
-                            
-                    </div>
-                    <!-- User's Details -->
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">
-                            <strong>Name:</strong> <?php echo "$firstname $lastname"; ?>
-                        </li>
-                        <li class="list-group-item">
-                            <strong>ID Number:</strong> <?php echo "$idNo"; ?>
-                        </li>
-                        <li class="list-group-item">
-                            <strong>Email:</strong> <?php echo "$email"; ?>
-                        </li>
-                        <li class="list-group-item">
-                            <strong>Account Type:</strong> <?php echo "$acctype"; ?>
-                        </li>
-                        <li class="list-group-item">
-                            <strong>School Level:</strong> <?php echo "$schlvl"; ?>
-                        </li>
-                        <li class="list-group-item">
-                            <strong>Barangay:</strong> <?php echo "$brgy"; ?>
-                        </li>
-                    </ul>
+<div class="table-box">
+    <div class="container col-12 col-md-10">
+        <div class="container">
+            <div class="row">
+                <div class="books-box">
+                    <div class="container-fluid">
 
                     <?php
+
+                    $query = "SELECT * FROM borrow_requests WHERE borrower_user_id = $idNo AND borrow_status = 'Pending' ORDER BY request_date DESC";
                     
-                    if (isset($_SESSION['id_no']) && isset($_SESSION['username'])) {
-                        $idNo = $_SESSION['id_no'];
-                        $username = $_SESSION['username'];
-
-                        
-                        $qrCodePath = "SELECT qr_code_data, qr_code_type FROM qr_codes WHERE user_id = ? AND username = ?";
-                        $statement = $conn->prepare($qrCodePath);
-                        $statement->bind_param("is", $idNo, $username);
-
-                        if ($statement->execute()) {
-                            $result = $statement->get_result();
-
-                            if ($row = $result->fetch_assoc()) {
-                                $width = 150;
-                                $height = 150;
-
-                                echo '<div class="container col-sm-6 center">';
-                                echo '<img src="data:image/png;base64,' . base64_encode($row["qr_code_data"]) . '" width="' . $width . '" height="' . $height . '"/>';
-                                echo '</div>';
-                            } else {
-                                // QR code not found in the database
-                                echo '<div class="text-center mb-3">';
-                                echo '<p><i class="fa fa-solid fa-triangle-exclamation fa-sm"></i> QR Code not found.</p>';
-                                echo '</div>';
-                            }
-                        } else {
-                            // Error in executing the SQL query
-                            echo '<div class="text-center mb-3">';
-                            echo '<p>Error in executing the SQL query.</p>';
-                            echo '</div>';
-                        }
-
-                        $statement->close();
-                    } else {
-                        // User is not logged in
-                        echo '<div class="text-center mb-3">';
-                        echo '<p>You are not logged in.</p>';
-                        echo '</div>';
+                    function getPendingByPagination($conn, $query, $offset, $limit) {
+                    $query .= " LIMIT $limit OFFSET $offset"; // Append the LIMIT and OFFSET to the query for pagination
+                    $result = mysqli_query($conn, $query);
+                    
+                    return $result;
                     }
+                    
+                    $totalPendingQuery = "SELECT COUNT(*) as total FROM borrow_requests";
+                    $totalPendingResult = mysqli_query($conn, $totalPendingQuery);
+                    $totalPending = mysqli_fetch_assoc($totalPendingResult)['total'];
+                    
+                    
+                    // Number of books to display per page
+                    $limit = 7;
+                    
+                    // Get the current page number from the query parameter
+                    $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
+                    
+                    // Calculate the offset for the current page
+                    $offset = ($page - 1) * $limit;
+                    
+                    // Get the books for the current page
+                    $result = getPendingByPagination($conn, $query, $offset, $limit);
+                    
+                    // Check if the query executed successfully
+                    if ($result && mysqli_num_rows($result) > 0) {
+                        echo '<div id="pending-list-container">';
+                        echo '<table id="dataTable">';
+                        echo '<thead>';
+                        echo '<tr>';
+                        echo '<th>Borrower User ID</th>';
+                        echo '<th>Borrower Username</th>';
+                        echo '<th>Book Title</th>';
+                        echo '<th>Borrow Days</th>';
+                        echo '<th>Borrow Status</th>';
+                        echo '<th>Request Date</th>';
+                        echo '<th>Timestamp</th>';
+                        echo '<th>Action</th>';
+                        echo '</tr>';
+                        echo '</thead>';
+                        echo '<tbody>';
+                    
+                        while ($pending = mysqli_fetch_assoc($result)) {
+                            echo '<tr class="pending-row">';
+                            echo '<td>' . $pending['borrower_user_id'] . '</td>';
+                            echo '<td>' . $pending['borrower_username'] . '</td>';
+                            echo '<td>' . $pending['book_title'] . '</td>';
+                            echo '<td>' . $pending['borrow_days'] . '</td>';
+                            echo '<td>' . $pending['borrow_status'] . '</td>';
+                            echo '<td>' . $pending['request_date'] . '</td>';
+                            echo '<td>' . $pending['request_timestamp'] . '</td>';
+                            echo '<td>';
+                            echo '<button type="button" class="btn btn-danger btn-sm" style="margin-left:5px;" onClick=sendCancelRequest('.$pending['borrow_id'].')><i class="fa-solid fa-xmark fa-sm"></i> Cancel Request</button>';
+                            echo '</td>';
 
-                    ?>
+                            echo '</tr>';
+                            
 
-
-
+                        }
+                    
+                        echo '</tbody>';
+                        echo '</table>';
+                        
+                    
+                    
+                        // Calculate the total number of pages
+                        $totalPages = ceil($totalPending / $limit);
+                        if ($totalPages > 1) {
+                            echo '
+                            <div class="pagination-buttons" style="margin-top: 10px;
+                            margin-left: 70px;
+                            ">
+                                ';
+                    
+                            if ($page > 1) {
+                                echo '<a href="?page='.($page - 1).'" class="btn btn-primary btn-sm" id="previous" style="padding: 10px; width:10%;"><i class="fa-solid fa-angle-left"></i>'.($page - 1).' Previous</a>';
+                            }
+                    
+                            if ($page < $totalPages) {
+                                echo '<a href="?page='.($page + 1).'" class="btn btn-primary btn-sm" id="next" style="padding: 10px; width:10%; margin-left:5px;"> '.($page + 1).' Next <i class="fa-solid fa-angle-right"></i></a>';
+                            }
+                    
+                            echo '
+                            </div>
+                            ';
+                        }
+                    
+                    } else {
+                        echo "<tr><td colspan='10'><p class='container' style='margin-left:90px; margin-top:50px; font-size: 20px; font-weight:700;'>There Are No Pending Requests Yet.</p></td></tr>";
+                    }
+                    
+                    
+                // Close the database connection
+                mysqli_close($conn);
+                    
+                    
+                ?>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    function sendCancelRequest(borrow_id) {
+        var xhr = new XMLHttpRequest();
+        var url = "/LibMS/users/student/requests/cancel-request.php";
+        var params = "borrow_id=" + borrow_id; // Add other parameters as needed
+
+        xhr.open("POST", url, true);
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                // Handle the response from the server
+                alert(xhr.responseText);
+            }
+        };
+
+        xhr.send(params);
+    }
+</script>
 
 
 </body>

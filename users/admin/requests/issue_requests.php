@@ -365,9 +365,9 @@ if ($_SESSION['acctype'] === 'Admin') {
                                                 <button class="btn btn-success btn-sm"><i class="fa fa-solid fa-check fa-sm"></i> Accept</button>
                                             </a>
 
-                                            <a href="#">
-                                                <button class="btn btn-danger btn-sm"><i class="fa fa-solid fa-x fa-sm"></i> Reject</button>
-                                            </a>
+                                            
+                                            <button class="btn btn-danger btn-sm" onclick="sendRejectRequest('. $request['borrow_id'] .')"><i class="fa fa-solid fa-x fa-sm"></i> Reject</button>
+                                           
 
                                         </td>';
 
@@ -417,6 +417,27 @@ if ($_SESSION['acctype'] === 'Admin') {
         </div>
     </div>
 </div>
+
+<script>
+    function sendRejectRequest(borrow_id) {
+        var xhr = new XMLHttpRequest();
+        var url = "/LibMS/users/admin/requests/reject_request.php";
+        var params = "borrow_id=" + borrow_id; // Add other parameters as needed
+
+        xhr.open("POST", url, true);
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                // Handle the response from the server
+                alert(xhr.responseText);
+            }
+        };
+
+        xhr.send(params);
+    }
+
+</script>
 
 </body>
 </html>

@@ -411,7 +411,7 @@ if ($_SESSION['acctype'] === 'Student') {
                         <?php
                         
 
-                        $query = "SELECT * FROM books WHERE 'deleted' = 0 AND status = 'GOOD' ORDER BY 'book_title' ASC";
+                        $query = "SELECT * FROM books WHERE 'deleted' = 0 AND status = 'GOOD' AND book_borrow_status = 'Available' ORDER BY 'book_title' ASC";
 
                        /*// Add the following code at the beginning to handle AJAX requests
                         if (isset($_POST['section']) && isset($_POST['status']) && isset($_POST['dewey']) && isset($_POST['book_borrow_status'])) {
@@ -503,13 +503,15 @@ if ($_SESSION['acctype'] === 'Student') {
                                     if ($book['status'] == 'GOOD') {
                                         echo '<td style="color: green;"><b><i>' . $book['status'] . '</i></b></td>';
                                     }
+
                                     echo '<td>';
-                                    echo '<button type="button" class="btn btn-primary btn-sm"><i class="fa-solid fa-circle-info fa-sm"></i> Details</button>';
-                                    echo '
-                                    <a href="/LibMS/users/student/requests/borrow/borrow.php?book_id=' .$book['book_id']. '">
-                                        <button type="button" class="btn btn-success btn-sm" style="margin-left:5px;"><i class="fa-solid fa-bookmark fa-sm"></i> Borrow</button>
-                                    </a>
-                                        ';
+                                        echo '<button type="button" class="btn btn-primary btn-sm"><i class="fa-solid fa-circle-info fa-sm"></i> Details</button>';
+                                        echo '
+                                        <a href="/LibMS/users/student/requests/borrow/borrow.php?book_id=' .$book['book_id']. '">
+                                            <button type="button" class="btn btn-success btn-sm" style="margin-left:5px;"><i class="fa-solid fa-bookmark fa-sm"></i> Borrow</button>
+                                        </a>
+                                            ';
+                                     
                                     echo '</td>';
                                     echo '</tr>';
                                 }

@@ -117,6 +117,7 @@ if (isset($_GET['borrow_id'])) {
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $pickup_date = $_POST['pickup-date'];
     $request_approval_date = date('Y-m-d');
+    $borrow_status = "Approved(Ready to Pickup)";
 
     $approveQuery = "INSERT INTO approved_borrow_request (borrower_user_id, borrower_username, book_id, book_title, borrow_days, borrow_status, request_approval_date, pickup_date, approved_by)
                     VALUES('$borrower_user_id', '$borrower_username', '$book_id', '$book_title', '$borrow_days', '$borrow_status', '$request_approval_date', '$pickup_date', '$username')";

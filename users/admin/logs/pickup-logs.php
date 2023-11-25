@@ -1,10 +1,10 @@
 <?php
 session_start();
 
-$servername = "localhost"; // Replace with your server name if different
-$user_name = "root"; // Replace with your database username
-$Password = ""; // Replace with your database password
-$database = "mylibro"; // Replace with your database name
+$servername = "localhost";
+$user_name = "root";
+$Password = "";
+$database = "mylibro";
 
 // Create a connection
 $conn = new mysqli($servername, $user_name, $Password, $database);
@@ -78,14 +78,22 @@ if ($_SESSION['acctype'] === 'Admin') {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <?php echo '<title>'. $firstname .' '. $lastname .' /Admin - MyLibro </title>'; ?>
+    <?php echo '<title>'. $firstname .' '. $lastname .' / Pickup Logs - MyLibro </title>'; ?>
     <!--Link for Tab ICON-->
     <link rel="icon" type="image/x-icon" href="/LibMS/resources/images/logov1.png">
     <!--Link for Bootstrap-->
     <link rel="stylesheet" type="text/css" href="/LibMS/resources/bootstrap/css/bootstrap.min.css"/>
     <script type="text/javascript" src="/LibMS/resources/bootstrap/js/bootstrap.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <!--Link for JQuery-->
+    <script type="text/javascript" src="/LibMS/resources/jquery ui/jquery-ui.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/LibMS/resources/jquery ui/jquery-ui.min.css"/>
+    <script type="text/javascript" src="/LibMS/resources/jquery/jquery-3.7.1.min.js"></script>
     <!--Link for CSS File-->
-    <link rel="stylesheet" type="text/css" href="/LibMS/users/admin/css/index.css">
+    <link rel="stylesheet" type="text/css" href="/LibMS/users/admin/logs/css/pickup-logs.css">
+    <!--Link for NAVBAR and SIDEBAR styling-->
+    <link rel="stylesheet" type="text/css" href="/LibMS/users/admin/css/navbar-sidebar.css">
     <!--Link for Font Awesome Icons-->
     <link rel="stylesheet" href="/LibMS/resources/icons/fontawesome-free-6.4.0-web/css/all.css">
     <!--Link for Google Font-->
@@ -107,6 +115,14 @@ if ($_SESSION['acctype'] === 'Admin') {
         <li class="nav-item">
           <a class="nav-link" aria-current="page" href="#"><i class="fa-solid fa-cogs fa-xs"></i> Page Banner Settings</a>
         </li>
+
+        <li class="nav-item">
+          <a class="nav-link" aria-current="page" href="/LibMS/users/admin/logs/history.php"><i class="fa-solid fa-clock-rotate-left fa-xs"></i> History</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" aria-current="page" href="/LibMS/users/admin/logs/pickup-logs.php"><i class="fa-solid fa-book fa-xs"></i> Pickup Logs</a>
+        </li>
       </ul>
 
       <ul class="navbar-nav ms-auto">
@@ -119,7 +135,7 @@ if ($_SESSION['acctype'] === 'Admin') {
         <li class="nav-item">
           <a class="nav-link" href="#">
 
-            <?php
+          <?php
                 if (isset($_SESSION['id_no']) && isset($_SESSION['username'])) {
                     $idNo = $_SESSION['id_no'];
                     $username = $_SESSION['username'];
@@ -159,7 +175,7 @@ if ($_SESSION['acctype'] === 'Admin') {
 <!--NAVBAR-->
 
 <!--SIDEBAR-->
-    <div id="sidebar">
+<div id="sidebar">
             <ul>
                 <li></li>
                 <li>
@@ -193,7 +209,7 @@ if ($_SESSION['acctype'] === 'Admin') {
                     <a href="#">
                         <i class="fa fa-solid fa-qrcode fa-sm"></i>
                         <span class="sidebar-name">
-                            QR
+                            QR Code and ID Card
                         </span>
                     </a>
                 </li>
@@ -244,7 +260,7 @@ if ($_SESSION['acctype'] === 'Admin') {
                 </li>
 
                 <li>
-                    <a href="/LibMS/users/admin/logs/history.php">
+                    <a href="#">
                         <i class="fa fa-book fa-sm"></i>
                         <span class="sidebar-name">
                             Books Log
@@ -253,7 +269,7 @@ if ($_SESSION['acctype'] === 'Admin') {
                 </li>
 
                 <li>
-                    <a href="/LibMS/users/admin/logs/recent-deletion-books.php">
+                    <a href="#">
                         <i class="fa fa-trash fa-sm"></i>
                         <span class="sidebar-name">
                             Recent Deletion Books
@@ -276,123 +292,131 @@ if ($_SESSION['acctype'] === 'Admin') {
     </div>
 <!--SIDEBAR-->
 
-<!-- ID Card Container -->
-<div class="container mt-4">
-    <div class="row justify-content-center">
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-header bg-dark text-white">
-                    <p class="text-center">MyLibro ID</p>
-                </div>
-                <div class="card-body">
-                    <!-- User's Profile Image -->
-                    <div class="text-center mb-2">
-                        <img src="/LibMS/resources/images/logov1.png" 
-                            width="75" height="75" class="Idlogo">
+
+<div class="table-box">
+    <div class="container col-12 col-md-10">
+        <div class="container">
+            <div class="row">
+                <div class="inner-box">
+                    <div class="container-fluid">
 
                         <?php
-                        
-                        if (isset($_SESSION['id_no']) && isset($_SESSION['username'])) {
-                        $idNo = $_SESSION['id_no'];
-                        $username = $_SESSION['username'];
-                                                    
-                        // Query to retrieve the necessary columns from the database
-                        $UserPicPath = "SELECT user_pic_data, user_pic_type FROM user_pics WHERE user_id = ? AND username = ?";
-                        $statement = $conn->prepare($UserPicPath);
-                        $statement->bind_param("is", $idNo, $username);
-                                                    
-                            if ($statement->execute()) {
-                                $result = $statement->get_result();
-                                                    
-                                if ($row = $result->fetch_assoc()) {
-                                    // Use the "width" and "height" attributes to resize the image
-                                    echo '<img src="data:image/png;base64,' . base64_encode($row["user_pic_data"]) . '" width="100" height="100" class="rounded-circle"/>';
-                                    
-                                } else {
-                                    // If not found in the database, display the default image
-                                    echo '<img src="/LibMS/resources/images/user.png" width=100" height="100" class="rounded-circle" style="margin-top: 10px; margin-bottom: 10px;">';
-                                }
-                            } else {
-                                // Error in executing the SQL query
-                                echo '<img src="/LibMS/resources/images/user.png" width="100" height="100" class="rounded-circle" style="margin-top: 10px; margin-bottom: 10px;">';
-                                                        }
-                        }
-                                                    
-                        ?>
-                            
-                    </div>
-                    <!-- User's Details -->
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">
-                            <strong>Name:</strong> <?php echo "$firstname $lastname"; ?>
-                        </li>
-                        <li class="list-group-item">
-                            <strong>ID Number:</strong> <?php echo "$idNo"; ?>
-                        </li>
-                        <li class="list-group-item">
-                            <strong>Email:</strong> <?php echo "$email"; ?>
-                        </li>
-                        <li class="list-group-item">
-                            <strong>Account Type:</strong> <?php echo "$acctype"; ?>
-                        </li>
-                        <li class="list-group-item">
-                            <strong>Barangay:</strong> <?php echo "$brgy"; ?>
-                        </li>
-                    </ul>
+                            // Default query to fetch all books
+                            $query = "SELECT * FROM approved_borrow_requests WHERE borrow_status = 'Approved(Ready to Pickup)' ORDER BY request_approval_date DESC";
 
-                    <?php
-                    // Check if the user is logged in
-                    if (isset($_SESSION['id_no']) && isset($_SESSION['username'])) {
-                        $idNo = $_SESSION['id_no'];
-                        $username = $_SESSION['username'];
-
-                        // Query to retrieve the necessary columns from the database
-                        $qrCodePath = "SELECT qr_code_data, qr_code_type FROM qr_codes WHERE user_id = ? AND username = ?";
-                        $statement = $conn->prepare($qrCodePath);
-                        $statement->bind_param("is", $idNo, $username);
-
-                        if ($statement->execute()) {
-                            $result = $statement->get_result();
-
-                            if ($row = $result->fetch_assoc()) {
-                                // Define the desired width and height for the image
-                                $width = 150; // Set your desired width
-                                $height = 150; // Set your desired height
-
-                                echo '<div class="container col-sm-6 center">';
-                                // Use the "width" and "height" attributes to resize the image
-                                echo '<img src="data:image/png;base64,' . base64_encode($row["qr_code_data"]) . '" width="' . $width . '" height="' . $height . '"/>';
-                                echo '</div>';
-                            } else {
-                                // QR code not found in the database
-                                echo '<div class="text-center mb-3">';
-                                echo '<p><i class="fa fa-solid fa-triangle-exclamation fa-sm"></i> QR Code not found.</p>';
-                                echo '</div>';
+                            function getRequestsByPagination($conn, $query, $offset, $limit) {
+                                $query .= " LIMIT $limit OFFSET $offset"; // Append the LIMIT and OFFSET to the query for pagination
+                                $result = mysqli_query($conn, $query);
+            
+                                return $result;
                             }
-                        } else {
-                            // Error in executing the SQL query
-                            echo '<div class="text-center mb-3">';
-                            echo '<p>Error in executing the SQL query.</p>';
-                            echo '</div>';
-                        }
+            
+                            $totalRequestsQuery = "SELECT COUNT(*) as total FROM approved_borrow_requests";
+                            $totalRequestsResult = mysqli_query($conn, $totalRequestsQuery);
+                            $totalRequests = mysqli_fetch_assoc($totalRequestsResult)['total'];
+            
+            
+                            // Number of books to display per page
+                            $limit = 7;
 
-                        $statement->close();
-                    } else {
-                        // User is not logged in
-                        echo '<div class="text-center mb-3">';
-                        echo '<p>You are not logged in.</p>';
-                        echo '</div>';
-                    }
+                            // Get the current page number from the query parameter
+                            $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
 
-                    ?>
+                            // Calculate the offset for the current page
+                            $offset = ($page - 1) * $limit;
+
+                            // Get the books for the current page
+                            $result = getRequestsByPagination($conn, $query, $offset, $limit);
+
+                                // Check if the query executed successfully
+                                if ($result && mysqli_num_rows($result) > 0) {
+                                    echo '<div class="container">';
+                                    echo '<table>';
+                                    echo '<thead>';
+                                    echo '<tr>';
+                                    echo '<th>Borrower User ID</th>';
+                                    echo '<th>Username</th>';
+                                    echo '<th>Book Title</th>';
+                                    echo '<th>Requested Borrow Days</th>';
+                                    echo '<th>Borrow Status</th>';
+                                    echo '<th>Request Approval Date</th>';
+                                    echo '<th>Due Date</th>';
+                                    echo '<th>Pickup Date</th>';
+                                    echo '<th style="width:18%;">Action</th>';
+                                    echo '</tr>';
+                                    echo '</thead>';
+                                    echo '<tbody>';
+
+                                    while ($request = mysqli_fetch_assoc($result)) {
+                                        echo '<tr>';
+                                        echo '<td>' . $request['borrower_user_id'] . '</td>';
+                                        echo '<td>' . $request['borrower_username'] . '</td>';
+                                        echo '<td>' . $request['book_title'] . '</td>';
+                                        echo '<td>' . $request['borrow_days'] . '</td>';
+                                        echo '<td>' . $request['borrow_status'] . '</td>';
+                                        echo '<td>' . $request['request_approval_date'] . '</td>';
+                                        echo '<td>' . $request['due_date'] . '</td>';
+                                        echo '<td>' . $request['pickup_date'] . '</td>';
+
+                                        if ($request['borrow_status'] === 'Approved(Ready to Pickup)') {
+                                            echo '<td>
+                                                <a href="#">
+                                                    <button class="btn btn-success btn-sm"><i class="fa fa-solid fa-book fa-sm"></i> Verify Book Pickup</button>
+                                                </a>
+
+                                                <a href="#">
+                                                    <button class="btn btn-danger btn-sm"><i class="fa fa-solid fa-xmark fa-sm"></i> Cancel Book Pickup</button>
+                                                </a>
+
+                                                </td>';
+                                        }
+
+                                        echo '</tr>';
+                                    }
+
+                                    echo '</tbody>';
+                                    echo '</table>';
 
 
+                                    // Calculate the total number of pages
+                                    $totalPages = ceil($totalRequests / $limit);
+                                    if ($totalPages > 1) {
+                                        echo '
+                                        <div class="pagination-buttons" style="margin-top: 10px;
+                                        margin-left: 70px;
+                                        ">
+                                            ';
+                                
+                                        if ($page > 1) {
+                                            echo '<a href="?page='.($page - 1).'" class="btn btn-primary btn-sm" id="previous" style="padding: 10px; width:10%;"><i class="fa-solid fa-angle-left"></i>'.($page - 1).' Previous</a>';
+                                        }
+                                
+                                        if ($page < $totalPages) {
+                                            echo '<a href="?page='.($page + 1).'" class="btn btn-primary btn-sm" id="next" style="padding: 10px; width:10%; margin-left:5px;"> '.($page + 1).' Next <i class="fa-solid fa-angle-right"></i></a>';
+                                        }
+                                
+                                        echo '
+                                        </div>
+                                        ';
+                                    }
+
+                                } else {
+                                    echo "<tr><td colspan='10'><p class='container' style='margin-left:90px; margin-top:50px; font-size: 20px; font-weight:700;'>No Pickup Logs Found.</p></td></tr>";
+                                }
+
+
+                                // Close the database connection
+                                mysqli_close($conn);
+
+
+                        ?>
+
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
 
 </body>
 </html>
