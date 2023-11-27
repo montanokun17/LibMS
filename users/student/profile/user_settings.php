@@ -243,24 +243,21 @@ if ($_SESSION['acctype'] === 'Student') {
 
 <div class="main-box">
     <div class="container">
-            <ul class="mini-sidebar">
-                <li class="mini-item">
-                    <span class="item-content">
-                        My ID Card
-                    </span>
-                </li>
+                <a href="/LibMS/users/student/profile/func/my_id_card.php">
+                    <li class="mini-item">
+                        <span class="item-content">
+                            My ID Card
+                        </span>
+                    </li>
+                </a>
 
-                <li class="mini-item active">
-                    <span class="item-content">
-                        My Account's Information
-                    </span>
-                </li>
-                
-                <li class="mini-item">
-                    <span class="item-content">
-                        My ID Card
-                    </span>
-                </li>
+                <a href="/LibMS/users/student/profile/user_settings.php">
+                    <li class="mini-item active">
+                        <span class="item-content">
+                            My Account's Information
+                        </span>
+                    </li>
+                </a>
 
                 <div class="dash-box-1">
                     <div class="container">

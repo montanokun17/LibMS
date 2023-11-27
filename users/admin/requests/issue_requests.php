@@ -423,23 +423,31 @@ if ($_SESSION['acctype'] === 'Admin') {
 </div>
 
 <script>
+    
     function sendRejectRequest(borrow_id) {
-        var xhr = new XMLHttpRequest();
-        var url = "/LibMS/users/admin/requests/reject_request.php";
-        var params = "borrow_id=" + borrow_id; // Add other parameters as needed
+    // Create a new XMLHttpRequest object
+    var xhr = new XMLHttpRequest();
 
-        xhr.open("POST", url, true);
-        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    // Configure it: POST request to the specified URL
+    xhr.open('POST', '/LibMS/users/admin/requests/reject_requests.php', true);
 
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState == 4 && xhr.status == 200) {
-                // Handle the response from the server
-                alert(xhr.responseText);
-            }
-        };
+    // Set the content type of the request to send URL-encoded form data
+    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 
-        xhr.send(params);
-    }
+    // Set up a function that will be called when the request is successfully completed
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            // Handle the response from the server
+            alert(xhr.responseText);
+        }
+    };
+
+    // Create a URL-encoded string with the borrow_id parameter
+    var params = 'borrow_id=' + borrow_id;
+
+    // Send the request with the form data
+    xhr.send(params);
+}
 
 </script>
 

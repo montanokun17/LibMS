@@ -343,6 +343,7 @@ if ($_SESSION['acctype'] === 'Admin') {
                         echo '<th>Action Performed</th>';
                         echo '<th>Action Performed By</th>';
                         echo '<th>Timestamp</th>';
+                        echo '<th>Action</th>';
                         //echo '<th style="width:18%;">Action</th>';
                         echo '</tr>';
                         echo '</thead>';

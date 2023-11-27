@@ -80,78 +80,101 @@ $borrow_status = "";
 $request_date = "";
 $request_timestamp = "";
 
-        if (isset($_POST['borrow_id'])) {
+
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+    if (isset($_POST['borrow_id'])) {
         $borrow_id = $_POST['borrow_id'];
-
-        $borrowQuery = "SELECT * FROM borrow_requests WHERE borrow_id = ?";
-        $borrowStmt = $conn->prepare($borrowQuery);
-
+    
+        $RequestQuery = "SELECT * FROM approved_borrow_requests WHERE borrow_id = ?";
+        $RequestStmt = $conn->prepare($RequestQuery);
+    
         if (is_numeric($borrow_id)) {
-            $borrowStmt->bind_param('i', $borrow_id);
-            $borrowStmt->execute();
-            $borrowResult = $borrowStmt->get_result();
-
-            if($borrowResult->num_rows === 1) {
-                $row = $borrowResult->fetch_assoc();
-
+            $RequestStmt->bind_param('i', $borrow_id);
+            $RequestStmt->execute();
+            $RequestResult = $RequestStmt->get_result();
+    
+            if ($RequestResult->num_rows === 1) {
+                $row = $RequestResult->fetch_assoc();
+    
                 $borrower_user_id = $row['borrower_user_id'];
                 $borrower_username = $row['borrower_username'];
                 $book_id = $row['book_id'];
                 $book_title = $row['book_title'];
                 $borrow_days = $row['borrow_days'];
                 $borrow_status = $row['borrow_status'];
-                $request_date = $row['request_date'];
-                $request_timestamp = $row['request_timestamp'];
+                $request_approval_date = $row['request_approval_date'];
+                $pickup_date = $row['pickup_date'];
+                $approvedBy = $row['approved_by'];
+                
             } else {
-                echo "<script>alert('Request Not Found');</script>";
+                echo "Request Not Found" . $RequestStmt->error;
             }
         } else {
-            echo "<script>alert('Invalid Borrow ID');</script>";
+            echo "Invalid Borrow ID" . $RequestStmt->error;
         }
     } else {
-        echo "<script>alert('Borrow ID Not Set');</script>";
+        echo "Borrow ID Not Set" . $RequestStmt->error;
     }
+    
 
-
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $borrow_status = "Rejected";
+    $RejectQuery = "UPDATE borrow_requests SET borrow_status = ? WHERE borrow_id = ?";
+    $RejectQuery = $conn->prepare($RejectQuery);
 
-    $RejectQuery = "INSERT INTO borrow_requests(borrow_status) VALUE('$borrow_status')";
+    // Assuming $borrow_id is defined before this point
+    $RejectQuery->bind_param("si", $borrow_status, $borrow_id);
 
-    if (mysqli_query($conn, $RejectQuery)) {
+    if ($RejectQuery->execute()) {
 
-        $updateBookStatusSql = "UPDATE books SET book_borrow_status = 'Available' WHERE book_id = '$book_id'";
-        mysqli_query($conn, $updateBookStatusSql);
+        $updateBookStatus = "Available";
+        $updateBookStatusSql = "UPDATE books SET book_borrow_status = ? WHERE book_id = ?";
+        $updateBookStatusSql = $conn->prepare($updateBookStatusSql);
+        $updateBookStatusSql->bind_param("si", $updateBookStatus, $book_id);
+        $updateBookStatusSql->execute();
 
         $logAction = "Request Rejected";
-        $logSql = "INSERT INTO book_log_history (borrower_user_id, borrower_username, book_id, book_title, borrow_days, borrow_status, request_date, action_performed, action_performed_by)
-                    VALUES ('$borrower_user_id','$borrower_username', '$book_id', '$book_title', '$borrow_days', '$borrow_status', '$request_date', '$logAction', '$username')";
-        mysqli_query($conn, $logSql);
+        $logSql = "INSERT INTO book_log_history (borrow_id, borrower_user_id, borrower_username, book_id, book_title, borrow_days, borrow_status, request_date, action_performed, action_performed_by)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $logStatement = $conn->prepare($logSql);
+
+        // Assuming all other variables are defined before this point
+        $logStatement->bind_param("iisississs", $borrow_id, $borrower_user_id, $borrower_username, $book_id, $book_title, $borrow_days, $borrow_status, $request_date, $logAction, $username);
+        $logStatement->execute();
 
         echo 'The Request was Rejected.';
     } else {
-        echo 'Error: ' . $RejectQuery . '<br>' . mysqli_error($conn);
+        echo 'Error: ' . $RejectQuery->error;
     }
+
 
     $notificationMessage = "Dear User, Your Borrow Request for the book: " . $book_title . " was rejected by " . $acctype . " " . $username . ". Contact the Admin or Librarian about the other information.";
     $readStatus = "UNREAD";
 
-    //$sqlStudent = "SELECT id_no = '$borrower_user_id' FROM users WHERE acctype IN ('Student')";
-    $sqlStudent = "SELECT * FROM users WHERE id_no = '$borrower_user_id'";
-    $resultStudent = mysqli_query($conn, $sqlStudent);
+    $sqlStudent = "SELECT * FROM users WHERE id_no = ?";
+    $stmtStudent = $conn->prepare($sqlStudent);
+    $stmtStudent->bind_param("s", $borrower_user_id);
+    $stmtStudent->execute();
+    $resultStudent = $stmtStudent->get_result();
 
     if ($resultStudent) {
         while ($row = mysqli_fetch_assoc($resultStudent)) {
             $student_userId = $row['id_no'];
 
             $sqlNotification = "INSERT INTO notifications (sender_user_id, receiver_user_id, notification_message, read_status)
-                                VALUES ('$idNo', '$student_userId', '$notificationMessage', '$readStatus')";
-            mysqli_query($conn, $sqlNotification);
+                                VALUES (?, ?, ?, ?)";
+            $stmtNotification = $conn->prepare($sqlNotification);
+            $stmtNotification->bind_param("ssss", $idNo, $student_userId, $notificationMessage, $readStatus);
+            $stmtNotification->execute();
         }
     } else {
-        echo "Error: " . $sqlStudent . "<br>" . mysqli_error($conn). "";
+        echo "Error: " . $sqlStudent . "<br>" . mysqli_error($conn) . "";
     }
+
+    $stmtStudent->close();
+    $stmtNotification->close();
+
 
 }
 

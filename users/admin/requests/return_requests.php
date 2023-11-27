@@ -340,7 +340,7 @@ if ($_SESSION['acctype'] === 'Admin') {
                                 // Check if the query executed successfully
                                 if ($result && mysqli_num_rows($result) > 0) {
                                     echo '<div class="container">';
-                                    echo '<table>';
+                                    echo '<table style="width: 75pc;">';
                                     echo '<thead>';
                                     echo '<tr>';
                                     echo '<th>Borrower User ID</th>';
@@ -348,9 +348,11 @@ if ($_SESSION['acctype'] === 'Admin') {
                                     echo '<th>Book Title</th>';
                                     echo '<th>Requested Borrow Days</th>';
                                     echo '<th>Borrow Status</th>';
-                                    echo '<th>Date of Request</th>';
-                                    echo '<th>Time Stamp</th>';
-                                    echo '<th style="width:18%;">Action</th>';
+                                    echo '<th>Request Approval Date</th>';
+                                    echo '<th>Due Date</th>';
+                                    echo '<th>Pickup Date</th>';
+                                    echo '<th>Approved By</th>';
+                                    echo '<th style="width:20%;">Action</th>';
                                     echo '</tr>';
                                     echo '</thead>';
                                     echo '<tbody>';
@@ -362,16 +364,18 @@ if ($_SESSION['acctype'] === 'Admin') {
                                         echo '<td>' . $return['book_title'] . '</td>';
                                         echo '<td>' . $return['borrow_days'] . '</td>';
                                         echo '<td>' . $return['borrow_status'] . '</td>';
-                                        echo '<td>' . $return['request_date'] . '</td>';
-                                        echo '<td>' . $return['request_timestamp'] . '</td>';
+                                        echo '<td>' . $return['request_approval_date'] . '</td>';
+                                        echo '<td>' . $return['due_date'] . '</td>';
+                                        echo '<td>' . $return['pickup_date'] . '</td>';
+                                        echo '<td>' . $return['approved_by'] . '</td>';
                                         echo '<td>
 
-                                            <a href="/LibMS/users/admin/requests/accept_request.php?borrow_id=' .$return['borrow_id']. '">
-                                                <button class="btn btn-success btn-sm"><i class="fa fa-solid fa-check fa-sm"></i> Accept</button>
+                                            <a href="/LibMS/users/admin/requests/func/verify_return.php?borrow_id=' .$return['borrow_id']. '">
+                                                <button class="btn btn-success btn-sm" style="font-size:11px;"><i class="fa fa-solid fa-check fa-sm"></i> Verify Return</button>
                                             </a>
 
                                             
-                                            <button class="btn btn-danger btn-sm" onclick="sendRejectRequest('. $return['borrow_id'] .')"><i class="fa fa-solid fa-x fa-sm"></i> Reject</button>
+                                            <button class="btn btn-danger btn-sm" onclick="sendRejectRequest('. $return['borrow_id'] .')" style="font-size:11px;"><i class="fa fa-solid fa-x fa-sm"></i> Report Lost</button>
                                            
 
                                             </td>';
@@ -421,6 +425,10 @@ if ($_SESSION['acctype'] === 'Admin') {
         </div>
     </div>
 </div>
+
+<script>
+    
+</script>
 
 </body>
 </html>

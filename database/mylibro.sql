@@ -75,7 +75,7 @@ CREATE TABLE notifications (
     sender_user_id INT references users(id_no),
     receiver_user_id INT references users(id_no),
     notification_message VARCHAR(255) NOT NULL,
-    read_status ENUM('UNREAD','READ') NOT NULL,
+    read_status ENUM('UNREAD','READ') NOT NULL, 
     notif_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -115,6 +115,56 @@ CREATE TABLE book_log_history (
     FOREIGN KEY (book_id) REFERENCES books(book_id)
 );
 
+CREATE TABLE returned_books (
+    return_id INT PRIMARY KEY AUTO_INCREMENT,
+    borrow_id INT,
+    borrower_user_id INT,
+    borrower_username VARCHAR(255),
+    book_id INT,
+    book_title VARCHAR(255),
+    borrow_days INT,
+    book_status VARCHAR(100) NOT NULL,
+    return_date DATE NOT NULL,
+    verified_by VARCHAR(100) NOT NULL,
+    FOREIGN KEY (borrow_id) REFERENCES borrow_requests(borrow_id),
+    FOREIGN KEY (book_id) REFERENCES books(book_id),
+    FOREIGN KEY (borrower_user_id) REFERENCES users(id_no)
+);
+
+CREATE TABLE renew_requests (
+    renew_id INT PRIMARY KEY AUTO_INCREMENT,
+    borrow_id INT,
+    borrower_user_id INT,
+    borrower_username VARCHAR(255),
+    book_id INT,
+    book_title VARCHAR(255),
+    borrow_days INT,
+    book_status VARCHAR(100) NOT NULL,
+    renew_date DATE NOT NULL,
+    renewed_by VARCHAR(100) NOT NULL,
+    renew_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (borrow_id) REFERENCES borrow_requests(borrow_id),
+    FOREIGN KEY (book_id) REFERENCES books(book_id),
+    FOREIGN KEY (borrower_user_id) REFERENCES users(id_no)
+);
+
+CREATE TABLE renewed_books (
+    renew_id INT,
+    borrow_id INT,
+    borrower_user_id INT,
+    borrower_username VARCHAR(255),
+    book_id INT,
+    book_title VARCHAR(255),
+    borrow_days INT,
+    book_status VARCHAR(100) NOT NULL,
+    renew_date DATE NOT NULL,
+    renewed_by VARCHAR(100) NOT NULL,
+    renew_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (renew_id) REFERENCES renew_requests(renew_id),
+    FOREIGN KEY (borrow_id) REFERENCES borrow_requests(borrow_id),
+    FOREIGN KEY (book_id) REFERENCES books(book_id),
+    FOREIGN KEY (borrower_user_id) REFERENCES users(id_no)
+);
 
 /*CREATE TABLE approved_borrow_requests (
     borrow_id INT PRIMARY KEY AUTO_INCREMENT,

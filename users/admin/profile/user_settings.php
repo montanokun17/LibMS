@@ -281,23 +281,30 @@ if ($_SESSION['acctype'] === 'Admin') {
 <div class="main-box">
     <div class="container">
             <ul class="mini-sidebar">
-                <li class="mini-item">
-                    <span class="item-content">
-                        My ID Card
-                    </span>
-                </li>
+                <a href="/LibMS/users/admin/profile/func/my_id_card.php">
+                    <li class="mini-item">
+                        <span class="item-content">
+                            My ID Card
+                        </span>
+                    </li>
+                </a>
 
-                <li class="mini-item active">
-                    <span class="item-content">
-                        My Account's Information
-                    </span>
-                </li>
+                <a href="/LibMS/users/admin/profile/user_settings.php">
+                    <li class="mini-item active">
+                        <span class="item-content">
+                            My Account's Information
+                        </span>
+                    </li>
+                </a>
+                
 
-                <li class="mini-item">
-                    <span class="item-content">
-                        Page Banners
-                    </span>
-                </li>
+                <a href="/LibMS/users/admin/profile/func/login_banner.php">
+                    <li class="mini-item">
+                        <span class="item-content">
+                            Page Banners
+                        </span>
+                    </li>
+                </a>
 
                 <div class="dash-box-1">
                     <div class="container">

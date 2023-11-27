@@ -1,10 +1,10 @@
 <?php
 session_start();
 
-$servername = "localhost"; // Replace with your server name if different
-$user_name = "root"; // Replace with your database username
-$Password = ""; // Replace with your database password
-$database = "mylibro"; // Replace with your database name
+$servername = "localhost";
+$user_name = "root";
+$Password = "";
+$database = "mylibro";
 
 // Create a connection
 $conn = new mysqli($servername, $user_name, $Password, $database);
@@ -70,6 +70,52 @@ if ($_SESSION['acctype'] === 'Admin') {
     }
 }
 
+$borrower_user_id = "";
+$borrower_username = "";
+$book_id = "";
+$book_title = "";
+$borrow_days = "";
+$borrow_status = "";
+$request_approval_date = "";
+$due_date = "";
+$pickup_date = "";
+
+
+if (isset($_GET['borrow_id'])) {
+    $borrow_id = $_GET['borrow_id'];
+
+    $borrowQuery = "SELECT * FROM approved_borrow_requests WHERE borrow_id = ?";
+    $borrowStmt = $conn->prepare($borrowQuery);
+
+    if (is_numeric($borrow_id)) {
+        $borrowStmt->bind_param('i', $borrow_id);
+        $borrowStmt->execute();
+        $borrowResult = $borrowStmt->get_result();
+
+        if($borrowResult->num_rows === 1) {
+            $row = $borrowResult->fetch_assoc();
+            
+            $borrower_user_id =  $row['borrower_user_id'];
+            $borrower_username =  $row['borrower_username'];
+            $book_id = $row['book_id'];
+            $book_title = $row['book_title'];
+            $borrow_days = $row['borrow_days'];
+            $borrow_status = $row['borrow_status'];
+            $request_approval_date = $row['request_approval_date'];
+            $due_date = $row['due_date'];
+            $pickup_date = $row['pickup_date'];
+            $approved_by = $row['approved_by'];
+            
+        } else {
+            echo "<script>alert('Request Not Found');</script>";
+        }
+    } else {
+        echo "<script>alert('Invalid Book ID');</script>";
+    }
+} else {
+    echo "<script>alert('Book ID Not Set');</script>";
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -78,14 +124,22 @@ if ($_SESSION['acctype'] === 'Admin') {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <?php echo '<title>'. $firstname .' '. $lastname .' /Admin - MyLibro </title>'; ?>
+    <?php echo '<title>'. $firstname .' '. $lastname .' /Books - MyLibro </title>'; ?>
     <!--Link for Tab ICON-->
     <link rel="icon" type="image/x-icon" href="/LibMS/resources/images/logov1.png">
     <!--Link for Bootstrap-->
     <link rel="stylesheet" type="text/css" href="/LibMS/resources/bootstrap/css/bootstrap.min.css"/>
     <script type="text/javascript" src="/LibMS/resources/bootstrap/js/bootstrap.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <!--Link for JQuery-->
+    <script type="text/javascript" src="/LibMS/resources/jquery ui/jquery-ui.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/LibMS/resources/jquery ui/jquery-ui.min.css"/>
+    <script type="text/javascript" src="/LibMS/resources/jquery/jquery-3.7.1.min.js"></script>
     <!--Link for CSS File-->
-    <link rel="stylesheet" type="text/css" href="/LibMS/users/admin/css/index.css">
+    <link rel="stylesheet" type="text/css" href="/LibMS/users/admin/requests/func/css/verify_return.css">
+    <!--Link for NAVBAR and SIDEBAR styling-->
+    <link rel="stylesheet" type="text/css" href="/LibMS/users/admin/css/navbar-sidebar.css">
     <!--Link for Font Awesome Icons-->
     <link rel="stylesheet" href="/LibMS/resources/icons/fontawesome-free-6.4.0-web/css/all.css">
     <!--Link for Google Font-->
@@ -105,7 +159,23 @@ if ($_SESSION['acctype'] === 'Admin') {
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="#"><i class="fa-solid fa-cogs fa-xs"></i> Login Page Banner</a>
+          <a class="nav-link" aria-current="page" href="#"><i class="fa-solid fa-cogs fa-xs"></i> Page Banner Settings</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" aria-current="page" href="/LibMS/users/admin/requests/issue_requests.php"><i class="fa-solid fa-bookmark fa-xs"></i> Issue Requests</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" aria-current="page" href="/LibMS/users/admin/requests/approved_requests.php"><i class="fa-solid fa-clock-rotate-left fa-xs"></i> Approved Requests</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" aria-current="page" href="/LibMS/users/admin/requests/return_requests.php"><i class="fa-solid fa-rotate-left fa-xs"></i> Return Requests</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" aria-current="page" href="/LibMS/users/admin/requests/renew_requests.php"><i class="fa-solid fa-clock-rotate-left fa-xs"></i> Renewal Requests</a>
         </li>
       </ul>
 
@@ -119,7 +189,7 @@ if ($_SESSION['acctype'] === 'Admin') {
         <li class="nav-item">
           <a class="nav-link" href="#">
 
-            <?php
+          <?php
                 if (isset($_SESSION['id_no']) && isset($_SESSION['username'])) {
                     $idNo = $_SESSION['id_no'];
                     $username = $_SESSION['username'];
@@ -145,7 +215,7 @@ if ($_SESSION['acctype'] === 'Admin') {
                         } else {
                             // Error in executing the SQL query
                             echo '<img src="/LibMS/resources/images/user.png" width="200" height="200" class="rounded-circle" style="margin-top: 10px; margin-bottom: 10px;">';
-                                                    }
+                        }
                     }
                                                     
             ?>
@@ -159,7 +229,7 @@ if ($_SESSION['acctype'] === 'Admin') {
 <!--NAVBAR-->
 
 <!--SIDEBAR-->
-    <div id="sidebar">
+<div id="sidebar">
             <ul>
                 <li></li>
                 <li>
@@ -276,123 +346,105 @@ if ($_SESSION['acctype'] === 'Admin') {
     </div>
 <!--SIDEBAR-->
 
-<!-- ID Card Container -->
-<div class="container mt-4">
-    <div class="row justify-content-center">
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-header bg-dark text-white">
-                    <p class="text-center">MyLibro ID</p>
-                </div>
-                <div class="card-body">
-                    <!-- User's Profile Image -->
-                    <div class="text-center mb-2">
-                        <img src="/LibMS/resources/images/logov1.png" 
-                            width="75" height="75" class="Idlogo">
+<div class="main-box">
+    <div class="container">
+        <div class="row">
+            <div class="box-1 col-12">
+                <div class="card-body bg-dark">
+                    <div class="col-md-8 mx-auto">
+                        <form class="form-box" method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
 
-                        <?php
-                        
-                        if (isset($_SESSION['id_no']) && isset($_SESSION['username'])) {
-                        $idNo = $_SESSION['id_no'];
-                        $username = $_SESSION['username'];
-                                                    
-                        // Query to retrieve the necessary columns from the database
-                        $UserPicPath = "SELECT user_pic_data, user_pic_type FROM user_pics WHERE user_id = ? AND username = ?";
-                        $statement = $conn->prepare($UserPicPath);
-                        $statement->bind_param("is", $idNo, $username);
-                                                    
-                            if ($statement->execute()) {
-                                $result = $statement->get_result();
-                                                    
-                                if ($row = $result->fetch_assoc()) {
-                                    // Use the "width" and "height" attributes to resize the image
-                                    echo '<img src="data:image/png;base64,' . base64_encode($row["user_pic_data"]) . '" width="100" height="100" class="rounded-circle"/>';
-                                    
-                                } else {
-                                    // If not found in the database, display the default image
-                                    echo '<img src="/LibMS/resources/images/user.png" width=100" height="100" class="rounded-circle" style="margin-top: 10px; margin-bottom: 10px;">';
-                                }
-                            } else {
-                                // Error in executing the SQL query
-                                echo '<img src="/LibMS/resources/images/user.png" width="100" height="100" class="rounded-circle" style="margin-top: 10px; margin-bottom: 10px;">';
-                                                        }
-                        }
-                                                    
-                        ?>
-                            
+                            <div class="form-group" style="margin-top:20px;">
+                                <h2><i class="fa-solid fa-paper-plane"></i> Verify Book Return:</h2>
+                            </div>
+
+                            <div class="form-group" style="margin-top:10px;">
+                                <label>Book Title:</label>
+                                <span class="form-control-static"><?php echo $book_title; ?></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label >Borrower Username:</label>
+                                <span class="form-control-static"><?php echo $borrower_username; ?></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label >Borrow Days:</label>
+                                <span class="form-control-static"><?php echo $borrow_days; ?></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label >Reuest Approval Date:</label>
+                                <span class="form-control-static"><?php echo $request_approval_date; ?></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label >Due Date:</label>
+                                <span class="form-control-static"><?php echo $due_date; ?></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label >Approved By:</label>
+                                <span class="form-control-static"><?php echo $approved_by; ?></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Book Condition When Returned:</label>
+                                <span class="form-control-static">
+                                    <select name="book-status" id="book-status" class="book-status" required="">
+                                        <option selected disabled>**Select Book Condition When Returned**</option>
+                                        <option value="GOOD">GOOD</option>
+                                        <option value="DAMAGED">DAMAGED</option>
+                                        <option value="DILAPITATED">DILAPITATED</option>
+                                    </select>
+                                </span>
+                            </div>
+
+                            <div class="form-group" style="margin-bottom:10px; margin-top:10px;">
+                                <button type="button" class="btn btn-primary btn-md" style="width:80%;" onclick="sendVerifyReturn(<?php echo $borrow_id; ?>)"><i class="fa-solid fa-paper-plane"></i> Verify Book Return</button>
+                            </div>
+
+
+                            <!--
+                            <div class="form-group">
+                                <label for="book">:</label>
+                                <span id="book" class="form-control-static"><?php //echo $; ?></span>
+                            </div>
+                            -->
+
+                        </form>
                     </div>
-                    <!-- User's Details -->
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">
-                            <strong>Name:</strong> <?php echo "$firstname $lastname"; ?>
-                        </li>
-                        <li class="list-group-item">
-                            <strong>ID Number:</strong> <?php echo "$idNo"; ?>
-                        </li>
-                        <li class="list-group-item">
-                            <strong>Email:</strong> <?php echo "$email"; ?>
-                        </li>
-                        <li class="list-group-item">
-                            <strong>Account Type:</strong> <?php echo "$acctype"; ?>
-                        </li>
-                        <li class="list-group-item">
-                            <strong>Barangay:</strong> <?php echo "$brgy"; ?>
-                        </li>
-                    </ul>
-
-                    <?php
-                    // Check if the user is logged in
-                    if (isset($_SESSION['id_no']) && isset($_SESSION['username'])) {
-                        $idNo = $_SESSION['id_no'];
-                        $username = $_SESSION['username'];
-
-                        // Query to retrieve the necessary columns from the database
-                        $qrCodePath = "SELECT qr_code_data, qr_code_type FROM qr_codes WHERE user_id = ? AND username = ?";
-                        $statement = $conn->prepare($qrCodePath);
-                        $statement->bind_param("is", $idNo, $username);
-
-                        if ($statement->execute()) {
-                            $result = $statement->get_result();
-
-                            if ($row = $result->fetch_assoc()) {
-                                // Define the desired width and height for the image
-                                $width = 150; // Set your desired width
-                                $height = 150; // Set your desired height
-
-                                echo '<div class="container col-sm-6 center">';
-                                // Use the "width" and "height" attributes to resize the image
-                                echo '<img src="data:image/png;base64,' . base64_encode($row["qr_code_data"]) . '" width="' . $width . '" height="' . $height . '"/>';
-                                echo '</div>';
-                            } else {
-                                // QR code not found in the database
-                                echo '<div class="text-center mb-3">';
-                                echo '<p><i class="fa fa-solid fa-triangle-exclamation fa-sm"></i> QR Code not found.</p>';
-                                echo '</div>';
-                            }
-                        } else {
-                            // Error in executing the SQL query
-                            echo '<div class="text-center mb-3">';
-                            echo '<p>Error in executing the SQL query.</p>';
-                            echo '</div>';
-                        }
-
-                        $statement->close();
-                    } else {
-                        // User is not logged in
-                        echo '<div class="text-center mb-3">';
-                        echo '<p>You are not logged in.</p>';
-                        echo '</div>';
-                    }
-
-                    ?>
-
-
                 </div>
             </div>
         </div>
     </div>
 </div>
 
+<script>
+    function sendVerifyReturn(borrow_id) {
+    var bookstatus = document.getElementById("book-status").value;
+
+    if (bookstatus === "") {
+        alert("Please select the current Book condition when returned, for assessment purposes.");
+        return;
+    }
+
+    // You can perform an AJAX request to the server to handle the database operations
+    // For simplicity, let's assume there is a PHP script (borrow_request.php) to handle this
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/LibMS/users/admin/requests/func/return.php", true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            alert(xhr.responseText); // You can customize this based on your response from the server
+        }
+    };
+
+    // Send data to the server, including the book ID
+    xhr.send("book-status=" + bookstatus + "&borrow_id=" + borrow_id);
+}
+</script>
 
 </body>
 </html>

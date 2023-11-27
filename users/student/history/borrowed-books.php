@@ -309,7 +309,7 @@ if ($_SESSION['acctype'] === 'Student' || 'Guest') {
                             echo '<td>' . $borrowed['request_approval_date'] . '</td>';
                             echo '<td>' . $borrowed['due_date'] . '</td>';
                             echo '<td>';
-                            echo '<button type="button" class="btn btn-danger btn-sm" style="margin-left:5px;" onClick=sendRenewRequest('.$borrowed['borrow_id'].')><i class="fa-solid fa-xmark fa-sm"></i> Renew</button>';
+                            echo '<button type="button" class="btn btn-primary btn-sm" style="margin-left:5px;" onClick=sendRenewRequest('.$borrowed['borrow_id'].')><i class="fa-solid fa-clock-rotate-left fa-sm"></i> Renew</button>';
                             echo '</td>';
 
                             echo '</tr>';
