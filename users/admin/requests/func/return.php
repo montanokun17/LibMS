@@ -101,7 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo "<script>alert('Borrow ID Not Set');</script>";
     }
 
-    $bookStatus = $_POST['bookstatus'];
+    $bookStatus = $_POST['book-status'];
     $book_borrow_status = "Available";
     $return_date = date('Y-m-d');
 
