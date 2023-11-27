@@ -108,6 +108,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Calculate due date
     $due_date = date('Y-m-d', strtotime($pickup_date . ' + ' . $borrow_days . ' days'));
     $borrow_status = "Borrowed";
+    $RequestStatus = "Approved";
 
     // Fix syntax error in the UPDATE query
     $VerifyPickupQuery = "UPDATE approved_borrow_requests SET borrow_status = ?, due_date = ? WHERE borrow_id = ?";
@@ -121,7 +122,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo 'Error: ' . $VerifyPickupQuery . '<br>' . $VerifyPickupStmt->error;
     }
 
-    $RequestStatus = "Approved";
     $VerifyBorrowQuery = "UPDATE borrow_requests SET borrow_status = ? WHERE borrow_id = ?";
     $VerifyBorrowStmt = $conn->prepare($VerifyBorrowQuery);
     $VerifyBorrowStmt->bind_param("si", $RequestStatus, $borrow_id);
