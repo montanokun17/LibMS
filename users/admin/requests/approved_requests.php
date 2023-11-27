@@ -70,6 +70,7 @@ if ($_SESSION['acctype'] === 'Admin') {
     }
 }
 
+
 ?>
 
 <!DOCTYPE html>
@@ -89,6 +90,7 @@ if ($_SESSION['acctype'] === 'Admin') {
     <!--Link for JQuery-->
     <script type="text/javascript" src="/LibMS/resources/jquery ui/jquery-ui.min.js"></script>
     <link rel="stylesheet" type="text/css" href="/LibMS/resources/jquery ui/jquery-ui.min.css"/>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script type="text/javascript" src="/LibMS/resources/jquery/jquery-3.7.1.min.js"></script>
     <!--Link for CSS File-->
     <link rel="stylesheet" type="text/css" href="/LibMS/users/admin/requests/css/approved_requests.css">
@@ -339,7 +341,7 @@ if ($_SESSION['acctype'] === 'Admin') {
                                 // Check if the query executed successfully
                                 if ($result && mysqli_num_rows($result) > 0) {
                                     echo '<div class="container">';
-                                    echo '<table>';
+                                    echo '<table style="width: 75pc;">';
                                     echo '<thead>';
                                     echo '<tr>';
                                     echo '<th>Borrower User ID</th>';
@@ -347,9 +349,11 @@ if ($_SESSION['acctype'] === 'Admin') {
                                     echo '<th>Book Title</th>';
                                     echo '<th>Requested Borrow Days</th>';
                                     echo '<th>Borrow Status</th>';
-                                    echo '<th>Date of Request</th>';
-                                    echo '<th>Time Stamp</th>';
-                                    echo '<th style="width:18%;">Action</th>';
+                                    echo '<th>Request Approval Date</th>';
+                                    echo '<th>Due Date</th>';
+                                    echo '<th>Pickup Date</th>';
+                                    echo '<th>Approved By</th>';
+                                    echo '<th style="width:20%;">Action</th>';
                                     echo '</tr>';
                                     echo '</thead>';
                                     echo '<tbody>';
@@ -361,19 +365,14 @@ if ($_SESSION['acctype'] === 'Admin') {
                                         echo '<td>' . $request['book_title'] . '</td>';
                                         echo '<td>' . $request['borrow_days'] . '</td>';
                                         echo '<td>' . $request['borrow_status'] . '</td>';
-                                        echo '<td>' . $request['request_date'] . '</td>';
-                                        echo '<td>' . $request['request_timestamp'] . '</td>';
-                                        echo '<td>
-
-                                            <a href="/LibMS/users/admin/requests/verify_pickup.php?borrow_id=' .$request['borrow_id']. '">
-                                                <button class="btn btn-success btn-sm" onclick="sendSuccessPickup('. $request['borrow_id'] .')"><i class="fa fa-solid fa-check fa-sm"></i> Verify Pickup</button>
-                                            </a>
-
-                                            
-                                            <button class="btn btn-danger btn-sm" onclick="sendCancelPickup('. $request['borrow_id'] .')"><i class="fa fa-solid fa-x fa-sm"></i> Cancel Pickup</button>
-                                           
-
-                                            </td>';
+                                        echo '<td>' . $request['request_approval_date'] . '</td>';
+                                        echo '<td>' . $request['due_date'] . '</td>';
+                                        echo '<td>' . $request['pickup_date'] . '</td>';
+                                        echo '<td>' . $request['approved_by'] . '</td>';
+                                        echo '<td>';
+                                        echo '<button style="font-size:11px; margin-right:5px;" class="btn btn-success btn-sm" onclick="sendSuccessPickup('. $request['borrow_id'] .')"><i class="fa fa-solid fa-check fa-sm"></i> Verify Pickup</button>';
+                                        echo '<button style="font-size:11px;" class="btn btn-danger btn-sm" onclick="sendCancelPickup('. $request['borrow_id'] .')"><i class="fa fa-solid fa-x fa-sm"></i> Cancel Pickup</button>';
+                                        echo '</td>';
 
                                         echo '</tr>';
                                     }
@@ -424,22 +423,29 @@ if ($_SESSION['acctype'] === 'Admin') {
 
 <script>
     function sendSuccessPickup(borrow_id) {
-        var xhr = new XMLHttpRequest();
-        var url = "/LibMS/users/admin/requests/verify_pickup.php";
-        var params = "borrow_id=" + borrow_id; // Add other parameters as needed
+    // Create a new XMLHttpRequest object
+    var xhr = new XMLHttpRequest();
 
-        xhr.open("POST", url, true);
-        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    // Configure it: POST request to the specified URL
+    xhr.open('POST', '/LibMS/users/admin/requests/verify_pickup.php', true);
 
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState == 4 && xhr.status == 200) {
-                // Handle the response from the server
-                alert(xhr.responseText);
-            }
-        };
+    // Set the content type of the request to send URL-encoded form data
+    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 
-        xhr.send(params);
-    }
+    // Set up a function that will be called when the request is successfully completed
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            // Handle the response from the server
+            alert(xhr.responseText);
+        }
+    };
+
+    // Create a URL-encoded string with the borrow_id parameter
+    var params = 'borrow_id=' + borrow_id;
+
+    // Send the request with the form data
+    xhr.send(params);
+}
 
     function sendCancelPickup(borrow_id) {
         var xhr = new XMLHttpRequest();

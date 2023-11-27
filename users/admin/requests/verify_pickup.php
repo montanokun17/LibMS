@@ -15,19 +15,6 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Check if the logout parameter is set
-if (isset($_GET['logout']) && $_GET['logout'] === 'true') {
-    // Unset all session variables
-    $_SESSION = array();
-
-    // Destroy the session
-    session_destroy();
-
-    // Redirect to the login page
-    header('Location: /LibMS/main/login.php');
-    exit();
-}
-
 // Initialize variables with default values
 $firstname = "";
 $lastname = "";
@@ -81,20 +68,23 @@ $request_approval_date = "";
 $pickup_date = "";
 $approvedBy = "";
 
-if (isset($_POST['borrow_id'])) {
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+    if (isset($_POST['borrow_id'])) {
         $borrow_id = $_POST['borrow_id'];
-
-        $RequestQuery = "SELECT * FROM approved_borrow_request WHERE borrow_id = ?";
+    
+        $RequestQuery = "SELECT * FROM approved_borrow_requests WHERE borrow_id = ?";
         $RequestStmt = $conn->prepare($RequestQuery);
-
+    
         if (is_numeric($borrow_id)) {
             $RequestStmt->bind_param('i', $borrow_id);
             $RequestStmt->execute();
             $RequestResult = $RequestStmt->get_result();
-
-            if($RequestResult->num_rows === 1) {
+    
+            if ($RequestResult->num_rows === 1) {
                 $row = $RequestResult->fetch_assoc();
-
+    
                 $borrower_user_id = $row['borrower_user_id'];
                 $borrower_username = $row['borrower_username'];
                 $book_id = $row['book_id'];
@@ -104,58 +94,73 @@ if (isset($_POST['borrow_id'])) {
                 $request_approval_date = $row['request_approval_date'];
                 $pickup_date = $row['pickup_date'];
                 $approvedBy = $row['approved_by'];
+                
             } else {
-                echo "<script>alert('Request Not Found');</script>";
+                echo "Request Not Found" . $RequestStmt->error;
             }
         } else {
-            echo "<script>alert('Invalid Borrow ID');</script>";
+            echo "Invalid Borrow ID" . $RequestStmt->error;
         }
     } else {
-        echo "<script>alert('Borrow ID Not Set');</script>";
+        echo "Borrow ID Not Set" . $RequestStmt->error;
     }
 
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-   
     // Calculate due date
     $due_date = date('Y-m-d', strtotime($pickup_date . ' + ' . $borrow_days . ' days'));
     $borrow_status = "Borrowed";
 
-    $VerifyPickupQuery = "UPDATE approved_borrow_request SET borrow_status = $borrow_status AND due_date = $due_date WHERE borrow_id = $borrow_id";
+    // Fix syntax error in the UPDATE query
+    $VerifyPickupQuery = "UPDATE approved_borrow_requests SET borrow_status = ?, due_date = ? WHERE borrow_id = ?";
+    $VerifyPickupStmt = $conn->prepare($VerifyPickupQuery);
+    $VerifyPickupStmt->bind_param("ssi", $borrow_status, $due_date, $borrow_id);
 
-    if (mysqli_query($conn, $VerifyPickupQuery)) {
-
-        $updateBookStatusSql = "UPDATE books SET book_borrow_status = 'Borrowed' WHERE book_id = '$book_id'";
-        mysqli_query($conn, $updateBookStatusSql);
-
-        $logAction = "Borrowed";
-        $logSql = "INSERT INTO book_log_history (borrower_user_id, borrower_username, book_id, book_title, borrow_days, borrow_status, request_date, action_performed, action_performed_by)
-                    VALUES ('$borrower_user_id','$borrower_username', '$book_id', '$book_title', '$borrow_days', '$borrow_status', '$request_date', '$logAction', '$username')";
-        mysqli_query($conn, $logSql);
+    if ($VerifyPickupStmt->execute()) {
 
         echo 'Book Loan/Borrow Pickup Verified.';
     } else {
-        echo 'Error: ' . $VerifyPickupQuery . '<br>' . mysqli_error($conn);
+        echo 'Error: ' . $VerifyPickupQuery . '<br>' . $VerifyPickupStmt->error;
     }
+
+    $RequestStatus = "Approved";
+    $VerifyBorrowQuery = "UPDATE borrow_requests SET borrow_status = ? WHERE borrow_id = ?";
+    $VerifyBorrowStmt = $conn->prepare($VerifyBorrowQuery);
+    $VerifyBorrowStmt->bind_param("si", $RequestStatus, $borrow_id);
+
+    if ($VerifyBorrowStmt->execute()) {
+
+    } else {
+        echo 'Error: ' . $VerifyBorrowQuery . '<br>' . $VerifyBorrowStmt->error;
+    }
+
+    $VerifyBookQuery = "UPDATE books SET book_borrow_status = ? WHERE book_id = ?";
+    $VerifyBookStmt = $conn->prepare($VerifyBookQuery);
+    $VerifyBookStmt->bind_param("si", $borrow_status, $book_id);
+
+    if ($VerifyBookStmt->execute()) {
+
+    } else {
+        echo 'Error: ' . $VerifyBookQuery . '<br>' . $VerifyBookStmt->error;
+    }
+
 
     $notificationMessage = "You Have Successfully Picked up and Borrowed A Book from the Library. Remember to Return the Book Before it's Due Date " . $due_date . " to avoid penalties from the Library. Have Fun Reading!";
     $readStatus = "UNREAD";
 
-    $sqlStudent = "SELECT id_no = '$borrower_user_id' FROM users WHERE acctype IN ('Student')";
+    $sqlStudent = "SELECT * FROM users WHERE id_no = $borrower_user_id";
     $resultStudent = mysqli_query($conn, $sqlStudent);
 
     if ($resultStudent) {
-        while ($row = myssqli_fetch_assoc($resultStudent)) {
+        while ($row = mysqli_fetch_assoc($resultStudent)) {
             $student_userId = $row['id_no'];
 
             $sqlNotification = "INSERT INTO notifications (sender_user_id, receiver_user_id, notification_message, read_status)
-                                VALUES ('$idNo', '$borrower_user_id', '$notificationMessage', '$readStatus')";
+                                VALUES ('$idNo', '$student_userId', '$notificationMessage', '$readStatus')";
             mysqli_query($conn, $sqlNotification);
         }
     } else {
         echo "Error: " . $sqlStudent . "<br>" . mysqli_error($conn). "";
     }
-
+    
 }
 
 ?>

@@ -19,3 +19,25 @@ form {
     padding: 10px;
     padding-bottom: 40px;
 }
+
+.main-box {
+    color: white;
+}
+
+.head-title {
+    margin-top: 10px;
+}
+
+.sender-head {
+    font-style: italic;
+    font-size: 17px;
+}
+
+label {
+    margin-bottom: 10px;
+    font-style: italic;
+}
+
+.action-box {
+    margin-top: 100px;
+}

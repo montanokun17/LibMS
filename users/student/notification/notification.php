@@ -251,7 +251,7 @@ if ($_SESSION['acctype'] === 'Student' || 'Guest') {
 
                     <?php
 
-                    $query = "SELECT * FROM notifications WHERE sender_user_id = ? AND receiver_user_id = ? ORDER BY notif_id DESC";
+                    $query = "SELECT * FROM notifications WHERE receiver_user_id = $idNo ORDER BY notif_id DESC";
                     
                     function getNotifsByPagination($conn, $query, $offset, $limit) {
                     $query .= " LIMIT $limit OFFSET $offset"; // Append the LIMIT and OFFSET to the query for pagination
@@ -290,7 +290,7 @@ if ($_SESSION['acctype'] === 'Student' || 'Guest') {
                         while ($notifs = mysqli_fetch_assoc($result)) {
                             echo '<tr>';
                             if ($notifs['read_status']==='UNREAD') {
-                                echo '<td class="indicator" style="width:5%;"><i class="fa-solid fa-circle fa-sm" style="color: #b12525;"></i></td>';
+                                echo '<td class="indicator" style="background-color:#CCD1D1; width:5%;"><i class="fa-solid fa-circle fa-sm" style="color: #b12525;"></i></td>';
                                 echo '<td style="background-color:#CCD1D1; font-weight:800;">' . $notifs['sender_user_id'] . '</td>';
                                 echo '<td style="background-color:#CCD1D1; font-weight:800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 500px;">' 
                                 . $notifs['notification_message'] . '</td>';

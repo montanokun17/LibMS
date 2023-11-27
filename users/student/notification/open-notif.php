@@ -72,6 +72,60 @@ if ($_SESSION['acctype'] === 'Student' || 'Guest') {
     }
 }
 
+
+if (isset($_GET['notif_id'])) {
+    $notifId = $_GET['notif_id'];
+
+    // Use prepared statement to prevent SQL injection
+    $stmt = $conn->prepare("UPDATE notifications SET read_status = 'READ' WHERE notif_id = ?");
+    $stmt->bind_param("i", $notifId); // 'i' represents integer, adjust accordingly if notif_id is of a different type
+
+    // Execute the update
+    if ($stmt->execute()) {
+        // Update successful
+        // echo 'Notification marked as read successfully';
+    } else {
+        // Update failed
+        echo 'Error updating notification: ' . $stmt->error;
+    }
+
+    // Close the statement
+    $stmt->close();
+
+    // Retrieve additional information about the notification
+    $notif_sender = "";
+    $notif_receiver = "";
+    $notif_message = "";
+    $notif_timestamp = "";
+
+    // Use a different variable name for the statement to avoid conflicts
+    $notifStmt = $conn->prepare("SELECT * FROM notifications WHERE notif_id = ?");
+    if ($notifStmt) {
+        $notifStmt->bind_param('i', $notifId);
+        $notifStmt->execute();
+        $notifResult = $notifStmt->get_result();
+
+        if ($notifResult->num_rows === 1) {
+            $row = $notifResult->fetch_assoc();
+
+            $notif_sender = $row['sender_user_id'];
+            $notif_receiver = $row['receiver_user_id'];
+            $notif_message = $row['notification_message'];
+            $notif_timestamp = $row['notif_timestamp'];
+        } else {
+            echo "Notification was not found.";
+        }
+
+        // Close the statement for retrieving additional information
+        $notifStmt->close();
+    } else {
+        echo "Error preparing statement: " . $conn->error;
+    }
+} else {
+    // Handle the case where notif_id is not provided
+    echo 'Invalid request';
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -249,16 +303,29 @@ if ($_SESSION['acctype'] === 'Student' || 'Guest') {
                 <div class="card-body bg-dark">
                     <div class="col-md-8 mx-auto">
 
-                        <div class="container head-title">
-                            <h3></h3>
+                    <div class="container head-title bg-dark">
+                            <p class="sender-head">From: <?php echo $notif_sender; ?></p>
                         </div>
+                        <br>
 
-                        <div class="container message-body">
-                            <p></p>
+                        <div class="container message-body bg-dark">
+                            <label for="message-box">Notification Content:</label>
+                            <p class="message-box"><?php echo $notif_message; ?></p>
+                        </div><br>
+
+                        <div class="container message-body bg-dark">
+                            <label for="message-box">Received:</label>
+                            <p class="message-box"><?php echo $notif_timestamp; ?></p>
                         </div>
 
                         <div class="action-box">
-                            <buttton></button>
+                            <a href="/LibMS/users/student/notification/notification.php">
+                                <button class="btn btn-primary btn-sm" style="width:50%; margin-bottom:10px;"><i class="fa fa-solid fa-arrow-left fa-sm"></i> Go Back</button>
+                            </a>
+
+                            <a href="#">
+                                <button class="btn btn-danger btn-sm" style="width:50%; margin-bottom:10px;"><i class="fa-solid fa-trash fa-sm"></i> Delete</button>
+                            </a>
                         </div>
 
                     </div>

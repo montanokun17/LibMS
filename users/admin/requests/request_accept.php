@@ -131,7 +131,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo 'Error: ' . $approveQuery . '<br>' . mysqli_error($conn);
     }
 
-    $notificationMessage = "Dear User, Your Borrow Request for the book: " . $book_title . " is approved by " . $acctype . " " . $username . ". Your Book is Ready to Pickup in the Library on Date: " . $pickup_date . ".";
+    $notificationMessage = "Dear User, Your Borrow Request for the book: " . $book_title . " is approved by " . $acctype . " (" . $username . "). Your Book is Ready to Pickup in the Library on Date: " . $pickup_date . ".";
     $readStatus = "UNREAD";
 
     $sqlStudent = "SELECT * FROM users WHERE id_no = $borrower_user_id";
