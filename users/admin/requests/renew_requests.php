@@ -113,11 +113,15 @@ if ($_SESSION['acctype'] === 'Admin') {
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="#"><i class="fa-solid fa-cogs fa-xs"></i> Homepage Settings</a>
+          <a class="nav-link" aria-current="page" href="#"><i class="fa-solid fa-cogs fa-xs"></i> Page Banner Settings</a>
         </li>
-        
+
         <li class="nav-item">
           <a class="nav-link" aria-current="page" href="/LibMS/users/admin/requests/issue_requests.php"><i class="fa-solid fa-bookmark fa-xs"></i> Issue Requests</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" aria-current="page" href="/LibMS/users/admin/requests/approved_requests.php"><i class="fa-solid fa-clock-rotate-left fa-xs"></i> Approved Requests</a>
         </li>
 
         <li class="nav-item">
@@ -165,7 +169,7 @@ if ($_SESSION['acctype'] === 'Admin') {
                         } else {
                             // Error in executing the SQL query
                             echo '<img src="/LibMS/resources/images/user.png" width="200" height="200" class="rounded-circle" style="margin-top: 10px; margin-bottom: 10px;">';
-                                                    }
+                        }
                     }
                                                     
             ?>

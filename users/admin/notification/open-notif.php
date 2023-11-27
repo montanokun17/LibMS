@@ -348,6 +348,11 @@ if (isset($_GET['notif_id'])) {
                         <div class="container message-body bg-dark">
                             <label for="message-box">Notification Content:</label>
                             <p class="message-box"><?php echo $notif_message; ?></p>
+                        </div><br>
+
+                        <div class="container message-body bg-dark">
+                            <label for="message-box">Received:</label>
+                            <p class="message-box"><?php echo $notif_timestamp; ?></p>
                         </div>
 
                         <div class="action-box">
@@ -355,7 +360,7 @@ if (isset($_GET['notif_id'])) {
                                 <button class="btn btn-primary btn-sm" style="width:50%; margin-bottom:10px;"><i class="fa fa-solid fa-arrow-left fa-sm"></i> Go Back</button>
                             </a>
 
-                            <a href="/LibMS/users/admin/requests/issue_return_requests.php">
+                            <a href="/LibMS/users/admin/requests/issue_requests.php">
                                 <button class="btn btn-primary btn-sm" style="width:50%; margin-bottom:10px;"><i class="fa-solid fa-arrow-right-to-bracket fa-sm"></i> Go to Requests Pages</button>
                             </a>
                         </div>

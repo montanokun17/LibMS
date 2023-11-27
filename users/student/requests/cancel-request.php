@@ -126,11 +126,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $notificationSQL = "DELETE FROM notification WHERE notif_id = $borrow_id OR notif_timestamp = $request_timestamp";
         mysqli_query($conn, $notificationSQL);
 
-        $logAction = 'Cancelled';
-        $logSQL = "INSERT INTO book_log_history(borrow_status) WHERE borrow_id = $borrow_id VALUES('$logAction')";
+        $logSQL = "DELETE FROM book_log_history WHERE borrow_id = $borrow_id";
         mysqli_query($conn, $logSQL);
 
-        echo 'The Request was Cancelled.';
+        echo 'Your Request was Cancelled.';
     } else {
         echo 'Error: ' . $CancelQuery . '<br>' . mysqli_error($conn);
     }

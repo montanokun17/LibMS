@@ -78,7 +78,7 @@ if ($_SESSION['acctype'] === 'Student') {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <?php echo '<title>'. $firstname .' '. $lastname .' /Books - MyLibro </title>'; ?>
+    <?php echo '<title>'. $firstname .' '. $lastname .' /Student: Books - MyLibro </title>'; ?>
     <!--Link for Tab ICON-->
     <link rel="icon" type="image/x-icon" href="/LibMS/resources/images/logov1.png">
     <!--Link for Bootstrap-->
@@ -467,7 +467,7 @@ if ($_SESSION['acctype'] === 'Student') {
                             
                             // Check if the query executed successfully
                             if ($result && mysqli_num_rows($result) > 0) {
-                                echo '<div class="container" id="book-list-container">';
+                                echo '<div>';
                                 echo '<table id="dataTable">';
                                 echo '<thead>';
                                 echo '<tr>';

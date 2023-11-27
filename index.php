@@ -115,8 +115,7 @@ exec("python3 qr_codes_import.py");
                         </span>
                       </h1>
                       <p>
-                        It is a long established fact that a reader will be distracted by the readable content of a page
-                        when looking
+                        “The public library is where place and possibility meet.” ― Stuart Dybek
                       </p>
                       <div class="btn-box">
                         <a href="" class="btn-1">

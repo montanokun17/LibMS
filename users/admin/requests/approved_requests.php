@@ -78,7 +78,7 @@ if ($_SESSION['acctype'] === 'Admin') {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <?php echo '<title>'. $firstname .' '. $lastname .' / Return Requests - MyLibro </title>'; ?>
+    <?php echo '<title>'. $firstname .' '. $lastname .' / Approved Requests - MyLibro </title>'; ?>
     <!--Link for Tab ICON-->
     <link rel="icon" type="image/x-icon" href="/LibMS/resources/images/logov1.png">
     <!--Link for Bootstrap-->
@@ -91,7 +91,7 @@ if ($_SESSION['acctype'] === 'Admin') {
     <link rel="stylesheet" type="text/css" href="/LibMS/resources/jquery ui/jquery-ui.min.css"/>
     <script type="text/javascript" src="/LibMS/resources/jquery/jquery-3.7.1.min.js"></script>
     <!--Link for CSS File-->
-    <link rel="stylesheet" type="text/css" href="/LibMS/users/admin/requests/css/issue_requests.css">
+    <link rel="stylesheet" type="text/css" href="/LibMS/users/admin/requests/css/approved_requests.css">
     <!--Link for NAVBAR and SIDEBAR styling-->
     <link rel="stylesheet" type="text/css" href="/LibMS/users/admin/css/navbar-sidebar.css">
     <!--Link for Font Awesome Icons-->
@@ -308,21 +308,20 @@ if ($_SESSION['acctype'] === 'Admin') {
                 <div class="inner-box">
                     <div class="container-fluid">
 
-                            <?php
-
+                        <?php
                             // Default query to fetch all books
-                            $query = "SELECT * FROM approved_borrow_requests WHERE borrow_status = 'Borrowed' ORDER BY request_approval_date DESC";
+                            $query = "SELECT * FROM approved_borrow_requests WHERE borrow_status = 'Approved(Ready to Pickup)' ORDER BY borrow_id ASC";
 
-                            function getReturnByPagination($conn, $query, $offset, $limit) {
+                            function getRequestsByPagination($conn, $query, $offset, $limit) {
                                 $query .= " LIMIT $limit OFFSET $offset"; // Append the LIMIT and OFFSET to the query for pagination
                                 $result = mysqli_query($conn, $query);
             
                                 return $result;
                             }
             
-                            $totalReturnQuery = "SELECT COUNT(*) as total FROM borrow_requests";
-                            $totalReturnResult = mysqli_query($conn, $totalReturnQuery);
-                            $totalReturn = mysqli_fetch_assoc($totalReturnResult)['total'];
+                            $totalRequestsQuery = "SELECT COUNT(*) as total FROM approved_borrow_requests";
+                            $totalRequestsResult = mysqli_query($conn, $totalRequestsQuery);
+                            $totalRequests = mysqli_fetch_assoc($totalRequestsResult)['total'];
             
             
                             // Number of books to display per page
@@ -335,7 +334,7 @@ if ($_SESSION['acctype'] === 'Admin') {
                             $offset = ($page - 1) * $limit;
 
                             // Get the books for the current page
-                            $result = getReturnByPagination($conn, $query, $offset, $limit);
+                            $result = getRequestsByPagination($conn, $query, $offset, $limit);
 
                                 // Check if the query executed successfully
                                 if ($result && mysqli_num_rows($result) > 0) {
@@ -355,23 +354,23 @@ if ($_SESSION['acctype'] === 'Admin') {
                                     echo '</thead>';
                                     echo '<tbody>';
 
-                                    while ($return = mysqli_fetch_assoc($result)) {
+                                    while ($request = mysqli_fetch_assoc($result)) {
                                         echo '<tr>';
-                                        echo '<td>' . $return['borrower_user_id'] . '</td>';
-                                        echo '<td>' . $return['borrower_username'] . '</td>';
-                                        echo '<td>' . $return['book_title'] . '</td>';
-                                        echo '<td>' . $return['borrow_days'] . '</td>';
-                                        echo '<td>' . $return['borrow_status'] . '</td>';
-                                        echo '<td>' . $return['request_date'] . '</td>';
-                                        echo '<td>' . $return['request_timestamp'] . '</td>';
+                                        echo '<td>' . $request['borrower_user_id'] . '</td>';
+                                        echo '<td>' . $request['borrower_username'] . '</td>';
+                                        echo '<td>' . $request['book_title'] . '</td>';
+                                        echo '<td>' . $request['borrow_days'] . '</td>';
+                                        echo '<td>' . $request['borrow_status'] . '</td>';
+                                        echo '<td>' . $request['request_date'] . '</td>';
+                                        echo '<td>' . $request['request_timestamp'] . '</td>';
                                         echo '<td>
 
-                                            <a href="/LibMS/users/admin/requests/accept_request.php?borrow_id=' .$return['borrow_id']. '">
-                                                <button class="btn btn-success btn-sm"><i class="fa fa-solid fa-check fa-sm"></i> Accept</button>
+                                            <a href="/LibMS/users/admin/requests/verify_pickup.php?borrow_id=' .$request['borrow_id']. '">
+                                                <button class="btn btn-success btn-sm" onclick="sendSuccessPickup('. $request['borrow_id'] .')"><i class="fa fa-solid fa-check fa-sm"></i> Verify Pickup</button>
                                             </a>
 
                                             
-                                            <button class="btn btn-danger btn-sm" onclick="sendRejectRequest('. $return['borrow_id'] .')"><i class="fa fa-solid fa-x fa-sm"></i> Reject</button>
+                                            <button class="btn btn-danger btn-sm" onclick="sendCancelPickup('. $request['borrow_id'] .')"><i class="fa fa-solid fa-x fa-sm"></i> Cancel Pickup</button>
                                            
 
                                             </td>';
@@ -384,7 +383,7 @@ if ($_SESSION['acctype'] === 'Admin') {
 
 
                                     // Calculate the total number of pages
-                                    $totalPages = ceil($totalReturn / $limit);
+                                    $totalPages = ceil($totalRequests / $limit);
                                     if ($totalPages > 1) {
                                         echo '
                                         <div class="pagination-buttons" style="margin-top: 10px;
@@ -414,13 +413,53 @@ if ($_SESSION['acctype'] === 'Admin') {
                                 mysqli_close($conn);
 
 
-                            ?>
+                        ?>
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    function sendSuccessPickup(borrow_id) {
+        var xhr = new XMLHttpRequest();
+        var url = "/LibMS/users/admin/requests/verify_pickup.php";
+        var params = "borrow_id=" + borrow_id; // Add other parameters as needed
+
+        xhr.open("POST", url, true);
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                // Handle the response from the server
+                alert(xhr.responseText);
+            }
+        };
+
+        xhr.send(params);
+    }
+
+    function sendCancelPickup(borrow_id) {
+        var xhr = new XMLHttpRequest();
+        var url = "/LibMS/users/admin/requests/cancel_pickup.php";
+        var params = "borrow_id=" + borrow_id; // Add other parameters as needed
+
+        xhr.open("POST", url, true);
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                // Handle the response from the server
+                alert(xhr.responseText);
+            }
+        };
+
+        xhr.send(params);
+    }
+
+</script>
 
 </body>
 </html>

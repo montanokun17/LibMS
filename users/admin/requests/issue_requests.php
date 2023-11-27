@@ -121,6 +121,10 @@ if ($_SESSION['acctype'] === 'Admin') {
         </li>
 
         <li class="nav-item">
+          <a class="nav-link" aria-current="page" href="/LibMS/users/admin/requests/approved_requests.php"><i class="fa-solid fa-clock-rotate-left fa-xs"></i> Approved Requests</a>
+        </li>
+
+        <li class="nav-item">
           <a class="nav-link" aria-current="page" href="/LibMS/users/admin/requests/return_requests.php"><i class="fa-solid fa-rotate-left fa-xs"></i> Return Requests</a>
         </li>
 
@@ -165,7 +169,7 @@ if ($_SESSION['acctype'] === 'Admin') {
                         } else {
                             // Error in executing the SQL query
                             echo '<img src="/LibMS/resources/images/user.png" width="200" height="200" class="rounded-circle" style="margin-top: 10px; margin-bottom: 10px;">';
-                                                    }
+                        }
                     }
                                                     
             ?>
@@ -306,7 +310,7 @@ if ($_SESSION['acctype'] === 'Admin') {
 
                         <?php
                             // Default query to fetch all books
-                            $query = "SELECT * FROM borrow_requests WHERE borrow_status = 'Pending' ORDER BY borrow_id ASC";
+                            $query = "SELECT * FROM borrow_requests WHERE borrow_status = 'Pending' ORDER BY borrow_id DESC";
 
                             function getRequestsByPagination($conn, $query, $offset, $limit) {
                                 $query .= " LIMIT $limit OFFSET $offset"; // Append the LIMIT and OFFSET to the query for pagination
@@ -369,7 +373,7 @@ if ($_SESSION['acctype'] === 'Admin') {
                                             <button class="btn btn-danger btn-sm" onclick="sendRejectRequest('. $request['borrow_id'] .')"><i class="fa fa-solid fa-x fa-sm"></i> Reject</button>
                                            
 
-                                        </td>';
+                                            </td>';
 
                                         echo '</tr>';
                                     }

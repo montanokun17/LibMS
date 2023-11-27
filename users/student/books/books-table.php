@@ -251,7 +251,7 @@ function getBooksByPagination($conn, $query, $offset, $limit) {
     
     // Check if the query executed successfully
     if ($result && mysqli_num_rows($result) > 0) {
-        echo '<div class="container" id="book-list-container">';
+        echo '<div id="book-list-container">';
         echo '<table id="dataTable">';
         echo '<thead>';
         echo '<tr>';

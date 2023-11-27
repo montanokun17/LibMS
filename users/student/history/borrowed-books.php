@@ -80,14 +80,14 @@ if ($_SESSION['acctype'] === 'Student' || 'Guest') {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <?php echo '<title>'. $firstname .' '. $lastname .' / Student: Pending Borrow Requests - MyLibro </title>'; ?>
+    <?php echo '<title>'. $firstname .' '. $lastname .' / Student: Borrowed Books - MyLibro </title>'; ?>
     <!--Link for Tab ICON-->
     <link rel="icon" type="image/x-icon" href="/LibMS/resources/images/logov1.png">
     <!--Link for Bootstrap-->
     <link rel="stylesheet" type="text/css" href="/LibMS/resources/bootstrap/css/bootstrap.min.css"/>
     <script type="text/javascript" src="/LibMS/resources/bootstrap/js/bootstrap.min.js"></script>
     <!--Link for CSS File-->
-    <link rel="stylesheet" type="text/css" href="/LibMS/users/student/requests/css/pending-borrow-requests.css">
+    <link rel="stylesheet" type="text/css" href="/LibMS/users/student/history/css/borrowed-books.css">
     <!--Link for NAVBAR and SIDEBAR styling-->
     <link rel="stylesheet" type="text/css" href="/LibMS/users/student/css/navbar-sidebar.css">
     <!--Link for Font Awesome Icons-->
@@ -255,18 +255,18 @@ if ($_SESSION['acctype'] === 'Student' || 'Guest') {
 
                     <?php
 
-                    $query = "SELECT * FROM borrow_requests WHERE borrower_user_id = $idNo AND borrow_status = 'Pending' ORDER BY request_date DESC";
+                    $query = "SELECT * FROM approved_borrow_requests WHERE borrower_user_id = $idNo AND borrow_status = 'Borrowed' ORDER BY request_approval_date DESC";
                     
-                    function getPendingByPagination($conn, $query, $offset, $limit) {
+                    function getBorrowedByPagination($conn, $query, $offset, $limit) {
                     $query .= " LIMIT $limit OFFSET $offset"; // Append the LIMIT and OFFSET to the query for pagination
                     $result = mysqli_query($conn, $query);
                     
                     return $result;
                     }
                     
-                    $totalPendingQuery = "SELECT COUNT(*) as total FROM borrow_requests";
-                    $totalPendingResult = mysqli_query($conn, $totalPendingQuery);
-                    $totalPending = mysqli_fetch_assoc($totalPendingResult)['total'];
+                    $totalBorrowedQuery = "SELECT COUNT(*) as total FROM approved_borrow_requests";
+                    $totalBorrowedResult = mysqli_query($conn, $totalBorrowedQuery);
+                    $totalBorrowed = mysqli_fetch_assoc($totalBorrowedResult)['total'];
                     
                     
                     // Number of books to display per page
@@ -279,7 +279,7 @@ if ($_SESSION['acctype'] === 'Student' || 'Guest') {
                     $offset = ($page - 1) * $limit;
                     
                     // Get the books for the current page
-                    $result = getPendingByPagination($conn, $query, $offset, $limit);
+                    $result = getBorrowedByPagination($conn, $query, $offset, $limit);
                     
                     // Check if the query executed successfully
                     if ($result && mysqli_num_rows($result) > 0) {
@@ -292,24 +292,24 @@ if ($_SESSION['acctype'] === 'Student' || 'Guest') {
                         echo '<th>Book Title</th>';
                         echo '<th>Borrow Days</th>';
                         echo '<th>Borrow Status</th>';
-                        echo '<th>Request Date</th>';
-                        echo '<th>Timestamp</th>';
+                        echo '<th>Request Approval Date</th>';
+                        echo '<th>Due Date</th>';
                         echo '<th>Action</th>';
                         echo '</tr>';
                         echo '</thead>';
                         echo '<tbody>';
                     
-                        while ($pending = mysqli_fetch_assoc($result)) {
+                        while ($borrowed = mysqli_fetch_assoc($result)) {
                             echo '<tr class="pending-row">';
-                            echo '<td>' . $pending['borrower_user_id'] . '</td>';
-                            echo '<td>' . $pending['borrower_username'] . '</td>';
-                            echo '<td>' . $pending['book_title'] . '</td>';
-                            echo '<td>' . $pending['borrow_days'] . '</td>';
-                            echo '<td>' . $pending['borrow_status'] . '</td>';
-                            echo '<td>' . $pending['request_date'] . '</td>';
-                            echo '<td>' . $pending['request_timestamp'] . '</td>';
+                            echo '<td>' . $borrowed['borrower_user_id'] . '</td>';
+                            echo '<td>' . $borrowed['borrower_username'] . '</td>';
+                            echo '<td>' . $borrowed['book_title'] . '</td>';
+                            echo '<td>' . $borrowed['borrow_days'] . '</td>';
+                            echo '<td>' . $borrowed['borrow_status'] . '</td>';
+                            echo '<td>' . $borrowed['request_approval_date'] . '</td>';
+                            echo '<td>' . $borrowed['due_date'] . '</td>';
                             echo '<td>';
-                            echo '<button type="button" class="btn btn-danger btn-sm" style="margin-left:5px;" onClick=sendCancelRequest('.$pending['borrow_id'].')><i class="fa-solid fa-xmark fa-sm"></i> Cancel Request</button>';
+                            echo '<button type="button" class="btn btn-danger btn-sm" style="margin-left:5px;" onClick=sendRenewRequest('.$borrowed['borrow_id'].')><i class="fa-solid fa-xmark fa-sm"></i> Renew</button>';
                             echo '</td>';
 
                             echo '</tr>';
@@ -323,7 +323,7 @@ if ($_SESSION['acctype'] === 'Student' || 'Guest') {
                     
                     
                         // Calculate the total number of pages
-                        $totalPages = ceil($totalPending / $limit);
+                        $totalPages = ceil($totalBorrowed / $limit);
                         if ($totalPages > 1) {
                             echo '
                             <div class="pagination-buttons" style="margin-top: 10px;
@@ -345,7 +345,7 @@ if ($_SESSION['acctype'] === 'Student' || 'Guest') {
                         }
                     
                     } else {
-                        echo "<tr><td colspan='10'><p class='container' style='margin-left:90px; margin-top:50px; font-size: 20px; font-weight:700;'>There Are No Pending Requests Yet.</p></td></tr>";
+                        echo "<tr><td colspan='10'><p class='container' style='margin-left:90px; margin-top:50px; font-size: 20px; font-weight:700;'>There Are No Borrowed Books Yet.</p></td></tr>";
                     }
                     
                     
@@ -362,7 +362,7 @@ if ($_SESSION['acctype'] === 'Student' || 'Guest') {
 </div>
 
 <script>
-    function sendCancelRequest(borrow_id) {
+    function sendRenewRequest(borrow_id) {
         var xhr = new XMLHttpRequest();
         var url = "/LibMS/users/student/requests/cancel-request.php";
         var params = "borrow_id=" + borrow_id; // Add other parameters as needed
