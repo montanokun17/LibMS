@@ -42,9 +42,10 @@ label {
     margin-top: 100px;
 }
 
-.book-status {
+.borrowDays {
     padding: 10px;
     margin-left: 10px;
     width: 50%;
     border-radius: 5px;
 }
+

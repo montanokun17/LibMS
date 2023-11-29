@@ -160,6 +160,7 @@ if (isset($_GET['search'])) {
 }
 
 $Array="";
+
 // Add the following code at the beginning to handle AJAX requests
 if (isset($_POST['section']) && isset($_POST['status']) && isset($_POST['dewey']) && isset($_POST['book_borrow_status'])) {
     $section = $_POST['section'];

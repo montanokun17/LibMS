@@ -10,6 +10,10 @@
     height: 85vh;
 }
 
+a {
+    text-decoration: none;
+}
+
 .mini-item {
     padding: 10px;
     color: white;
@@ -37,7 +41,7 @@
     height: 300px;
     margin-left: 310px;
     border-radius: 10px;
-    margin-top: -100px;
+    margin-top: -70px;
     padding: 10px;
     height: 77vh;
 }

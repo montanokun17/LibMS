@@ -159,23 +159,11 @@ if (isset($_GET['borrow_id'])) {
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="#"><i class="fa-solid fa-cogs fa-xs"></i> Page Banner Settings</a>
+          <a class="nav-link" aria-current="page" href="#"><i class="fa-solid fa-user fa-xs"></i> Dashboard</a>
         </li>
 
         <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="/LibMS/users/admin/requests/issue_requests.php"><i class="fa-solid fa-bookmark fa-xs"></i> Issue Requests</a>
-        </li>
-
-        <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="/LibMS/users/admin/requests/approved_requests.php"><i class="fa-solid fa-clock-rotate-left fa-xs"></i> Approved Requests</a>
-        </li>
-
-        <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="/LibMS/users/admin/requests/return_requests.php"><i class="fa-solid fa-rotate-left fa-xs"></i> Return Requests</a>
-        </li>
-
-        <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="/LibMS/users/admin/requests/renew_requests.php"><i class="fa-solid fa-clock-rotate-left fa-xs"></i> Renewal Requests</a>
+          <a class="nav-link" aria-current="page" href="/LibMS/users/student/history/borrowed-books.php"><i class="fa-solid fa-user fa-xs"></i> Borrowed Books</a>
         </li>
       </ul>
 
@@ -188,38 +176,36 @@ if (isset($_GET['borrow_id'])) {
       <ul class="navbar-nav">
         <li class="nav-item">
           <a class="nav-link" href="#">
-
-          <?php
-                if (isset($_SESSION['id_no']) && isset($_SESSION['username'])) {
-                    $idNo = $_SESSION['id_no'];
-                    $username = $_SESSION['username'];
-                                                
-                    // Query to retrieve the necessary columns from the database
-                    $UserPicPath = "SELECT user_pic_data, user_pic_type FROM user_pics WHERE user_id = ? AND username = ?";
-                    $statement = $conn->prepare($UserPicPath);
-                    $statement->bind_param("is", $idNo, $username);
-                                                
-                        if ($statement->execute()) {
-                            $result = $statement->get_result();
-                                                
-                            if ($row = $result->fetch_assoc()) {
-
-                                echo '<div class="container col-sm-6 center">';
-                                // Use the "width" and "height" attributes to resize the image
-                                echo '<img src="data:image/png;base64,' . base64_encode($row["user_pic_data"]) . '" width="40" height="40" class="rounded-circle"/>';
-                                echo '</div>';
-                            } else {
-                                // If not found in the database, display the default image
-                                echo '<img src="/LibMS/resources/images/user.png" width=40" height="40" class="rounded-circle" style="margin-top: 10px; margin-bottom: 10px;">';
-                            }
-                        } else {
-                            // Error in executing the SQL query
-                            echo '<img src="/LibMS/resources/images/user.png" width="200" height="200" class="rounded-circle" style="margin-top: 10px; margin-bottom: 10px;">';
-                        }
-                    }
+            <?php
+                    if (isset($_SESSION['id_no']) && isset($_SESSION['username'])) {
+                        $idNo = $_SESSION['id_no'];
+                        $username = $_SESSION['username'];
                                                     
-            ?>
+                        // Query to retrieve the necessary columns from the database
+                        $UserPicPath = "SELECT user_pic_data, user_pic_type FROM user_pics WHERE user_id = ? AND username = ?";
+                        $statement = $conn->prepare($UserPicPath);
+                        $statement->bind_param("is", $idNo, $username);
+                                                    
+                            if ($statement->execute()) {
+                                $result = $statement->get_result();
+                                                    
+                                if ($row = $result->fetch_assoc()) {
 
+                                    echo '<div class="container col-sm-6 center">';
+                                    // Use the "width" and "height" attributes to resize the image
+                                    echo '<img src="data:image/png;base64,' . base64_encode($row["user_pic_data"]) . '" width="40" height="40" class="rounded-circle"/>';
+                                    echo '</div>';
+                                } else {
+                                    // If not found in the database, display the default image
+                                    echo '<img src="/LibMS/resources/images/user.png" width=40" height="40" class="rounded-circle" style="margin-top: 10px; margin-bottom: 10px;">';
+                                }
+                            } else {
+                                // Error in executing the SQL query
+                                echo '<img src="/LibMS/resources/images/user.png" width="200" height="200" class="rounded-circle" style="margin-top: 10px; margin-bottom: 10px;">';
+                                                        }
+                        }
+                                                        
+                ?>
           </a>
         </li>
       </ul>
@@ -233,7 +219,7 @@ if (isset($_GET['borrow_id'])) {
             <ul>
                 <li></li>
                 <li>
-                    <a href="/LibMS/users/admin/index.php">
+                    <a href="/LibMS/users/student/index.php">
                         <i class="fa fa-house fa-sm"></i>
                         <span class="sidebar-name">
                             Home
@@ -242,28 +228,10 @@ if (isset($_GET['borrow_id'])) {
                 </li>
 
                 <li>
-                    <a href="/LibMS/users/admin/profile/user_settings.php">
+                    <a href="/LibMS/users/student/profile/user_settings.php">
                         <i class="fa fa-cogs fa-sm"></i>
                         <span class="sidebar-name">
                             User Options
-                        </span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="/LibMS/users/admin/profile/accounts.php">
-                        <i class="fa fa-users fa-sm"></i>
-                        <span class="sidebar-name">
-                            Accounts
-                        </span>
-                    </a>
-                </li>
-                
-                <li>
-                    <a href="#">
-                        <i class="fa fa-solid fa-qrcode fa-sm"></i>
-                        <span class="sidebar-name">
-                            QR
                         </span>
                     </a>
                 </li>
@@ -278,7 +246,7 @@ if (isset($_GET['borrow_id'])) {
                 </li>
 
                 <li>
-                    <a href="/LibMS/users/admin/books/books.php">
+                    <a href="/LibMS/users/student/books/books.php">
                         <i class="fa fa-book fa-sm"></i>
                         <span class="sidebar-name">
                             Books
@@ -287,46 +255,28 @@ if (isset($_GET['borrow_id'])) {
                 </li>
 
                 <li>
-                    <a href="/LibMS/users/admin/books/add_books.php">
-                        <i class="fa fa-plus fa-sm"></i>
+                    <a href="/LibMS/users/student/requests/pending-borrow-requests.php">
+                        <i class="fa fa-bookmark fa-sm"></i>
                         <span class="sidebar-name">
-                            Add a Book
+                            Pending Borrow Requests
                         </span>
                     </a>
                 </li>
 
                 <li>
-                    <a href="/LibMS/users/admin/notification/notification.php">
+                    <a href="/LibMS/users/student/history/history.php">
+                        <i class="fa fa-clock-rotate-left fa-sm"></i>
+                        <span class="sidebar-name">
+                            History
+                        </span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="/LibMS/users/student/notification/notification.php">
                         <i class="fa fa-bell fa-sm"></i>
                         <span class="sidebar-name">
                             Notifications
-                        </span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="/LibMS/users/admin/requests/issue_requests.php">
-                        <i class="fa fa-bookmark fa-sm"></i>
-                        <span class="sidebar-name">
-                            Issue Requests
-                        </span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="/LibMS/users/admin/logs/history.php">
-                        <i class="fa fa-book fa-sm"></i>
-                        <span class="sidebar-name">
-                            Books Log
-                        </span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="/LibMS/users/admin/logs/recent-deletion-books.php">
-                        <i class="fa fa-trash fa-sm"></i>
-                        <span class="sidebar-name">
-                            Recent Deletion Books
                         </span>
                     </a>
                 </li>
@@ -345,6 +295,7 @@ if (isset($_GET['borrow_id'])) {
             </ul>
     </div>
 <!--SIDEBAR-->
+
 
 <div class="main-box">
     <div class="container">
@@ -389,22 +340,20 @@ if (isset($_GET['borrow_id'])) {
                             </div>
 
                             <div class="form-group">
-                                <label>Book Condition When Returned:</label>
+                                <label>How Many Days Do You Want to Renew the Book Borrow?</label>
                                 <span class="form-control-static">
                                     <select name="borrowDays" id="borrowDays" class="borrowDays" required="">
-                                            <option selected disabled>**Select No. of Days of Book Loan**</option>
+                                            <option selected disabled>**Select No. of Days of Book Loan Renewal**</option>
                                             <option value="1">1 Day</option>
                                             <option value="2">2 Days</option>
                                             <option value="3">3 Days</option>
                                             <option value="4">4 Days</option>
-                                            <option value="5">5 Days</option>
-                                            <option value="6">6 Days</option>
                                     </select>
                                 </span>
                             </div>
 
                             <div class="form-group" style="margin-bottom:10px; margin-top:10px;">
-                                <button type="button" class="btn btn-primary btn-md" style="width:80%;" onclick="sendVerifyReturn(<?php echo $borrow_id; ?>)"><i class="fa-solid fa-paper-plane"></i> Verify Book Return</button>
+                                <button type="button" class="btn btn-primary btn-md" style="width:80%;" onclick="sendRenewRequest(<?php echo $borrow_id; ?>)"><i class="fa-solid fa-paper-plane"></i> Send Renew Request</button>
                             </div>
 
 
@@ -424,7 +373,7 @@ if (isset($_GET['borrow_id'])) {
 </div>
 
 <script>
-    function sendVerifyReturn(borrow_id) {
+    function sendRenewRequest(borrow_id) {
     var borrowDays = document.getElementById("borrowDays").value;
 
     if (borrowDays === "") {
@@ -436,7 +385,7 @@ if (isset($_GET['borrow_id'])) {
     // For simplicity, let's assume there is a PHP script (borrow_request.php) to handle this
 
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", "/LibMS/users/admin/requests/func/return.php", true);
+    xhr.open("POST", "/LibMS/users/student/requests/renew/renew_request.php", true);
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {

@@ -171,7 +171,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         mysqli_query($conn, $logSql);
 
-        echo 'Borrow request sent successfully';
+        echo 'Borrow request sent successfully. Please Wait for the Admin/Librarian to Accept Your Request.';
     } else {
         echo "Error: ' . $sql . '<br>' . 'mysqli_error($conn)";
     }

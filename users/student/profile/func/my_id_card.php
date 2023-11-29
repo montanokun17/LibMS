@@ -78,16 +78,16 @@ if ($_SESSION['acctype'] === 'Student') {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <?php echo '<title>'. $firstname .' '. $lastname .' /Admin - MyLibro </title>'; ?>
+    <?php echo '<title>'. $firstname .' '. $lastname .' / My ID Card - MyLibro </title>'; ?>
     <!--Link for Tab ICON-->
     <link rel="icon" type="image/x-icon" href="/LibMS/resources/images/logov1.png">
     <!--Link for Bootstrap-->
     <link rel="stylesheet" type="text/css" href="/LibMS/resources/bootstrap/css/bootstrap.min.css"/>
     <script type="text/javascript" src="/LibMS/resources/bootstrap/js/bootstrap.min.js"></script>
     <!--Link for CSS File-->
-    <link rel="stylesheet" type="text/css" href="/LibMS/users/admin/css/navbar-sidebar.css">
+    <link rel="stylesheet" type="text/css" href="/LibMS/users/student/css/navbar-sidebar.css">
     <!--Link for CSS File-->
-    <link rel="stylesheet" type="text/css" href="/LibMS/users/admin/profile/func/css/my_id_card.css">
+    <link rel="stylesheet" type="text/css" href="/LibMS/users/student/profile/func/css/my_id_card.css">
     <!--Link for Font Awesome Icons-->
     <link rel="stylesheet" href="/LibMS/resources/icons/fontawesome-free-6.4.0-web/css/all.css">
     <!--Link for Google Font-->
@@ -107,7 +107,7 @@ if ($_SESSION['acctype'] === 'Student') {
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="#"><i class="fa-solid fa-cogs fa-xs"></i> Homepage Settings</a>
+          <a class="nav-link" aria-current="page" href="#"><i class="fa-solid fa-user fa-xs"></i> Dashboard</a>
         </li>
       </ul>
 
@@ -120,38 +120,36 @@ if ($_SESSION['acctype'] === 'Student') {
       <ul class="navbar-nav">
         <li class="nav-item">
           <a class="nav-link" href="#">
-
-          <?php
-                if (isset($_SESSION['id_no']) && isset($_SESSION['username'])) {
-                    $idNo = $_SESSION['id_no'];
-                    $username = $_SESSION['username'];
-                                                
-                    // Query to retrieve the necessary columns from the database
-                    $UserPicPath = "SELECT user_pic_data, user_pic_type FROM user_pics WHERE user_id = ? AND username = ?";
-                    $statement = $conn->prepare($UserPicPath);
-                    $statement->bind_param("is", $idNo, $username);
-                                                
-                        if ($statement->execute()) {
-                            $result = $statement->get_result();
-                                                
-                            if ($row = $result->fetch_assoc()) {
-
-                                echo '<div class="container col-sm-6 center">';
-                                // Use the "width" and "height" attributes to resize the image
-                                echo '<img src="data:image/png;base64,' . base64_encode($row["user_pic_data"]) . '" width="40" height="40" class="rounded-circle"/>';
-                                echo '</div>';
-                            } else {
-                                // If not found in the database, display the default image
-                                echo '<img src="/LibMS/resources/images/user.png" width=40" height="40" class="rounded-circle" style="margin-top: 10px; margin-bottom: 10px;">';
-                            }
-                        } else {
-                            // Error in executing the SQL query
-                            echo '<img src="/LibMS/resources/images/user.png" width="200" height="200" class="rounded-circle" style="margin-top: 10px; margin-bottom: 10px;">';
-                                                    }
-                    }
+            <?php
+                    if (isset($_SESSION['id_no']) && isset($_SESSION['username'])) {
+                        $idNo = $_SESSION['id_no'];
+                        $username = $_SESSION['username'];
                                                     
-            ?>
+                        // Query to retrieve the necessary columns from the database
+                        $UserPicPath = "SELECT user_pic_data, user_pic_type FROM user_pics WHERE user_id = ? AND username = ?";
+                        $statement = $conn->prepare($UserPicPath);
+                        $statement->bind_param("is", $idNo, $username);
+                                                    
+                            if ($statement->execute()) {
+                                $result = $statement->get_result();
+                                                    
+                                if ($row = $result->fetch_assoc()) {
 
+                                    //echo '<div class="container col-sm-6 center">';
+                                    // Use the "width" and "height" attributes to resize the image
+                                    echo '<img src="data:image/png;base64,' . base64_encode($row["user_pic_data"]) . '" width="40" height="40" class="rounded-circle"/>';
+                                    //echo '</div>';
+                                } else {
+                                    // If not found in the database, display the default image
+                                    echo '<img src="/LibMS/resources/images/user.png" width=40" height="40" class="rounded-circle" style="margin-top: 10px; margin-bottom: 10px;">';
+                                }
+                            } else {
+                                // Error in executing the SQL query
+                                echo '<img src="/LibMS/resources/images/user.png" width="200" height="200" class="rounded-circle" style="margin-top: 10px; margin-bottom: 10px;">';
+                                                        }
+                        }
+                                                        
+                ?>
           </a>
         </li>
       </ul>
@@ -165,37 +163,19 @@ if ($_SESSION['acctype'] === 'Student') {
             <ul>
                 <li></li>
                 <li>
-                    <a href="/LibMS/users/admin/index.php">
-                        <i class="fa fa-house fa-sm"></i>
+                    <a href="/LibMS/users/student/index.php">
+                        <i class="fa fa-user fa-sm"></i>
                         <span class="sidebar-name">
-                            Home
+                            Dashboard
                         </span>
                     </a>
                 </li>
 
                 <li>
-                    <a href="/LibMS/users/admin/profile/user_settings.php">
+                    <a href="/LibMS/users/student/profile/user_settings.php">
                         <i class="fa fa-cogs fa-sm"></i>
                         <span class="sidebar-name">
                             User Options
-                        </span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="/LibMS/users/admin/profile/accounts.php">
-                        <i class="fa fa-users fa-sm"></i>
-                        <span class="sidebar-name">
-                            Accounts
-                        </span>
-                    </a>
-                </li>
-                
-                <li>
-                    <a href="#">
-                        <i class="fa fa-solid fa-qrcode fa-sm"></i>
-                        <span class="sidebar-name">
-                            QR Code and ID Card
                         </span>
                     </a>
                 </li>
@@ -210,7 +190,7 @@ if ($_SESSION['acctype'] === 'Student') {
                 </li>
 
                 <li>
-                    <a href="/LibMS/users/admin/books/books.php">
+                    <a href="/LibMS/users/student/books/books.php">
                         <i class="fa fa-book fa-sm"></i>
                         <span class="sidebar-name">
                             Books
@@ -219,46 +199,28 @@ if ($_SESSION['acctype'] === 'Student') {
                 </li>
 
                 <li>
-                    <a href="/LibMS/users/admin/books/add_books.php">
-                        <i class="fa fa-plus fa-sm"></i>
+                    <a href="#">
+                        <i class="fa fa-bookmark fa-sm"></i>
                         <span class="sidebar-name">
-                            Add a Book
+                            Pending Borrow Requests
                         </span>
                     </a>
                 </li>
 
                 <li>
-                    <a href="/LibMS/users/admin/notification/notification.php">
+                    <a href="/LibMS/users/student/history/history.php">
+                        <i class="fa fa-clock-rotate-left fa-sm"></i>
+                        <span class="sidebar-name">
+                            History
+                        </span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="/LibMS/users/student/notification/notification.php">
                         <i class="fa fa-bell fa-sm"></i>
                         <span class="sidebar-name">
                             Notifications
-                        </span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="/LibMS/users/admin/requests/issue_requests.php">
-                        <i class="fa fa-bookmark fa-sm"></i>
-                        <span class="sidebar-name">
-                            Issue Requests
-                        </span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="#">
-                        <i class="fa fa-book fa-sm"></i>
-                        <span class="sidebar-name">
-                            Books Log
-                        </span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="#">
-                        <i class="fa fa-trash fa-sm"></i>
-                        <span class="sidebar-name">
-                            Recent Deletion Books
                         </span>
                     </a>
                 </li>
@@ -281,23 +243,24 @@ if ($_SESSION['acctype'] === 'Student') {
 <div class="main-box">
     <div class="container">
             <ul class="mini-sidebar">
-                <li class="mini-item active">
-                    <span class="item-content">
-                        My ID Card
-                    </span>
-                </li>
+                
+                <a href="/LibMS/users/student/profile/func/my_id_card.php">
+                    <li class="mini-item active">
+                        <span class="item-content">
+                            My ID Card
+                        </span>
+                    </li>
+                </a>
 
-                <li class="mini-item">
-                    <span class="item-content">
-                        My Account's Information
-                    </span>
-                </li>
+                <a href="/LibMS/users/student/profile/user_settings.php">
+                    <li class="mini-item">
+                        <span class="item-content">
+                            My Account's Information
+                        </span>
+                    </li>
+                </a>
 
-                <li class="mini-item">
-                    <span class="item-content">
-                        Page Banners
-                    </span>
-                </li>
+                
 
                 <div class="dash-box-1">
                     <div class="container">

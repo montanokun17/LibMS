@@ -409,9 +409,88 @@ if ($_SESSION['acctype'] === 'Student') {
                             </div>
             
                         <?php
-                        
 
-                        $query = "SELECT * FROM books WHERE 'deleted' = 0 AND status = 'GOOD' AND book_borrow_status = 'Available' ORDER BY 'book_title' ASC";
+                        if (isset($_GET['search'])) {
+                            // Get the search query from the input field
+                            $searchQuery = $_GET['search'];
+                        
+                            // Modify the query to include the search condition
+                            $query = "SELECT * FROM books WHERE isbn LIKE '%$searchQuery%'
+                                    OR book_title LIKE '%$searchQuery%'
+                                    OR author LIKE '%$searchQuery%'
+                                    OR year LIKE '%$searchQuery%'
+                                    OR subject LIKE '%$searchQuery%'
+                                    OR section LIKE '%$searchQuery%'
+                                    OR publisher LIKE '%$searchQuery%'
+                                    OR volume LIKE '%$searchQuery%'
+                                    OR edition LIKE '%$searchQuery%'
+                                    OR book_borrow_status LIKE '%$searchQuery%'
+                                    OR status LIKE '%$searchQuery%'
+                                    ";
+                        }
+                        
+                        $Array="";
+                        
+                        // Add the following code at the beginning to handle AJAX requests
+                        if (isset($_POST['section']) && isset($_POST['status']) && isset($_POST['dewey']) && isset($_POST['book_borrow_status'])) {
+                            $section = $_POST['section'];
+                            $status = $_POST['status'];
+                            $dewey = $_POST['dewey'];
+                            $bookBorrowStatus = $_POST['book_borrow_status'];
+                        
+                            // Use prepared statements to prevent SQL injection
+                            $query = "SELECT * FROM books WHERE `deleted` = 0 AND `status` = ?";
+                            $params = array("s", $status);
+                        
+                            $conditions = array(
+                                "*Select Section*" => array("field" => "section", "paramType" => "s"),
+                                "*Select Dewey Classification*" => array("field" => "dewey", "paramType" => "s"),
+                                "*Select Availability*" => array("field" => "book_borrow_status", "paramType" => "s")
+                            );
+                        
+                            // Append additional conditions based on the selected filters
+                            foreach ($conditions as $value => $condition) {
+                                if ($$condition['field'] !== $value) {
+                                    $query .= " AND `" . $condition['field'] . "` = ?";
+                                    $params[0] .= $condition['paramType']; // Append the type for string
+                                    $params[] = $$condition['field'];
+                                }
+                            }
+                        
+                            $query .= " ORDER BY `book_title` ASC";
+                        
+                            // Assuming you are using mysqli
+                            $stmt = $conn->prepare($query);
+                        
+                            // Check for errors in preparing the statement
+                            if (!$stmt) {
+                                die("Error in preparing the statement: " . $conn->error);
+                            }
+                        
+                            // Bind the parameters using the splat operator
+                            $stmt->bind_param(...$params);
+                        
+                            // Execute the query
+                            $stmt->execute();
+                        
+                            // Fetch the results
+                            $result = $stmt->get_result();
+                        
+                            // Fetch data as an associative array
+                            $rows = $result->fetch_all(MYSQLI_ASSOC);
+                        
+                            // Close the statement
+                            $stmt->close();
+                        } else {
+                            $query = "SELECT * FROM books WHERE 'deleted' = 0 AND status = 'GOOD' AND book_borrow_status = 'Available' ORDER BY 'book_title' ASC";
+                        
+                            // Execute the query without parameters
+                            $result = $conn->query($query);
+                        
+                            // Fetch the results as needed
+                            $rows = $result->fetch_all(MYSQLI_ASSOC);
+                        }
+                        
 
                        /*// Add the following code at the beginning to handle AJAX requests
                         if (isset($_POST['section']) && isset($_POST['status']) && isset($_POST['dewey']) && isset($_POST['book_borrow_status'])) {
@@ -564,7 +643,7 @@ if ($_SESSION['acctype'] === 'Student') {
 
                     $.ajax({
                         type: "POST",
-                        url: "/LibMS/users/student/books/books-table.php",
+                        url: "/LibMS/users/student/books/books.php",
                         data: {
                             section: section,
                             status: status,
@@ -592,7 +671,7 @@ if ($_SESSION['acctype'] === 'Student') {
                         // Make an AJAX request to the server
                         $.ajax({
                             type: 'GET',
-                            url: '/LibMS/users/student/books/books-table.php',
+                            url: '/LibMS/users/student/books/books.php',
                             data: { search: searchQuery },
                             success: function(response) {
                                 // Display the search results in the #searchResults div

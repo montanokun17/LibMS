@@ -309,7 +309,10 @@ if ($_SESSION['acctype'] === 'Student' || 'Guest') {
                             echo '<td>' . $borrowed['request_approval_date'] . '</td>';
                             echo '<td>' . $borrowed['due_date'] . '</td>';
                             echo '<td>';
-                            echo '<button type="button" class="btn btn-primary btn-sm" style="margin-left:5px;" onClick=sendRenewRequest('.$borrowed['borrow_id'].')><i class="fa-solid fa-clock-rotate-left fa-sm"></i> Renew</button>';
+                            echo '
+                            <a href="/LibMS/users/student/requests/renew/renew.php?borrow_id='.$borrowed['borrow_id'].'">
+                            <button type="button" class="btn btn-primary btn-sm" style="margin-left:5px;"><i class="fa-solid fa-clock-rotate-left fa-sm"></i> Renew</button>
+                            </a>';
                             echo '</td>';
 
                             echo '</tr>';
@@ -362,23 +365,7 @@ if ($_SESSION['acctype'] === 'Student' || 'Guest') {
 </div>
 
 <script>
-    function sendRenewRequest(borrow_id) {
-        var xhr = new XMLHttpRequest();
-        var url = "/LibMS/users/student/requests/cancel-request.php";
-        var params = "borrow_id=" + borrow_id; // Add other parameters as needed
-
-        xhr.open("POST", url, true);
-        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState == 4 && xhr.status == 200) {
-                // Handle the response from the server
-                alert(xhr.responseText);
-            }
-        };
-
-        xhr.send(params);
-    }
+    
 </script>
 
 

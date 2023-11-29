@@ -136,10 +136,10 @@ if ($_SESSION['acctype'] === 'Student') {
                                                     
                                 if ($row = $result->fetch_assoc()) {
 
-                                    echo '<div class="container col-sm-6 center">';
+                                    //echo '<div class="container col-sm-6 center">';
                                     // Use the "width" and "height" attributes to resize the image
                                     echo '<img src="data:image/png;base64,' . base64_encode($row["user_pic_data"]) . '" width="40" height="40" class="rounded-circle"/>';
-                                    echo '</div>';
+                                    //echo '</div>';
                                 } else {
                                     // If not found in the database, display the default image
                                     echo '<img src="/LibMS/resources/images/user.png" width=40" height="40" class="rounded-circle" style="margin-top: 10px; margin-bottom: 10px;">';
@@ -243,6 +243,8 @@ if ($_SESSION['acctype'] === 'Student') {
 
 <div class="main-box">
     <div class="container">
+            <ul class="mini-sidebar">
+
                 <a href="/LibMS/users/student/profile/func/my_id_card.php">
                     <li class="mini-item">
                         <span class="item-content">
@@ -258,6 +260,8 @@ if ($_SESSION['acctype'] === 'Student') {
                         </span>
                     </li>
                 </a>
+
+                
 
                 <div class="dash-box-1">
                     <div class="container">
@@ -330,7 +334,7 @@ if ($_SESSION['acctype'] === 'Student') {
                                                                 <option value="Ugong">Ugong</option>
                                                         </select>
 
-                                                <button type="submit" class="btn btn-primary btn-sm" id="save-btn">
+                                                <button type="submit" class="btn btn-primary btn-sm" id="save-btn" style="font-size:11px;">
                                                     <i class="fa-solid fa-floppy-disk"></i> Save
                                                 </button>
 
@@ -393,10 +397,10 @@ if ($_SESSION['acctype'] === 'Student') {
 
                                                 <!-- HTML form for image upload -->
                                             <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" enctype="multipart/form-data" class="dp-form">
-                                                <input type="file" name="image" style="font-size: 13px; margin-top: 10px; margin-bottom: 10px;">
+                                                <input type="file" name="image" style="font-size:13px; margin-top:10px; margin-bottom: 10px;">
                                                 <br>
                                                 <div class="button-div">
-                                                    <button type="submit" name="upload" class="btn btn-primary" id="upload-btn"><i class="fa fa-solid fa-image"></i> Upload Picture</button>
+                                                    <button type="submit" name="upload" class="btn btn-primary" id="upload-btn" style="font-size:11px; width:100%"><i class="fa fa-solid fa-image"></i> Upload Picture</button>
                                                 </div>
                                                 
                                             </form>
@@ -425,7 +429,7 @@ if ($_SESSION['acctype'] === 'Student') {
                                                     $imageData = file_get_contents($tmp_name);
                                                     $imageType = $img_type;
 
-                                                    $db = new PDO('mysql:host=localhost;dbname=mylibro', 'root', '');
+                                                    $db = new PDO('mysql:host=localhost; dbname=mylibro', 'root', '');
 
                                                     $user_id = $idNo;
                                                     $username = $username;
@@ -482,7 +486,9 @@ if ($_SESSION['acctype'] === 'Student') {
     </div>
 </div>
 
+<script>
 
+</script>
 
 </body>
 </html>

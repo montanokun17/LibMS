@@ -307,6 +307,110 @@ if ($_SESSION['acctype'] === 'Admin') {
             <div class="row">
                 <div class="inner-box">
                     <div class="container-fluid">
+                        <?php
+                                // Default query to fetch all books
+                                $query = "SELECT * FROM renew_requests ORDER BY borrow_id DESC";
+
+                                function getRequestsByPagination($conn, $query, $offset, $limit) {
+                                    $query .= " LIMIT $limit OFFSET $offset"; // Append the LIMIT and OFFSET to the query for pagination
+                                    $result = mysqli_query($conn, $query);
+                
+                                    return $result;
+                                }
+                
+                                $totalRequestsQuery = "SELECT COUNT(*) as total FROM renew_requests";
+                                $totalRequestsResult = mysqli_query($conn, $totalRequestsQuery);
+                                $totalRequests = mysqli_fetch_assoc($totalRequestsResult)['total'];
+                
+                
+                                // Number of books to display per page
+                                $limit = 7;
+
+                                // Get the current page number from the query parameter
+                                $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
+
+                                // Calculate the offset for the current page
+                                $offset = ($page - 1) * $limit;
+
+                                // Get the books for the current page
+                                $result = getRequestsByPagination($conn, $query, $offset, $limit);
+
+                                    // Check if the query executed successfully
+                                    if ($result && mysqli_num_rows($result) > 0) {
+                                        echo '<div class="container">';
+                                        echo '<table>';
+                                        echo '<thead>';
+                                        echo '<tr>';
+                                        echo '<th>Borrower User ID</th>';
+                                        echo '<th>Username</th>';
+                                        echo '<th>Book Title</th>';
+                                        echo '<th>Borrow Days</th>';
+                                        echo '<th>Renew Request Date</th>';
+                                        echo '<th>Time Stamp</th>';
+                                        echo '<th style="width:18%;">Action</th>';
+                                        echo '</tr>';
+                                        echo '</thead>';
+                                        echo '<tbody>';
+
+                                        while ($request = mysqli_fetch_assoc($result)) {
+                                            echo '<tr>';
+                                            echo '<td>' . $request['borrower_user_id'] . '</td>';
+                                            echo '<td>' . $request['borrower_username'] . '</td>';
+                                            echo '<td>' . $request['book_title'] . '</td>';
+                                            echo '<td>' . $request['borrow_days'] . '</td>';
+                                            echo '<td>' . $request['renew_request_date'] . '</td>';
+                                            echo '<td>' . $request['renew_timestamp'] . '</td>';
+                                            echo '<td>
+
+                                                <a href="/LibMS/users/admin/requests/accept_request.php?borrow_id=' .$request['borrow_id']. '">
+                                                    <button class="btn btn-success btn-sm"><i class="fa fa-solid fa-check fa-sm"></i> Grant Renewal</button>
+                                                </a>
+
+                                                
+                                                <button class="btn btn-danger btn-sm" onclick="sendRejectRequest('. $request['borrow_id'] .')"><i class="fa fa-solid fa-x fa-sm"></i> Reject Renewal</button>
+                                            
+
+                                                </td>';
+
+                                            echo '</tr>';
+                                        }
+
+                                        echo '</tbody>';
+                                        echo '</table>';
+
+
+                                        // Calculate the total number of pages
+                                        $totalPages = ceil($totalRequests / $limit);
+                                        if ($totalPages > 1) {
+                                            echo '
+                                            <div class="pagination-buttons" style="margin-top: 10px;
+                                            margin-left: 70px;
+                                            ">
+                                                ';
+                                    
+                                            if ($page > 1) {
+                                                echo '<a href="?page='.($page - 1).'" class="btn btn-primary btn-sm" id="previous" style="padding: 10px; width:10%;"><i class="fa-solid fa-angle-left"></i>'.($page - 1).' Previous</a>';
+                                            }
+                                    
+                                            if ($page < $totalPages) {
+                                                echo '<a href="?page='.($page + 1).'" class="btn btn-primary btn-sm" id="next" style="padding: 10px; width:10%; margin-left:5px;"> '.($page + 1).' Next <i class="fa-solid fa-angle-right"></i></a>';
+                                            }
+                                    
+                                            echo '
+                                            </div>
+                                            ';
+                                        }
+
+                                    } else {
+                                        echo "<tr><td colspan='10'><p class='container' style='margin-left:90px; margin-top:50px; font-size: 20px; font-weight:700;'>There Are No Renewal Requests Found.</p></td></tr>";
+                                    }
+
+
+                                    // Close the database connection
+                                    mysqli_close($conn);
+
+
+                            ?>
                     </div>
                 </div>
             </div>
