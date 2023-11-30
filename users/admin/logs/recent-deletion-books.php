@@ -113,7 +113,7 @@ if ($_SESSION['acctype'] === 'Admin') {
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="#"><i class="fa-solid fa-cogs fa-xs"></i> Page Banner Settings</a>
+          <a class="nav-link" aria-current="page" href="#"><i class="fa-solid fa-cogs fa-xs"></i> Login Page Banner</a>
         </li>
 
         <li class="nav-item">
@@ -175,7 +175,7 @@ if ($_SESSION['acctype'] === 'Admin') {
 <!--NAVBAR-->
 
 <!--SIDEBAR-->
-<div id="sidebar">
+    <div id="sidebar">
             <ul>
                 <li></li>
                 <li>
@@ -209,7 +209,7 @@ if ($_SESSION['acctype'] === 'Admin') {
                     <a href="#">
                         <i class="fa fa-solid fa-qrcode fa-sm"></i>
                         <span class="sidebar-name">
-                            QR Code and ID Card
+                            QR
                         </span>
                     </a>
                 </li>
@@ -260,7 +260,7 @@ if ($_SESSION['acctype'] === 'Admin') {
                 </li>
 
                 <li>
-                    <a href="#">
+                    <a href="/LibMS/users/admin/logs/history.php">
                         <i class="fa fa-book fa-sm"></i>
                         <span class="sidebar-name">
                             Books Log
@@ -269,7 +269,7 @@ if ($_SESSION['acctype'] === 'Admin') {
                 </li>
 
                 <li>
-                    <a href="#">
+                    <a href="/LibMS/users/admin/logs/recent-deletion-books.php">
                         <i class="fa fa-trash fa-sm"></i>
                         <span class="sidebar-name">
                             Recent Deletion Books
@@ -377,6 +377,11 @@ if ($_SESSION['acctype'] === 'Admin') {
                             echo '
                             <a href="#">
                                 <button type="button" class="btn btn-success btn-sm"><i class="fa-solid fa-circle-info fa-sm"></i> Details</button>
+                            </a>';
+
+                            echo '
+                            <a href="#">
+                            <button type="button" class="btn btn-success btn-sm"><i class="fa-solid fa-circle-info fa-sm"></i> Delete Permanently</button>
                             </a>';
                             echo '</td>';
                             echo '</tr>';

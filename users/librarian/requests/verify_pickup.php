@@ -25,7 +25,7 @@ $username = "";
 $con_num = "";
 $brgy = "";
 
-if ($_SESSION['acctype'] === 'Admin') {
+if ($_SESSION['acctype'] === 'Librarian') {
 
     $idNo = $_SESSION['id_no'];
     $username = $_SESSION['username'];
@@ -90,7 +90,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $book_id = $row['book_id'];
                 $book_title = $row['book_title'];
                 $borrow_days = $row['borrow_days'];
-                $approved_borrow_status = $row['borrow_status'];
+                $borrow_status = $row['borrow_status'];
                 $request_approval_date = $row['request_approval_date'];
                 $pickup_date = $row['pickup_date'];
                 $approvedBy = $row['approved_by'];
@@ -117,21 +117,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($VerifyPickupStmt->execute()) {
 
-        $VerifyBorrowQuery = "UPDATE borrow_requests SET borrow_status = ? WHERE borrow_id = ?";
-        $VerifyBorrowStmt = $conn->prepare($VerifyBorrowQuery);
-        $VerifyBorrowStmt->bind_param("si", $RequestStatus, $borrow_id);
-        $VerifyBorrowStmt->execute();
-
-        $VerifyBookQuery = "UPDATE books SET book_borrow_status = ? WHERE book_id = ?";
-        $VerifyBookStmt = $conn->prepare($VerifyBookQuery);
-        $VerifyBookStmt->bind_param("si", $borrow_status, $book_id);
-        $VerifyBookStmt->execute();
-
         echo 'Book Loan/Borrow Pickup Verified.';
     } else {
         echo 'Error: ' . $VerifyPickupQuery . '<br>' . $VerifyPickupStmt->error;
     }
 
+    $VerifyBorrowQuery = "UPDATE borrow_requests SET borrow_status = ? WHERE borrow_id = ?";
+    $VerifyBorrowStmt = $conn->prepare($VerifyBorrowQuery);
+    $VerifyBorrowStmt->bind_param("si", $RequestStatus, $borrow_id);
+
+    if ($VerifyBorrowStmt->execute()) {
+
+    } else {
+        echo 'Error: ' . $VerifyBorrowQuery . '<br>' . $VerifyBorrowStmt->error;
+    }
+
+    $VerifyBookQuery = "UPDATE books SET book_borrow_status = ? WHERE book_id = ?";
+    $VerifyBookStmt = $conn->prepare($VerifyBookQuery);
+    $VerifyBookStmt->bind_param("si", $borrow_status, $book_id);
+
+    if ($VerifyBookStmt->execute()) {
+
+    } else {
+        echo 'Error: ' . $VerifyBookQuery . '<br>' . $VerifyBookStmt->error;
+    }
 
 
     $notificationMessage = "You Have Successfully Picked up and Borrowed A Book from the Library. Remember to Return the Book Before it's Due Date " . $due_date . " to avoid penalties from the Library. Have Fun Reading!";

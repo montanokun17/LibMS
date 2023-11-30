@@ -104,97 +104,67 @@ if (isset($_GET['book_id'], $_GET['title'], $_GET['section'], $_GET['volume'], $
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $borrowDays = $_POST["borrowDays"];
-    //$bookId = $_POST['bookId'];
 
-        // Check if the book_id is set in the POST data
-        if (isset( $_POST['bookId'])) {
-            $bookId = $_POST['bookId'];
-    
-            // Use prepared statements to prevent SQL injection
+    if (isset($_POST['bookId'])) {
+        $bookId = $_POST['bookId'];
+
+        if (is_numeric($bookId)) {
             $bookQuery = "SELECT * FROM books WHERE book_id = ?";
             $bookStmt = $conn->prepare($bookQuery);
-    
-            // Validate bookId before binding
-            if (is_numeric($bookId)) {
-                $bookStmt->bind_param('i', $bookId);
-                $bookStmt->execute();
-                $bookResult = $bookStmt->get_result();
-    
-                if ($bookResult->num_rows === 1) {
-                    $row = $bookResult->fetch_assoc();
-    
-                    $book_title = $row['book_title'];
-                    $section = $row['section'];
-                    $volume = $row['volume'];
-                    $edition = $row['edition'];
-                    $author = $row['author'];
-                    $year = $row['year'];
-                    $publisher = $row['publisher'];
-                    $isbn = $row['isbn'];
-                    $status = $row['status'];
-    
-                    // Now you have the book information, you can display it or use it as needed
+
+            $bookStmt->bind_param('i', $bookId);
+            $bookStmt->execute();
+            $bookResult = $bookStmt->get_result();
+
+            if ($bookResult->num_rows === 1) {
+                $row = $bookResult->fetch_assoc();
+
+                $book_title = $row['book_title'];
+                // ... (other book details)
+
+                $borrowerUserId = $idNo;
+                $borrowerUsername = $username;
+                $bookTitle = $book_title;
+                $borrowStatus = "Pending";
+                $requestDate = date("Y-m-d");
+
+                // Use prepared statement for insert query
+                $sql = "INSERT INTO borrow_requests (borrower_user_id, borrower_username, book_id, book_title, borrow_days, borrow_status, request_date) 
+                        VALUES (?, ?, ?, ?, ?, ?, ?)";
+                $stmt = $conn->prepare($sql);
+                $stmt->bind_param('isissss', $borrowerUserId, $borrowerUsername, $bookId, $bookTitle, $borrowDays, $borrowStatus, $requestDate);
+
+                if ($stmt->execute()) {
+                    // Update book_borrow_status to 'Request Pending'
+                    $updateBookStatusSql = "UPDATE books SET book_borrow_status = 'Request Pending' WHERE book_id = ?";
+                    $updateStmt = $conn->prepare($updateBookStatusSql);
+                    $updateStmt->bind_param('i', $bookId);
+                    $updateStmt->execute();
+
+                    // Insert into book_log_history table
+                    $logAction = "Borrow Request Sent";
+                    $logSql = "INSERT INTO book_log_history (borrower_user_id, borrower_username, book_id, book_title, borrow_days, borrow_status, request_date, action_performed, action_performed_by) 
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    $logStmt = $conn->prepare($logSql);
+                    $logStmt->bind_param('isissssss', $borrowerUserId, $borrowerUsername, $bookId, $bookTitle, $borrowDays, $borrowStatus, $requestDate, $logAction, $borrowerUsername);
+                    $logStmt->execute();
+
+                    echo 'Borrow request sent successfully. Please Wait for the Admin/Librarian to Accept Your Request.';
                 } else {
-                    // Handle the case when the book is not found
-                    echo "<script>alert('Book Not Found');</script>";
+                    echo "Error: " . $stmt->error;
                 }
+                $stmt->close();
             } else {
-                // Handle the case when the book_id is not a valid number
-                echo "<script>alert('Invalid Book ID');</script>";
+                // Handle the case when the book is not found
+                echo "<script>alert('Book Not Found');</script>";
             }
         } else {
-            // Handle the case when book_id is not set in the POST data
-            echo "<script>alert('Book ID Not Set');</script>";
-        }
-
-
-
-    $borrowerUserId = $idNo;
-    $borrowerUsername = $username;
-    $bookTitle = $book_title;
-    $borrowStatus = "Pending";
-    $requestDate = date("Y-m-d");
-
-    // Insert into borrow_requests table
-    $sql = "INSERT INTO borrow_requests (borrower_user_id, borrower_username, book_id, book_title, borrow_days, borrow_status, request_date) 
-            VALUES ('$borrowerUserId', '$borrowerUsername', '$bookId', '$bookTitle', '$borrowDays', '$borrowStatus', '$requestDate')";
-
-    if (mysqli_query($conn, $sql)) {
-        // Update book_borrow_status to 'Request Pending'
-        $updateBookStatusSql = "UPDATE books SET book_borrow_status = 'Request Pending' WHERE book_id = '$bookId'";
-        mysqli_query($conn, $updateBookStatusSql);
-
-         // Insert into book_log_history table
-        $logAction = "Borrow Request Sent";
-        $logSql = "INSERT INTO book_log_history (borrower_user_id, borrower_username, book_id, book_title, borrow_days, borrow_status, request_date, action_performed, action_performed_by) 
-                VALUES ('$borrowerUserId', '$borrowerUsername', '$bookId', '$bookTitle', '$borrowDays', '$borrowStatus', '$requestDate', '$logAction', '$borrowerUsername')";
-
-        mysqli_query($conn, $logSql);
-
-        echo 'Borrow request sent successfully. Please Wait for the Admin/Librarian to Accept Your Request.';
-    } else {
-        echo "Error: ' . $sql . '<br>' . 'mysqli_error($conn)";
-    }
-
-    $notificationMessage = "A new borrow request from user: $borrowerUsername for the book: " . $bookTitle . ", for $borrowDays days, was sent.";
-    $readStatus = "UNREAD";
-
-    // Query users table to find admins and librarians
-    $sqlAdminsLibrarians = "SELECT id_no FROM users WHERE acctype IN ('admin', 'librarian')";
-    $resultAdminsLibrarians = mysqli_query($conn, $sqlAdminsLibrarians);
-
-    if ($resultAdminsLibrarians) {
-        while ($row = mysqli_fetch_assoc($resultAdminsLibrarians)) {
-            $adminUserId = $row['id_no'];
-
-            // Insert notification for each admin/librarian
-            $sqlNotification = "INSERT INTO notifications (sender_user_id, receiver_user_id, notification_message, read_status) 
-                                VALUES ('$borrowerUserId', '$adminUserId', '$notificationMessage', '$readStatus')";
-
-            mysqli_query($conn, $sqlNotification);
+            // Handle the case when the book_id is not a valid number
+            echo "<script>alert('Invalid Book ID');</script>";
         }
     } else {
-        echo "Error: " . $sqlAdminsLibrarians . "<br>" . mysqli_error($conn);
+        // Handle the case when book_id is not set in the POST data
+        echo "<script>alert('Book ID Not Set');</script>";
     }
 }
 

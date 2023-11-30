@@ -38,7 +38,7 @@ $username = "";
 $con_num = "";
 $brgy = "";
 
-if ($_SESSION['acctype'] === 'Student' || 'Guest') {
+if ($_SESSION['acctype'] === 'Student') {
 
     $idNo = $_SESSION['id_no'];
     $username = $_SESSION['username'];
@@ -109,11 +109,15 @@ if ($_SESSION['acctype'] === 'Student' || 'Guest') {
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="#"><i class="fa-solid fa-user fa-xs"></i> Dashboard</a>
+          <a class="nav-link" aria-current="page" href="/LibMS/users/student/index.php"><i class="fa fa-house fa-sm"></i> Home</a>
         </li>
 
         <li class="nav-item">
           <a class="nav-link" aria-current="page" href="/LibMS/users/student/history/borrowed-books.php"><i class="fa-solid fa-user fa-xs"></i> Borrowed Books</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" aria-current="page" href="/LibMS/users/student/requests/renew/pending-renew-request.php"><i class="fa-solid fa-user fa-xs"></i> Pending Renewal Requests</a>
         </li>
       </ul>
 
@@ -126,7 +130,7 @@ if ($_SESSION['acctype'] === 'Student' || 'Guest') {
       <ul class="navbar-nav">
         <li class="nav-item">
           <a class="nav-link" href="#">
-            <?php
+                <?php
                     if (isset($_SESSION['id_no']) && isset($_SESSION['username'])) {
                         $idNo = $_SESSION['id_no'];
                         $username = $_SESSION['username'];
@@ -170,9 +174,9 @@ if ($_SESSION['acctype'] === 'Student' || 'Guest') {
                 <li></li>
                 <li>
                     <a href="/LibMS/users/student/index.php">
-                        <i class="fa fa-user fa-sm"></i>
+                        <i class="fa fa-house fa-sm"></i>
                         <span class="sidebar-name">
-                            Dashboard
+                            Home
                         </span>
                     </a>
                 </li>
@@ -205,7 +209,7 @@ if ($_SESSION['acctype'] === 'Student' || 'Guest') {
                 </li>
 
                 <li>
-                    <a href="#">
+                    <a href="/LibMS/users/student/requests/pending-borrow-requests.php">
                         <i class="fa fa-bookmark fa-sm"></i>
                         <span class="sidebar-name">
                             Pending Borrow Requests

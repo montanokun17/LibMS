@@ -38,7 +38,7 @@ $username = "";
 $con_num = "";
 $brgy = "";
 
-if ($_SESSION['acctype'] === 'Student' || 'Guest') {
+if ($_SESSION['acctype'] === 'Student') {
 
     $idNo = $_SESSION['id_no'];
     $username = $_SESSION['username'];
@@ -120,7 +120,7 @@ if ($_SESSION['acctype'] === 'Student' || 'Guest') {
       <ul class="navbar-nav">
         <li class="nav-item">
           <a class="nav-link" href="/LibMS/users/student/index.php">
-            <?php
+                <?php
                     if (isset($_SESSION['id_no']) && isset($_SESSION['username'])) {
                         $idNo = $_SESSION['id_no'];
                         $username = $_SESSION['username'];

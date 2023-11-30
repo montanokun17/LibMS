@@ -111,29 +111,29 @@ if ($_SESSION['acctype'] === 'Admin') {
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav">
-        <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="#"><i class="fa-solid fa-cogs fa-xs"></i> Page Banner Settings</a>
-        </li>
+        <ul class="navbar-nav">
+            <li class="nav-item">
+            <a class="nav-link" aria-current="page" href="#"><i class="fa-solid fa-cogs fa-xs"></i> Login Page Banner</a>
+            </li>
 
-        <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="/LibMS/users/admin/requests/issue_requests.php"><i class="fa-solid fa-bookmark fa-xs"></i> Issue Requests</a>
-        </li>
+            <li class="nav-item">
+            <a class="nav-link" aria-current="page" href="/LibMS/users/admin/requests/issue_requests.php"><i class="fa-solid fa-bookmark fa-xs"></i> Issue Requests</a>
+            </li>
 
-        <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="/LibMS/users/admin/requests/approved_requests.php"><i class="fa-solid fa-clock-rotate-left fa-xs"></i> Approved Requests</a>
-        </li>
+            <li class="nav-item">
+            <a class="nav-link" aria-current="page" href="/LibMS/users/admin/requests/approved_requests.php"><i class="fa-solid fa-clock-rotate-left fa-xs"></i> Approved Requests</a>
+            </li>
 
-        <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="/LibMS/users/admin/requests/return_requests.php"><i class="fa-solid fa-rotate-left fa-xs"></i> Return Requests</a>
-        </li>
+            <li class="nav-item">
+            <a class="nav-link" aria-current="page" href="/LibMS/users/admin/requests/return_requests.php"><i class="fa-solid fa-rotate-left fa-xs"></i> Pending Return</a>
+            </li>
 
-        <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="/LibMS/users/admin/requests/renew_requests.php"><i class="fa-solid fa-clock-rotate-left fa-xs"></i> Renewal Requests</a>
-        </li>
-      </ul>
+            <li class="nav-item">
+            <a class="nav-link" aria-current="page" href="/LibMS/users/admin/requests/renew_requests.php"><i class="fa-solid fa-clock-rotate-left fa-xs"></i> Renewal Requests</a>
+            </li>
+        </ul>
 
-      <ul class="navbar-nav ms-auto">
+        <ul class="navbar-nav ms-auto">
         <li class="nav-item">
           <a class="nav-link" href="?logout=true"><i class="fa-solid fa-right-from-bracket fa-xs"></i> Logout</a>
         </li>
@@ -143,7 +143,7 @@ if ($_SESSION['acctype'] === 'Admin') {
         <li class="nav-item">
           <a class="nav-link" href="#">
 
-          <?php
+            <?php
                 if (isset($_SESSION['id_no']) && isset($_SESSION['username'])) {
                     $idNo = $_SESSION['id_no'];
                     $username = $_SESSION['username'];
@@ -158,10 +158,10 @@ if ($_SESSION['acctype'] === 'Admin') {
                                                 
                             if ($row = $result->fetch_assoc()) {
 
-                                echo '<div class="container col-sm-6 center">';
+                                //echo '<div class="container col-sm-6 center">';
                                 // Use the "width" and "height" attributes to resize the image
                                 echo '<img src="data:image/png;base64,' . base64_encode($row["user_pic_data"]) . '" width="40" height="40" class="rounded-circle"/>';
-                                echo '</div>';
+                                //echo '</div>';
                             } else {
                                 // If not found in the database, display the default image
                                 echo '<img src="/LibMS/resources/images/user.png" width=40" height="40" class="rounded-circle" style="margin-top: 10px; margin-bottom: 10px;">';
@@ -183,7 +183,7 @@ if ($_SESSION['acctype'] === 'Admin') {
 <!--NAVBAR-->
 
 <!--SIDEBAR-->
-<div id="sidebar">
+    <div id="sidebar">
             <ul>
                 <li></li>
                 <li>
@@ -217,7 +217,7 @@ if ($_SESSION['acctype'] === 'Admin') {
                     <a href="#">
                         <i class="fa fa-solid fa-qrcode fa-sm"></i>
                         <span class="sidebar-name">
-                            QR Code and ID Card
+                            QR
                         </span>
                     </a>
                 </li>
@@ -268,7 +268,7 @@ if ($_SESSION['acctype'] === 'Admin') {
                 </li>
 
                 <li>
-                    <a href="#">
+                    <a href="/LibMS/users/admin/logs/history.php">
                         <i class="fa fa-book fa-sm"></i>
                         <span class="sidebar-name">
                             Books Log
@@ -277,7 +277,7 @@ if ($_SESSION['acctype'] === 'Admin') {
                 </li>
 
                 <li>
-                    <a href="#">
+                    <a href="/LibMS/users/admin/logs/recent-deletion-books.php">
                         <i class="fa fa-trash fa-sm"></i>
                         <span class="sidebar-name">
                             Recent Deletion Books
@@ -301,6 +301,7 @@ if ($_SESSION['acctype'] === 'Admin') {
 <!--SIDEBAR-->
 
 
+
 <div class="table-box">
     <div class="container col-12 col-md-10">
         <div class="container">
@@ -309,7 +310,7 @@ if ($_SESSION['acctype'] === 'Admin') {
                     <div class="container-fluid">
                         <?php
                                 // Default query to fetch all books
-                                $query = "SELECT * FROM renew_requests ORDER BY borrow_id DESC";
+                                $query = "SELECT * FROM renew_requests WHERE renew_status = 'Renewal Pending' ORDER BY borrow_id DESC";
 
                                 function getRequestsByPagination($conn, $query, $offset, $limit) {
                                     $query .= " LIMIT $limit OFFSET $offset"; // Append the LIMIT and OFFSET to the query for pagination
@@ -362,12 +363,11 @@ if ($_SESSION['acctype'] === 'Admin') {
                                             echo '<td>' . $request['renew_timestamp'] . '</td>';
                                             echo '<td>
 
-                                                <a href="/LibMS/users/admin/requests/accept_request.php?borrow_id=' .$request['borrow_id']. '">
-                                                    <button class="btn btn-success btn-sm"><i class="fa fa-solid fa-check fa-sm"></i> Grant Renewal</button>
-                                                </a>
+                                                <button class="btn btn-success btn-sm" onclick="sendGrantRenewal('. $request['borrow_id'] .')"><i class="fa fa-solid fa-check fa-sm"></i> Grant Renewal</button>
+                                                
 
                                                 
-                                                <button class="btn btn-danger btn-sm" onclick="sendRejectRequest('. $request['borrow_id'] .')"><i class="fa fa-solid fa-x fa-sm"></i> Reject Renewal</button>
+                                                <button class="btn btn-danger btn-sm" onclick="sendRejectRenewal('. $request['borrow_id'] .')"><i class="fa fa-solid fa-x fa-sm"></i> Reject Renewal</button>
                                             
 
                                                 </td>';
@@ -417,6 +417,46 @@ if ($_SESSION['acctype'] === 'Admin') {
         </div>
     </div>
 </div>
+
+<script>
+
+    function sendGrantRenewal(borrow_id) {
+
+    // You can perform an AJAX request to the server to handle the database operations
+    // For simplicity, let's assume there is a PHP script (borrow_request.php) to handle this
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/LibMS/users/admin/requests/func/grant_renew.php", true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            alert(xhr.responseText); // You can customize this based on your response from the server
+        }
+    };
+
+    // Send data to the server, including the book ID
+    xhr.send("borrow_id=" + borrow_id);
+}
+
+function sendRejectRenewal(borrow_id) {
+
+    // You can perform an AJAX request to the server to handle the database operations
+    // For simplicity, let's assume there is a PHP script (borrow_request.php) to handle this
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/LibMS/users/admin/requests/func/reject_renewal.php", true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            alert(xhr.responseText); // You can customize this based on your response from the server
+        }
+    };
+
+    // Send data to the server, including the book ID
+    xhr.send("borrow_id=" + borrow_id);
+}
+
+</script>
 
 </body>
 </html>

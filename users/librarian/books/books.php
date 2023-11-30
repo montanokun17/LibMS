@@ -37,7 +37,7 @@ $username = "";
 $con_num = "";
 $brgy = "";
 
-if ($_SESSION['acctype'] === 'Admin') {
+if ($_SESSION['acctype'] === 'Librarian') {
 
     $idNo = $_SESSION['id_no'];
     $username = $_SESSION['username'];
@@ -85,9 +85,9 @@ if ($_SESSION['acctype'] === 'Admin') {
     <link rel="stylesheet" type="text/css" href="/LibMS/resources/bootstrap/css/bootstrap.min.css"/>
     <script type="text/javascript" src="/LibMS/resources/bootstrap/js/bootstrap.min.js"></script>
     <!--Link for CSS File-->
-    <link rel="stylesheet" type="text/css" href="/LibMS/users/admin/books/css/books.css">
+    <link rel="stylesheet" type="text/css" href="/LibMS/users/librarian/books/css/books.css">
     <!--Link for NAVBAR and SIDEBAR styling-->
-    <link rel="stylesheet" type="text/css" href="/LibMS/users/admin/css/navbar-sidebar.css">
+    <link rel="stylesheet" type="text/css" href="/LibMS/users/librarian/css/navbar-sidebar.css">
     <!--Link for Font Awesome Icons-->
     <link rel="stylesheet" href="/LibMS/resources/icons/fontawesome-free-6.4.0-web/css/all.css">
     <!--Link for Google Font-->

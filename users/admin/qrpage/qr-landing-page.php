@@ -112,30 +112,24 @@ if ($_SESSION['acctype'] === 'Admin') {
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav">
-        <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="/LibMS/users/admin/index.php"><i class="fa-solid fa-house fa-xs"></i> Home</a>
-        </li>
+          <li class="nav-item">
+            <a class="nav-link" aria-current="page" href="/LibMS/users/admin/index.php"><i class="fa-solid fa-house fa-xs"></i> Home</a>
+          </li>
 
-        <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="/LibMS/users/admin/qrpage/qr-attendance.php"><i class="fa-solid fa-house fa-xs"></i> QR Code Attendance</a>
-        </li>
+          <li class="nav-item">
+            <a class="nav-link" aria-current="page" href="/LibMS/users/admin/qrpage/qr-attendance.php"><i class="fa-solid fa-house fa-xs"></i> QR Code Attendance</a>
+          </li>
 
-        <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="/LibMS/users/admin/qrpage/qr-generator.php"><i class="fa-solid fa-house fa-xs"></i> QR Code Generator</a>
-        </li>
-      </ul>
-
-      <ul class="navbar-nav ms-auto">
-        <li class="nav-item">
-          <a class="nav-link" href="?logout=true"><i class="fa-solid fa-right-from-bracket fa-xs"></i> Logout</a>
-        </li>
-      </ul>
+          <li class="nav-item">
+            <a class="nav-link" aria-current="page" href="/LibMS/users/admin/qrpage/qr-generator.php"><i class="fa-solid fa-house fa-xs"></i> QR Code Generator</a>
+          </li>
+        </ul>
 
       <ul class="navbar-nav">
         <li class="nav-item">
           <a class="nav-link" href="#">
 
-          <?php
+            <?php
                 if (isset($_SESSION['id_no']) && isset($_SESSION['username'])) {
                     $idNo = $_SESSION['id_no'];
                     $username = $_SESSION['username'];
@@ -150,10 +144,10 @@ if ($_SESSION['acctype'] === 'Admin') {
                                                 
                             if ($row = $result->fetch_assoc()) {
 
-                                echo '<div class="container col-sm-6 center">';
+                                //echo '<div class="container col-sm-6 center">';
                                 // Use the "width" and "height" attributes to resize the image
                                 echo '<img src="data:image/png;base64,' . base64_encode($row["user_pic_data"]) . '" width="40" height="40" class="rounded-circle"/>';
-                                echo '</div>';
+                                //echo '</div>';
                             } else {
                                 // If not found in the database, display the default image
                                 echo '<img src="/LibMS/resources/images/user.png" width=40" height="40" class="rounded-circle" style="margin-top: 10px; margin-bottom: 10px;">';
@@ -174,22 +168,20 @@ if ($_SESSION['acctype'] === 'Admin') {
 </nav>
 <!--NAVBAR-->
 
+
+
 <div class="main-box">
     <div class="container">
         <div class="row">
-            <table>
-                <tbody>
-                    <td>
-                        <tr class="box-1" style="background-color:;">
+              <table>
+                <tr>
+                  <td class="box-1">
+                    <!--BOX 1-->
+                      
 
-                        </tr>
-
-                        <tr class="box-1" style="background-color:;">
-                            
-                        </tr>
-                    </td>
-                </tbody>
-            </table>
+                  </td>
+                </tr>
+              </table>
         </div>
     </div>
 </div>

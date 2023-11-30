@@ -134,10 +134,10 @@ if ($_SESSION['acctype'] === 'Admin') {
                                                 
                             if ($row = $result->fetch_assoc()) {
 
-                                echo '<div class="container col-sm-6 center">';
+                                //echo '<div class="container col-sm-6 center">';
                                 // Use the "width" and "height" attributes to resize the image
                                 echo '<img src="data:image/png;base64,' . base64_encode($row["user_pic_data"]) . '" width="40" height="40" class="rounded-circle"/>';
-                                echo '</div>';
+                                //echo '</div>';
                             } else {
                                 // If not found in the database, display the default image
                                 echo '<img src="/LibMS/resources/images/user.png" width=40" height="40" class="rounded-circle" style="margin-top: 10px; margin-bottom: 10px;">';
@@ -145,7 +145,7 @@ if ($_SESSION['acctype'] === 'Admin') {
                         } else {
                             // Error in executing the SQL query
                             echo '<img src="/LibMS/resources/images/user.png" width="200" height="200" class="rounded-circle" style="margin-top: 10px; margin-bottom: 10px;">';
-                                                    }
+                        }
                     }
                                                     
             ?>

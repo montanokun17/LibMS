@@ -16,6 +16,10 @@
     font-size: 13px;
 }
 
+a {
+    text-decoration: none;
+}
+
 .mini-item:hover {
     background-color: grey;
     border-radius: 10px;
@@ -41,7 +45,6 @@
     padding: 10px;
     height: 77vh;
 }
-
 
 .box-1 {
     padding: 15px;

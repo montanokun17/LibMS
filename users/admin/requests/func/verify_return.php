@@ -124,7 +124,7 @@ if (isset($_GET['borrow_id'])) {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <?php echo '<title>'. $firstname .' '. $lastname .' /Books - MyLibro </title>'; ?>
+    <?php echo '<title>'. $firstname .' '. $lastname .' /Verify Return - MyLibro </title>'; ?>
     <!--Link for Tab ICON-->
     <link rel="icon" type="image/x-icon" href="/LibMS/resources/images/logov1.png">
     <!--Link for Bootstrap-->
@@ -157,29 +157,29 @@ if (isset($_GET['borrow_id'])) {
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav">
-        <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="#"><i class="fa-solid fa-cogs fa-xs"></i> Page Banner Settings</a>
-        </li>
+        <ul class="navbar-nav">
+            <li class="nav-item">
+            <a class="nav-link" aria-current="page" href="#"><i class="fa-solid fa-cogs fa-xs"></i> Login Page Banner</a>
+            </li>
 
-        <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="/LibMS/users/admin/requests/issue_requests.php"><i class="fa-solid fa-bookmark fa-xs"></i> Issue Requests</a>
-        </li>
+            <li class="nav-item">
+            <a class="nav-link" aria-current="page" href="/LibMS/users/admin/requests/issue_requests.php"><i class="fa-solid fa-bookmark fa-xs"></i> Issue Requests</a>
+            </li>
 
-        <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="/LibMS/users/admin/requests/approved_requests.php"><i class="fa-solid fa-clock-rotate-left fa-xs"></i> Approved Requests</a>
-        </li>
+            <li class="nav-item">
+            <a class="nav-link" aria-current="page" href="/LibMS/users/admin/requests/approved_requests.php"><i class="fa-solid fa-clock-rotate-left fa-xs"></i> Approved Requests</a>
+            </li>
 
-        <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="/LibMS/users/admin/requests/return_requests.php"><i class="fa-solid fa-rotate-left fa-xs"></i> Return Requests</a>
-        </li>
+            <li class="nav-item">
+            <a class="nav-link" aria-current="page" href="/LibMS/users/admin/requests/return_requests.php"><i class="fa-solid fa-rotate-left fa-xs"></i> Pending Return</a>
+            </li>
 
-        <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="/LibMS/users/admin/requests/renew_requests.php"><i class="fa-solid fa-clock-rotate-left fa-xs"></i> Renewal Requests</a>
-        </li>
-      </ul>
+            <li class="nav-item">
+            <a class="nav-link" aria-current="page" href="/LibMS/users/admin/requests/renew_requests.php"><i class="fa-solid fa-clock-rotate-left fa-xs"></i> Renewal Requests</a>
+            </li>
+        </ul>
 
-      <ul class="navbar-nav ms-auto">
+        <ul class="navbar-nav ms-auto">
         <li class="nav-item">
           <a class="nav-link" href="?logout=true"><i class="fa-solid fa-right-from-bracket fa-xs"></i> Logout</a>
         </li>
@@ -189,7 +189,7 @@ if (isset($_GET['borrow_id'])) {
         <li class="nav-item">
           <a class="nav-link" href="#">
 
-          <?php
+            <?php
                 if (isset($_SESSION['id_no']) && isset($_SESSION['username'])) {
                     $idNo = $_SESSION['id_no'];
                     $username = $_SESSION['username'];
@@ -204,10 +204,10 @@ if (isset($_GET['borrow_id'])) {
                                                 
                             if ($row = $result->fetch_assoc()) {
 
-                                echo '<div class="container col-sm-6 center">';
+                                //echo '<div class="container col-sm-6 center">';
                                 // Use the "width" and "height" attributes to resize the image
                                 echo '<img src="data:image/png;base64,' . base64_encode($row["user_pic_data"]) . '" width="40" height="40" class="rounded-circle"/>';
-                                echo '</div>';
+                                //echo '</div>';
                             } else {
                                 // If not found in the database, display the default image
                                 echo '<img src="/LibMS/resources/images/user.png" width=40" height="40" class="rounded-circle" style="margin-top: 10px; margin-bottom: 10px;">';
@@ -229,7 +229,7 @@ if (isset($_GET['borrow_id'])) {
 <!--NAVBAR-->
 
 <!--SIDEBAR-->
-<div id="sidebar">
+    <div id="sidebar">
             <ul>
                 <li></li>
                 <li>

@@ -78,7 +78,7 @@ if ($_SESSION['acctype'] === 'Admin') {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <?php echo '<title>'. $firstname .' '. $lastname .' /Admin - MyLibro </title>'; ?>
+    <?php echo '<title>'. $firstname .' '. $lastname .' /Admin: My ID Card - MyLibro </title>'; ?>
     <!--Link for Tab ICON-->
     <link rel="icon" type="image/x-icon" href="/LibMS/resources/images/logov1.png">
     <!--Link for Bootstrap-->
@@ -288,23 +288,30 @@ if ($_SESSION['acctype'] === 'Admin') {
 <div class="main-box">
     <div class="container">
             <ul class="mini-sidebar">
-                <li class="mini-item active">
-                    <span class="item-content">
-                        My ID Card
-                    </span>
-                </li>
+                <a href="/LibMS/users/admin/profile/func/my_id_card.php">
+                        <li class="mini-item active">
+                            <span class="item-content">
+                                My ID Card
+                            </span>
+                        </li>
+                    </a>
 
-                <li class="mini-item">
-                    <span class="item-content">
-                        My Account's Information
-                    </span>
-                </li>
+                    <a href="/LibMS/users/admin/profile/user_settings.php">
+                        <li class="mini-item">
+                            <span class="item-content">
+                                My Account's Information
+                            </span>
+                        </li>
+                    </a>
+                    
 
-                <li class="mini-item">
-                    <span class="item-content">
-                        Page Banners
-                    </span>
-                </li>
+                    <a href="/LibMS/users/admin/profile/func/login_banner.php">
+                        <li class="mini-item">
+                            <span class="item-content">
+                                Page Banners
+                            </span>
+                        </li>
+                    </a>
 
                 <div class="dash-box-1">
                     <div class="container">

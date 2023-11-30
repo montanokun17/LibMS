@@ -15,6 +15,19 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
+// Check if the logout parameter is set
+if (isset($_GET['logout']) && $_GET['logout'] === 'true') {
+    // Unset all session variables
+    $_SESSION = array();
+
+    // Destroy the session
+    session_destroy();
+
+    // Redirect to the login page
+    header('Location: /LibMS/main/login.php');
+    exit();
+}
+
 // Initialize variables with default values
 $firstname = "";
 $lastname = "";
@@ -25,7 +38,7 @@ $username = "";
 $con_num = "";
 $brgy = "";
 
-if ($_SESSION['acctype'] === 'Admin') {
+if ($_SESSION['acctype'] === 'Librarian') {
 
     $idNo = $_SESSION['id_no'];
     $username = $_SESSION['username'];
@@ -64,9 +77,9 @@ $book_id = "";
 $book_title = "";
 $borrow_days = "";
 $borrow_status = "";
-$request_approval_date = "";
-$pickup_date = "";
-$approvedBy = "";
+$request_date = "";
+$request_timestamp = "";
+
 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -90,7 +103,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $book_id = $row['book_id'];
                 $book_title = $row['book_title'];
                 $borrow_days = $row['borrow_days'];
-                $approved_borrow_status = $row['borrow_status'];
+                $borrow_status = $row['borrow_status'];
                 $request_approval_date = $row['request_approval_date'];
                 $pickup_date = $row['pickup_date'];
                 $approvedBy = $row['approved_by'];
@@ -104,54 +117,66 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         echo "Borrow ID Not Set" . $RequestStmt->error;
     }
+    
 
-    // Calculate due date
-    $due_date = date('Y-m-d', strtotime($pickup_date . ' + ' . $borrow_days . ' days'));
-    $borrow_status = "Borrowed";
-    $RequestStatus = "Approved";
+    $borrow_status = "Rejected";
+    $RejectQuery = "UPDATE borrow_requests SET borrow_status = ? WHERE borrow_id = ?";
+    $RejectQuery = $conn->prepare($RejectQuery);
 
-    // Fix syntax error in the UPDATE query
-    $VerifyPickupQuery = "UPDATE approved_borrow_requests SET borrow_status = ?, due_date = ? WHERE borrow_id = ?";
-    $VerifyPickupStmt = $conn->prepare($VerifyPickupQuery);
-    $VerifyPickupStmt->bind_param("ssi", $borrow_status, $due_date, $borrow_id);
+    // Assuming $borrow_id is defined before this point
+    $RejectQuery->bind_param("si", $borrow_status, $borrow_id);
 
-    if ($VerifyPickupStmt->execute()) {
+    if ($RejectQuery->execute()) {
 
-        $VerifyBorrowQuery = "UPDATE borrow_requests SET borrow_status = ? WHERE borrow_id = ?";
-        $VerifyBorrowStmt = $conn->prepare($VerifyBorrowQuery);
-        $VerifyBorrowStmt->bind_param("si", $RequestStatus, $borrow_id);
-        $VerifyBorrowStmt->execute();
+        $updateBookStatus = "Available";
+        $updateBookStatusSql = "UPDATE books SET book_borrow_status = ? WHERE book_id = ?";
+        $updateBookStatusSql = $conn->prepare($updateBookStatusSql);
+        $updateBookStatusSql->bind_param("si", $updateBookStatus, $book_id);
+        $updateBookStatusSql->execute();
 
-        $VerifyBookQuery = "UPDATE books SET book_borrow_status = ? WHERE book_id = ?";
-        $VerifyBookStmt = $conn->prepare($VerifyBookQuery);
-        $VerifyBookStmt->bind_param("si", $borrow_status, $book_id);
-        $VerifyBookStmt->execute();
+        $logAction = "Request Rejected";
+        $logSql = "INSERT INTO book_log_history (borrow_id, borrower_user_id, borrower_username, book_id, book_title, borrow_days, borrow_status, request_date, action_performed, action_performed_by)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $logStatement = $conn->prepare($logSql);
 
-        echo 'Book Loan/Borrow Pickup Verified.';
+        // Assuming all other variables are defined before this point
+        $logStatement->bind_param("iisississs", $borrow_id, $borrower_user_id, $borrower_username, $book_id, $book_title, $borrow_days, $borrow_status, $request_date, $logAction, $username);
+        $logStatement->execute();
+
+        echo 'The Request was Rejected.';
     } else {
-        echo 'Error: ' . $VerifyPickupQuery . '<br>' . $VerifyPickupStmt->error;
+        echo 'Error: ' . $RejectQuery->error;
     }
 
 
-
-    $notificationMessage = "You Have Successfully Picked up and Borrowed A Book from the Library. Remember to Return the Book Before it's Due Date " . $due_date . " to avoid penalties from the Library. Have Fun Reading!";
+    $notificationMessage = "Dear User, Your Borrow Request for the book: " . $book_title . " was rejected by " . $acctype . " " . $username . ". Contact the Admin or Librarian about the other information.";
     $readStatus = "UNREAD";
 
-    $sqlStudent = "SELECT * FROM users WHERE id_no = $borrower_user_id";
-    $resultStudent = mysqli_query($conn, $sqlStudent);
+    $sqlStudent = "SELECT * FROM users WHERE id_no = ?";
+    $stmtStudent = $conn->prepare($sqlStudent);
+    $stmtStudent->bind_param("s", $borrower_user_id);
+    $stmtStudent->execute();
+    $resultStudent = $stmtStudent->get_result();
 
     if ($resultStudent) {
         while ($row = mysqli_fetch_assoc($resultStudent)) {
             $student_userId = $row['id_no'];
 
             $sqlNotification = "INSERT INTO notifications (sender_user_id, receiver_user_id, notification_message, read_status)
-                                VALUES ('$idNo', '$student_userId', '$notificationMessage', '$readStatus')";
-            mysqli_query($conn, $sqlNotification);
+                                VALUES (?, ?, ?, ?)";
+            $stmtNotification = $conn->prepare($sqlNotification);
+            $stmtNotification->bind_param("ssss", $idNo, $student_userId, $notificationMessage, $readStatus);
+            $stmtNotification->execute();
         }
     } else {
-        echo "Error: " . $sqlStudent . "<br>" . mysqli_error($conn). "";
+        echo "Error: " . $sqlStudent . "<br>" . mysqli_error($conn) . "";
     }
-    
+
+    $stmtStudent->close();
+    $stmtNotification->close();
+
+
 }
+
 
 ?>

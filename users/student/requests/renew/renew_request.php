@@ -123,13 +123,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit; // Stop execution if the borrow_id is not set
     }
 
-    $borrowStatus = "Renewal Pending";
+    $BorrowStatus = "Renewal Pending";
     $RenewRequestDate = date("Y-m-d");
+    $logAction = "Renew Request Sent";
 
-    $RenewSql = "INSERT INTO renew_requests (borrower_user_id, borrower_username, book_id, book_title, borrow_days, renew_request_date)
-                VALUES ( ?, ?, ?, ?, ?, ?)";
+    $RenewSql = "INSERT INTO renew_requests (borrow_id, borrower_user_id, borrower_username, book_id, book_title, borrow_days, renew_status, renew_request_date)
+                VALUES ( ?, ?, ?, ?, ?, ?, ?, ?)";
     $RenewStmt = $conn->prepare($RenewSql);
-    $RenewStmt->bind_param('ssisss', $borrower_user_id, $borrower_username, $book_id, $book_title, $borrow_days, $RenewRequestDate);
+    $RenewStmt->bind_param('ississss', $borrow_id ,$borrower_user_id, $borrower_username, $book_id, $book_title, $borrow_days, $BorrowStatus, $RenewRequestDate);
 
     if ($RenewStmt->execute()) {
 
@@ -139,11 +140,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $updateStmt->execute();
 
         // Insert into book_log_history table
-        $logAction = "Renew Request Sent";
-        $logSql = "INSERT INTO book_log_history (borrower_user_id, borrower_username, book_id, book_title, borrow_days, borrow_status, request_date, action_performed, action_performed_by) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $logSql = "INSERT INTO book_log_history (borrow_id, borrower_user_id, borrower_username, book_id, book_title, borrow_days, borrow_status, request_date, action_performed, action_performed_by) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $logStmt = $conn->prepare($logSql);
-        $logStmt->bind_param('isisissss', $borrower_user_id, $borrower_username, $book_id, $book_title, $borrow_days, $borrow_status, $RenewRequestDate, $logAction, $username);
+        $logStmt->bind_param('ississssss', $borrow_id ,$borrower_user_id, $borrower_username, $book_id, $book_title, $borrow_days, $BorrowStatus, $RenewRequestDate, $logAction, $username);
         $logStmt->execute();
 
         echo 'Renewal request was sent successfully. Please wait for the Admin/Librarian to grant your renewal. You will be notified soon.';

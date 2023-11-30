@@ -145,10 +145,10 @@ if ($_SESSION['acctype'] === 'Student') {
                                                     
                                 if ($row = $result->fetch_assoc()) {
 
-                                    echo '<div class="container col-sm-6 center">';
+                                    //echo '<div class="container col-sm-6 center">';
                                     // Use the "width" and "height" attributes to resize the image
                                     echo '<img src="data:image/png;base64,' . base64_encode($row["user_pic_data"]) . '" width="40" height="40" class="rounded-circle"/>';
-                                    echo '</div>';
+                                    //echo '</div>';
                                 } else {
                                     // If not found in the database, display the default image
                                     echo '<img src="/LibMS/resources/images/user.png" width=40" height="40" class="rounded-circle" style="margin-top: 10px; margin-bottom: 10px;">';
@@ -278,7 +278,7 @@ if ($_SESSION['acctype'] === 'Student') {
                                         <option onClick="filterSection('Politics')">Politics and Current Events</option>
                                         <option onClick="filterSection('Science and Technology')">Science and Technology</option>
                                         <option onClick="filterSection('Business and Finance')">Business and Finance</option>
-                                        <option onClick="filterSection('Self-Help an')d Personal Development')">Self-Help and Personal Development</option>
+                                        <option onClick="filterSection('Self-Help and Personal Development')">Self-Help and Personal Development</option>
                                         <option onClick="filterSection('Art and Architecture')">Art and Architecture</option>
                                         <option onClick="filterSection('Travel and Adventure')">Travel and Adventure</option>
                                         <option onClick="filterSection('Cookbooks and Food Writing')">Cookbooks and Food Writing</option>

@@ -37,7 +37,7 @@ $username = "";
 $con_num = "";
 $brgy = "";
 
-if ($_SESSION['acctype'] === 'Student' || 'Guest') {
+if ($_SESSION['acctype'] === 'Librarian') {
 
     $idNo = $_SESSION['id_no'];
     $username = $_SESSION['username'];
@@ -78,7 +78,7 @@ if ($_SESSION['acctype'] === 'Student' || 'Guest') {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <?php echo '<title>'. $firstname .' '. $lastname .' / Student - MyLibro </title>'; ?>
+    <?php echo '<title>'. $firstname .' '. $lastname .' / Librarian - MyLibro </title>'; ?>
     <!--Link for Tab ICON-->
     <link rel="icon" type="image/x-icon" href="/LibMS/resources/images/logov1.png">
     <!--Link for Bootstrap-->
@@ -105,7 +105,7 @@ if ($_SESSION['acctype'] === 'Student' || 'Guest') {
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="#"><i class="fa-solid fa-user fa-xs"></i> Dashboard</a>
+          <a class="nav-link" aria-current="page" href="#"><i class="fa-solid fa-house fa-xs"></i> Home</a>
         </li>
       </ul>
 
@@ -161,6 +161,15 @@ if ($_SESSION['acctype'] === 'Student' || 'Guest') {
 
                 <li>
                     <a href="#">
+                        <i class="fa fa-solid fa-qrcode fa-sm"></i>
+                        <span class="sidebar-name">
+                            QR
+                        </span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#">
                         <i class="fa fa-book fa-sm"></i>
                         <span class="sidebar-name">
                             Books
@@ -169,10 +178,10 @@ if ($_SESSION['acctype'] === 'Student' || 'Guest') {
                 </li>
 
                 <li>
-                    <a href="#">
-                        <i class="fa fa-clock-rotate-left fa-sm"></i>
+                    <a href="/LibMS/users/admin/logs/history.php">
+                        <i class="fa fa-book fa-sm"></i>
                         <span class="sidebar-name">
-                            Granted & Rejected Book Borrow Requests
+                            Books Log
                         </span>
                     </a>
                 </li>
@@ -199,7 +208,7 @@ if ($_SESSION['acctype'] === 'Student' || 'Guest') {
                     <a href="#">
                         <i class="fa fa-clock-rotate-left fa-sm"></i>
                         <span class="sidebar-name">
-                             Returned Books
+                             Pending Returns
                         </span>
                     </a>
                 </li>
@@ -244,8 +253,35 @@ if ($_SESSION['acctype'] === 'Student' || 'Guest') {
                         <img src="/LibMS/resources/images/logov1.png" 
                             width="75" height="75" class="Idlogo">
 
-                        <img src="/LibMS/resources/images/user.png" 
-                            width="100" height="100" class="rounded-circle">
+                            <?php
+                        
+                                if (isset($_SESSION['id_no']) && isset($_SESSION['username'])) {
+                                $idNo = $_SESSION['id_no'];
+                                $username = $_SESSION['username'];
+                                                            
+                                // Query to retrieve the necessary columns from the database
+                                $UserPicPath = "SELECT user_pic_data, user_pic_type FROM user_pics WHERE user_id = ? AND username = ?";
+                                $statement = $conn->prepare($UserPicPath);
+                                $statement->bind_param("is", $idNo, $username);
+                                                            
+                                    if ($statement->execute()) {
+                                        $result = $statement->get_result();
+                                                            
+                                        if ($row = $result->fetch_assoc()) {
+                                            // Use the "width" and "height" attributes to resize the image
+                                            echo '<img src="data:image/png;base64,' . base64_encode($row["user_pic_data"]) . '" width="100" height="100" class="rounded-circle"/>';
+                                            
+                                        } else {
+                                            // If not found in the database, display the default image
+                                            echo '<img src="/LibMS/resources/images/user.png" width=100" height="100" class="rounded-circle" style="margin-top: 10px; margin-bottom: 10px;">';
+                                        }
+                                    } else {
+                                        // Error in executing the SQL query
+                                        echo '<img src="/LibMS/resources/images/user.png" width="100" height="100" class="rounded-circle" style="margin-top: 10px; margin-bottom: 10px;">';
+                                                                }
+                                }
+                                                            
+                            ?>
                             
                     </div>
                     <!-- User's Details -->
@@ -268,43 +304,50 @@ if ($_SESSION['acctype'] === 'Student' || 'Guest') {
                     </ul>
 
                     <?php
-                    
                     // Check if the user is logged in
                     if (isset($_SESSION['id_no']) && isset($_SESSION['username'])) {
                         $idNo = $_SESSION['id_no'];
                         $username = $_SESSION['username'];
-                    
-                        // Query to retrieve the QR code path from the database
-                        $qrCodeQuery = "SELECT qr_code FROM qr_table WHERE id_no = ? AND username = ?";
-                        $stmt = $conn->prepare($qrCodeQuery);
-                        $stmt->bind_param("is", $idNo, $username);
-                        $stmt->execute();
-                        $result = $stmt->get_result();
-                    
-                        if ($result->num_rows > 0) {
-                            $row = $result->fetch_assoc();
-                            $qrCodePath = $row['qr_code'];
-                    
-                            // Display the QR code image
-                            echo '<div class="text-center mb-3">';
-                            echo '<img src="' . $qrCodePath . '" width="150px" height="150px" alt="' . $qrCodePath . '">';
-                            echo '</div>';
+
+                        // Query to retrieve the necessary columns from the database
+                        $qrCodePath = "SELECT qr_code_data, qr_code_type FROM qr_codes WHERE user_id = ? AND username = ?";
+                        $statement = $conn->prepare($qrCodePath);
+                        $statement->bind_param("is", $idNo, $username);
+
+                        if ($statement->execute()) {
+                            $result = $statement->get_result();
+
+                            if ($row = $result->fetch_assoc()) {
+                                // Define the desired width and height for the image
+                                $width = 150; // Set your desired width
+                                $height = 150; // Set your desired height
+
+                                echo '<div class="container col-sm-6 center">';
+                                // Use the "width" and "height" attributes to resize the image
+                                echo '<img src="data:image/png;base64,' . base64_encode($row["qr_code_data"]) . '" width="' . $width . '" height="' . $height . '"/>';
+                                echo '</div>';
+                            } else {
+                                // QR code not found in the database
+                                echo '<div class="text-center mb-3">';
+                                echo '<p><i class="fa fa-solid fa-triangle-exclamation fa-sm"></i> QR Code not found.</p>';
+                                echo '</div>';
+                            }
                         } else {
-                            // QR code not found in the database
+                            // Error in executing the SQL query
                             echo '<div class="text-center mb-3">';
-                            echo '<p>QR code not found.</p>';
+                            echo '<p>Error in executing the SQL query.</p>';
                             echo '</div>';
                         }
-                    
-                        $stmt->close();
+
+                        $statement->close();
                     } else {
-                        // User is not logged in, redirect to login page or handle as needed
-                        header('Location: /LibMS/main/login.php'); // Replace with your login page URL
-                        exit();
+                        // User is not logged in
+                        echo '<div class="text-center mb-3">';
+                        echo '<p>You are not logged in.</p>';
+                        echo '</div>';
                     }
 
                     ?>
-
 
                 </div>
             </div>

@@ -164,7 +164,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete'])) {
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="#"><i class="fa-solid fa-cogs fa-xs"></i> Homepage Settings</a>
+          <a class="nav-link" aria-current="page" href="#"><i class="fa-solid fa-cogs fa-xs"></i> Login Page Banner</a>
         </li>
       </ul>
 
@@ -178,7 +178,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete'])) {
         <li class="nav-item">
           <a class="nav-link" href="#">
 
-          <?php
+            <?php
                 if (isset($_SESSION['id_no']) && isset($_SESSION['username'])) {
                     $idNo = $_SESSION['id_no'];
                     $username = $_SESSION['username'];
@@ -193,10 +193,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete'])) {
                                                 
                             if ($row = $result->fetch_assoc()) {
 
-                                echo '<div class="container col-sm-6 center">';
+                                //echo '<div class="container col-sm-6 center">';
                                 // Use the "width" and "height" attributes to resize the image
                                 echo '<img src="data:image/png;base64,' . base64_encode($row["user_pic_data"]) . '" width="40" height="40" class="rounded-circle"/>';
-                                echo '</div>';
+                                //echo '</div>';
                             } else {
                                 // If not found in the database, display the default image
                                 echo '<img src="/LibMS/resources/images/user.png" width=40" height="40" class="rounded-circle" style="margin-top: 10px; margin-bottom: 10px;">';
@@ -204,7 +204,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete'])) {
                         } else {
                             // Error in executing the SQL query
                             echo '<img src="/LibMS/resources/images/user.png" width="200" height="200" class="rounded-circle" style="margin-top: 10px; margin-bottom: 10px;">';
-                                                    }
+                        }
                     }
                                                     
             ?>
@@ -218,7 +218,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete'])) {
 <!--NAVBAR-->
 
 <!--SIDEBAR-->
-<div id="sidebar">
+    <div id="sidebar">
             <ul>
                 <li></li>
                 <li>
@@ -252,7 +252,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete'])) {
                     <a href="#">
                         <i class="fa fa-solid fa-qrcode fa-sm"></i>
                         <span class="sidebar-name">
-                            QR Code and ID Card
+                            QR
                         </span>
                     </a>
                 </li>
@@ -303,7 +303,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete'])) {
                 </li>
 
                 <li>
-                    <a href="#">
+                    <a href="/LibMS/users/admin/logs/history.php">
                         <i class="fa fa-book fa-sm"></i>
                         <span class="sidebar-name">
                             Books Log
@@ -312,7 +312,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete'])) {
                 </li>
 
                 <li>
-                    <a href="#">
+                    <a href="/LibMS/users/admin/logs/recent-deletion-books.php">
                         <i class="fa fa-trash fa-sm"></i>
                         <span class="sidebar-name">
                             Recent Deletion Books
@@ -334,7 +334,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete'])) {
             </ul>
     </div>
 <!--SIDEBAR-->
-
 <div class="table-box">
     <div class="container col-12 col-md-10">
         <div class="container">

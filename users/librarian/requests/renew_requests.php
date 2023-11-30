@@ -37,7 +37,7 @@ $username = "";
 $con_num = "";
 $brgy = "";
 
-if ($_SESSION['acctype'] === 'Admin') {
+if ($_SESSION['acctype'] === 'Librarian') {
 
     $idNo = $_SESSION['id_no'];
     $username = $_SESSION['username'];
@@ -91,9 +91,9 @@ if ($_SESSION['acctype'] === 'Admin') {
     <link rel="stylesheet" type="text/css" href="/LibMS/resources/jquery ui/jquery-ui.min.css"/>
     <script type="text/javascript" src="/LibMS/resources/jquery/jquery-3.7.1.min.js"></script>
     <!--Link for CSS File-->
-    <link rel="stylesheet" type="text/css" href="/LibMS/users/student/requests/renew/css/pending-renew-request.css">
+    <link rel="stylesheet" type="text/css" href="/LibMS/users/librarian/requests/css/issue_requests.css">
     <!--Link for NAVBAR and SIDEBAR styling-->
-    <link rel="stylesheet" type="text/css" href="/LibMS/users/student/css/navbar-sidebar.css">
+    <link rel="stylesheet" type="text/css" href="/LibMS/users/librarian/css/navbar-sidebar.css">
     <!--Link for Font Awesome Icons-->
     <link rel="stylesheet" href="/LibMS/resources/icons/fontawesome-free-6.4.0-web/css/all.css">
     <!--Link for Google Font-->
@@ -112,18 +112,25 @@ if ($_SESSION['acctype'] === 'Admin') {
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav">
+            <li class="nav-item">
+            <a class="nav-link" aria-current="page" href="#"><i class="fa-solid fa-house fa-xs"></i> Home</a>
+            </li>
 
-        <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="/LibMS/users/student/index.php"><i class="fa fa-house fa-sm"></i> Home</a>
-        </li>
+            <li class="nav-item">
+            <a class="nav-link" aria-current="page" href="/LibMS/users/librarian/requests/issue_requests.php"><i class="fa-solid fa-bookmark fa-xs"></i> Issue Requests</a>
+            </li>
 
-        <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="/LibMS/users/student/history/borrowed-books.php"><i class="fa-solid fa-user fa-xs"></i> Borrowed Books</a>
-        </li>
+            <li class="nav-item">
+            <a class="nav-link" aria-current="page" href="/LibMS/users/librarian/requests/approved_requests.php"><i class="fa-solid fa-clock-rotate-left fa-xs"></i> Approved Requests</a>
+            </li>
 
-        <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="/LibMS/users/student/requests/renew/pending-renew-request.php"><i class="fa-solid fa-user fa-xs"></i> Pending Renewal Requests</a>
-        </li>
+            <li class="nav-item">
+            <a class="nav-link" aria-current="page" href="/LibMS/users/librarian/requests/return_requests.php"><i class="fa-solid fa-rotate-left fa-xs"></i> Pending Return</a>
+            </li>
+
+            <li class="nav-item">
+            <a class="nav-link" aria-current="page" href="/LibMS/users/librarian/requests/renew_requests.php"><i class="fa-solid fa-clock-rotate-left fa-xs"></i> Renewal Requests</a>
+            </li>
       </ul>
 
       <ul class="navbar-nav ms-auto">
@@ -135,38 +142,36 @@ if ($_SESSION['acctype'] === 'Admin') {
       <ul class="navbar-nav">
         <li class="nav-item">
           <a class="nav-link" href="#">
-
-          <?php
-                if (isset($_SESSION['id_no']) && isset($_SESSION['username'])) {
-                    $idNo = $_SESSION['id_no'];
-                    $username = $_SESSION['username'];
-                                                
-                    // Query to retrieve the necessary columns from the database
-                    $UserPicPath = "SELECT user_pic_data, user_pic_type FROM user_pics WHERE user_id = ? AND username = ?";
-                    $statement = $conn->prepare($UserPicPath);
-                    $statement->bind_param("is", $idNo, $username);
-                                                
-                        if ($statement->execute()) {
-                            $result = $statement->get_result();
-                                                
-                            if ($row = $result->fetch_assoc()) {
-
-                                echo '<div class="container col-sm-6 center">';
-                                // Use the "width" and "height" attributes to resize the image
-                                echo '<img src="data:image/png;base64,' . base64_encode($row["user_pic_data"]) . '" width="40" height="40" class="rounded-circle"/>';
-                                echo '</div>';
-                            } else {
-                                // If not found in the database, display the default image
-                                echo '<img src="/LibMS/resources/images/user.png" width=40" height="40" class="rounded-circle" style="margin-top: 10px; margin-bottom: 10px;">';
-                            }
-                        } else {
-                            // Error in executing the SQL query
-                            echo '<img src="/LibMS/resources/images/user.png" width="200" height="200" class="rounded-circle" style="margin-top: 10px; margin-bottom: 10px;">';
-                        }
-                    }
+            <?php
+                    if (isset($_SESSION['id_no']) && isset($_SESSION['username'])) {
+                        $idNo = $_SESSION['id_no'];
+                        $username = $_SESSION['username'];
                                                     
-            ?>
+                        // Query to retrieve the necessary columns from the database
+                        $UserPicPath = "SELECT user_pic_data, user_pic_type FROM user_pics WHERE user_id = ? AND username = ?";
+                        $statement = $conn->prepare($UserPicPath);
+                        $statement->bind_param("is", $idNo, $username);
+                                                    
+                            if ($statement->execute()) {
+                                $result = $statement->get_result();
+                                                    
+                                if ($row = $result->fetch_assoc()) {
 
+                                    //echo '<div class="container col-sm-6 center">';
+                                    // Use the "width" and "height" attributes to resize the image
+                                    echo '<img src="data:image/png;base64,' . base64_encode($row["user_pic_data"]) . '" width="40" height="40" class="rounded-circle"/>';
+                                    //echo '</div>';
+                                } else {
+                                    // If not found in the database, display the default image
+                                    echo '<img src="/LibMS/resources/images/user.png" width=40" height="40" class="rounded-circle" style="margin-top: 10px; margin-bottom: 10px;">';
+                                }
+                            } else {
+                                // Error in executing the SQL query
+                                echo '<img src="/LibMS/resources/images/user.png" width="200" height="200" class="rounded-circle" style="margin-top: 10px; margin-bottom: 10px;">';
+                            }
+                        }
+                                                        
+                ?>
           </a>
         </li>
       </ul>
@@ -176,20 +181,20 @@ if ($_SESSION['acctype'] === 'Admin') {
 <!--NAVBAR-->
 
 <!--SIDEBAR-->
-<div id="sidebar">
+    <div id="sidebar">
             <ul>
                 <li></li>
                 <li>
-                    <a href="/LibMS/users/student/index.php">
-                        <i class="fa fa-house fa-sm"></i>
+                    <a href="#">
+                        <i class="fa fa-user fa-sm"></i>
                         <span class="sidebar-name">
-                            Home
+                            Dashboard
                         </span>
                     </a>
                 </li>
 
                 <li>
-                    <a href="/LibMS/users/student/profile/user_settings.php">
+                    <a href="#">
                         <i class="fa fa-cogs fa-sm"></i>
                         <span class="sidebar-name">
                             User Options
@@ -207,7 +212,16 @@ if ($_SESSION['acctype'] === 'Admin') {
                 </li>
 
                 <li>
-                    <a href="/LibMS/users/student/books/books.php">
+                    <a href="#">
+                        <i class="fa fa-solid fa-qrcode fa-sm"></i>
+                        <span class="sidebar-name">
+                            QR
+                        </span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#">
                         <i class="fa fa-book fa-sm"></i>
                         <span class="sidebar-name">
                             Books
@@ -216,31 +230,51 @@ if ($_SESSION['acctype'] === 'Admin') {
                 </li>
 
                 <li>
-                    <a href="/LibMS/users/student/requests/pending-borrow-requests.php">
-                        <i class="fa fa-bookmark fa-sm"></i>
+                    <a href="/LibMS/users/admin/logs/history.php">
+                        <i class="fa fa-book fa-sm"></i>
                         <span class="sidebar-name">
-                            Pending Borrow Requests
+                            Books Log
                         </span>
                     </a>
                 </li>
 
                 <li>
-                    <a href="/LibMS/users/student/history/history.php">
+                    <a href="#">
                         <i class="fa fa-clock-rotate-left fa-sm"></i>
                         <span class="sidebar-name">
-                            History
+                            Book Borrow Requests
                         </span>
                     </a>
                 </li>
 
                 <li>
-                    <a href="/LibMS/users/student/notification/notification.php">
-                        <i class="fa fa-bell fa-sm"></i>
+                    <a href="#">
+                        <i class="fa fa-clock-rotate-left fa-sm"></i>
                         <span class="sidebar-name">
-                            Notifications
+                            Renewal Requests
                         </span>
                     </a>
                 </li>
+
+                <li>
+                    <a href="#">
+                        <i class="fa fa-clock-rotate-left fa-sm"></i>
+                        <span class="sidebar-name">
+                             Pending Returns
+                        </span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#">
+                        <i class="fa fa-clock-rotate-left fa-sm"></i>
+                        <span class="sidebar-name">
+                             Books Deletion History
+                        </span>
+                    </a>
+                </li>
+
+                
 
             </ul>
 
@@ -267,7 +301,7 @@ if ($_SESSION['acctype'] === 'Admin') {
                     <div class="container-fluid">
                         <?php
                                 // Default query to fetch all books
-                                $query = "SELECT * FROM renew_requests WHERE renew_status = 'Renewal Pending' ORDER BY borrow_id DESC";
+                                $query = "SELECT * FROM renew_requests ORDER BY borrow_id DESC";
 
                                 function getRequestsByPagination($conn, $query, $offset, $limit) {
                                     $query .= " LIMIT $limit OFFSET $offset"; // Append the LIMIT and OFFSET to the query for pagination
@@ -302,9 +336,8 @@ if ($_SESSION['acctype'] === 'Admin') {
                                         echo '<th>Borrower User ID</th>';
                                         echo '<th>Username</th>';
                                         echo '<th>Book Title</th>';
-                                        echo '<th>Requested Borrow Days</th>';
-                                        echo '<th>Renew Status</th>';
-                                        echo '<th>Renewal Request Date</th>';
+                                        echo '<th>Borrow Days</th>';
+                                        echo '<th>Renew Request Date</th>';
                                         echo '<th>Time Stamp</th>';
                                         echo '<th style="width:18%;">Action</th>';
                                         echo '</tr>';
@@ -317,13 +350,18 @@ if ($_SESSION['acctype'] === 'Admin') {
                                             echo '<td>' . $request['borrower_username'] . '</td>';
                                             echo '<td>' . $request['book_title'] . '</td>';
                                             echo '<td>' . $request['borrow_days'] . '</td>';
-                                            echo '<td>' . $request['renew_status'] . '</td>';
                                             echo '<td>' . $request['renew_request_date'] . '</td>';
                                             echo '<td>' . $request['renew_timestamp'] . '</td>';
                                             echo '<td>
+
+                                                <a href="/LibMS/users/admin/requests/accept_request.php?borrow_id=' .$request['borrow_id']. '">
+                                                    <button class="btn btn-success btn-sm"><i class="fa fa-solid fa-check fa-sm"></i> Grant Renewal</button>
+                                                </a>
+
                                                 
-                                                <button class="btn btn-danger btn-sm" onclick="sendCancelRenewal('. $request['borrow_id'] .')"><i class="fa fa-solid fa-x fa-sm"></i> Cancel Renewal</button>
+                                                <button class="btn btn-danger btn-sm" onclick="sendRejectRequest('. $request['borrow_id'] .')"><i class="fa fa-solid fa-x fa-sm"></i> Reject Renewal</button>
                                             
+
                                                 </td>';
 
                                             echo '</tr>';
