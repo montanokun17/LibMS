@@ -151,6 +151,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $UpdateBorrowStmt = $conn->prepare($UpdateBorrowQuery);
         $UpdateBorrowStmt->bind_param('issi', $renewed_days, $renewed_date, $status, $borrow_id);
         $UpdateBorrowStmt->execute();
+        
+        $UpdateBookQuery = "UPDATE books SET book_borrow_status = ? WHERE book_id = ?";
+        $UpdateBookStmt = $conn->prepare($UpdateBorrowQuery);
+        $UpdateBookStmt->bind_param('si', $status, $approved_book_id);
+        $UpdateBookStmt->execute();
 
         $LogQuery = "INSERT INTO book_log_history (borrow_id, borrower_user_id, borrower_username, book_id, book_title, borrow_days, borrow_status, request_date, action_performed, action_performed_by)
                     VALUES (?,?,?,?,?,?,?,?,?,?)";
@@ -175,12 +180,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $student_userId = $row['id_no'];
 
             $sqlNotification = "INSERT INTO notifications (sender_user_id, receiver_user_id, notification_message, read_status)
+                                VALUES (?,?,?,?)";
+            $NoificationStmt = $conn->prepare($sqlNotification);
+            $NoificationStmt->bind_param( 'iiss' ,$idNo, $student_userId, $notificationMessage, $readStatus);
+        }
+    } else {
+        echo "Error: " . $sqlStudent . "<br>" . mysqli_error($conn). "";
+    }
+
+    /*if ($resultStudent) {
+        while ($row = mysqli_fetch_assoc($resultStudent)) {
+            $student_userId = $row['id_no'];
+
+            $sqlNotification = "INSERT INTO notifications (sender_user_id, receiver_user_id, notification_message, read_status)
                                 VALUES ('$idNo', '$student_userId', '$notificationMessage', '$readStatus')";
             mysqli_query($conn, $sqlNotification);
         }
     } else {
         echo "Error: " . $sqlStudent . "<br>" . mysqli_error($conn). "";
-    }
+    }*/
 
 }
 

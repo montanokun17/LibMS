@@ -102,6 +102,7 @@ if (isset($_GET['book_id'], $_GET['title'], $_GET['section'], $_GET['volume'], $
 // Your code to display or use the book information can go here
 
 
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $borrowDays = $_POST["borrowDays"];
 
@@ -150,6 +151,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $logStmt->execute();
 
                     echo 'Borrow request sent successfully. Please Wait for the Admin/Librarian to Accept Your Request.';
+
                 } else {
                     echo "Error: " . $stmt->error;
                 }

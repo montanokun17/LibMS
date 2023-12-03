@@ -141,6 +141,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $resultStudent = mysqli_query($conn, $sqlStudent);
 
     if ($resultStudent) {
+
+        while ($row = mysqli_fetch_assoc($resultStudent)) {
+            $student_userId = $row['id_no'];
+
+            $sqlNotification = "INSERT INTO notifications (sender_user_id, receiver_user_id, notification_message, read_status)
+                                VALUES (?,?,?,?)";
+            $notificationStmt = $conn->prepare($sqlNotification);
+            $notificationStmt->bind_param('iiss', $idNo, $student_userId, $notificationMessage, $readStatus);
+            $notificationStmt->execute();
+        }
+
+    } else {
+        echo "Error: " . $sqlStudent . "<br>" . mysqli_error($conn). "";
+    }
+
+    /*if ($resultStudent) {
         while ($row = mysqli_fetch_assoc($resultStudent)) {
             $student_userId = $row['id_no'];
 
@@ -151,7 +167,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         echo "Error: " . $sqlStudent . "<br>" . mysqli_error($conn). "";
     }
-    
+    */
 }
 
 ?>

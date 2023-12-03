@@ -1,10 +1,10 @@
 <?php
 session_start();
 
-$servername = "localhost"; // Replace with your server name if different
-$user_name = "root"; // Replace with your database username
-$Password = ""; // Replace with your database password
-$database = "mylibro"; // Replace with your database name
+$servername = "localhost";
+$user_name = "root";
+$Password = "";
+$database = "mylibro";
 
 // Create a connection
 $conn = new mysqli($servername, $user_name, $Password, $database);
@@ -78,18 +78,25 @@ if ($_SESSION['acctype'] === 'Admin') {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <?php echo '<title>'. $firstname .' '. $lastname .' /Admin - MyLibro </title>'; ?>
+    <?php echo '<title>'. $firstname .' '. $lastname .' / QR - MyLibro </title>'; ?>
     <!--Link for Tab ICON-->
     <link rel="icon" type="image/x-icon" href="/LibMS/resources/images/logov1.png">
     <!--Link for Bootstrap-->
     <link rel="stylesheet" type="text/css" href="/LibMS/resources/bootstrap/css/bootstrap.min.css"/>
     <script type="text/javascript" src="/LibMS/resources/bootstrap/js/bootstrap.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <!--Link for JQuery-->
+    <script type="text/javascript" src="/LibMS/resources/jquery ui/jquery-ui.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/LibMS/resources/jquery ui/jquery-ui.min.css"/>
+    <script type="text/javascript" src="/LibMS/resources/jquery/jquery-3.7.1.min.js"></script>
     <!--Link for CSS File-->
-    <link rel="stylesheet" type="text/css" href="/LibMS/users/admin/css/index.css">
+    <link rel="stylesheet" type="text/css" href="/LibMS/users/admin/qrpage/css/qr-landing-page.css">
+    <!--Link for NAVBAR and SIDEBAR styling-->
+    <link rel="stylesheet" type="text/css" href="/LibMS/users/admin/css/navbar-sidebar.css">
     <!--Link for Font Awesome Icons-->
     <link rel="stylesheet" href="/LibMS/resources/icons/fontawesome-free-6.4.0-web/css/all.css">
-    <!--Link for Google Font-->
-    <link rel="stylesheet" href="/LibMS/resources/fonts/fonts.css"/>
+    <script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
 
 </head>
 
@@ -104,10 +111,10 @@ if ($_SESSION['acctype'] === 'Admin') {
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav">
-        <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="#"><i class="fa-solid fa-cogs fa-xs"></i> Login Page Banner</a>
-        </li>
-      </ul>
+          <li class="nav-item">
+            <a class="nav-link" aria-current="page" href="/LibMS/users/admin/index.php"><i class="fa-solid fa-house fa-xs"></i> Home</a>
+          </li>
+        </ul>
 
       <ul class="navbar-nav ms-auto">
         <li class="nav-item">
@@ -159,7 +166,7 @@ if ($_SESSION['acctype'] === 'Admin') {
 <!--NAVBAR-->
 
 <!--SIDEBAR-->
-    <div id="sidebar">
+<div id="sidebar">
             <ul>
                 <li></li>
                 <li>
@@ -276,123 +283,80 @@ if ($_SESSION['acctype'] === 'Admin') {
     </div>
 <!--SIDEBAR-->
 
-<!-- ID Card Container -->
-<div class="container mt-4">
-    <div class="row justify-content-center">
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-header bg-dark text-white">
-                    <p class="text-center">MyLibro ID</p>
-                </div>
-                <div class="card-body">
-                    <!-- User's Profile Image -->
-                    <div class="text-center mb-2">
-                        <img src="/LibMS/resources/images/logov1.png" 
-                            width="75" height="75" class="Idlogo">
 
-                        <?php
-                        
-                        if (isset($_SESSION['id_no']) && isset($_SESSION['username'])) {
-                        $idNo = $_SESSION['id_no'];
-                        $username = $_SESSION['username'];
-                                                    
-                        // Query to retrieve the necessary columns from the database
-                        $UserPicPath = "SELECT user_pic_data, user_pic_type FROM user_pics WHERE user_id = ? AND username = ?";
-                        $statement = $conn->prepare($UserPicPath);
-                        $statement->bind_param("is", $idNo, $username);
-                                                    
-                            if ($statement->execute()) {
-                                $result = $statement->get_result();
-                                                    
-                                if ($row = $result->fetch_assoc()) {
-                                    // Use the "width" and "height" attributes to resize the image
-                                    echo '<img src="data:image/png;base64,' . base64_encode($row["user_pic_data"]) . '" width="100" height="100" class="rounded-circle"/>';
-                                    
-                                } else {
-                                    // If not found in the database, display the default image
-                                    echo '<img src="/LibMS/resources/images/user.png" width=100" height="100" class="rounded-circle" style="margin-top: 10px; margin-bottom: 10px;">';
-                                }
-                            } else {
-                                // Error in executing the SQL query
-                                echo '<img src="/LibMS/resources/images/user.png" width="100" height="100" class="rounded-circle" style="margin-top: 10px; margin-bottom: 10px;">';
-                                                        }
-                        }
-                                                    
-                        ?>
-                            
+<div class="main-box">
+    <div class="container">
+        <div class="row">
+            <div class="box-1 col-12">
+                <div class="card-body bg-dark">
+                    <div class="col-md-8 mx-auto">
+                        <form class="form-box" method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+
+                            <div class="form-group" style="margin-top:20px;">
+                                <h2><i class="fa-solid fa-paper-plane"></i> Send Book Borrow Request:</h2>
+                            </div>
+
+                            <div class="form-group" style="margin-top:10px;">
+                                <label for="bookTitle">Book Title:</label>
+                                <span id="bookTitle" class="form-control-static"><?php echo $book_title; ?></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="bookYear">Year:</label>
+                                <span id="bookYear" class="form-control-static"><?php echo $year; ?></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="bookAuthor">Author:</label>
+                                <span id="bookAuthor" class="form-control-static"><?php echo $author; ?></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="bookPublisher">Publisher:</label>
+                                <span id="bookPublisher" class="form-control-static"><?php echo $publisher; ?></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="bookSection">Section:</label>
+                                <span id="bookSection" class="form-control-static"><?php echo $section; ?></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="bookEditionVolume">Edition and Volume:</label>
+                                <span id="bookEditionVolume" class="form-control-static"><?php echo $edition; ?></span>,
+                                <span id="bookEditionVolume" class="form-control-static"><?php echo $volume; ?></span>
+                            </div>
+
+
+                            <div class="form-group" style="margin-bottom:10px; margin-top:10px;">
+                                <button class="btn btn-primary btn-md" style="width:80%;" onclick="deleteBook(<?php echo $bookId; ?>)"><i class="fa-solid fa-trash"></i> Delete</button>
+                            </div>
+
+                            <div class="form-group" style="margin-bottom:10px; margin-top:10px;">
+                                <a href="/LibMS/users/admin/books/books.php">
+                                    <button class="btn btn-primary btn-md" style="width:80%;"><i class="fa-solid fa-arrow-left"></i> Go Back</button>
+                                </a>
+                            </div>
+
+
+                            <!--
+                            <div class="form-group">
+                                <label for="book">:</label>
+                                <span id="book" class="form-control-static"><?php //echo $; ?></span>
+                            </div>
+                            -->
+
+                        </form>
                     </div>
-                    <!-- User's Details -->
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">
-                            <strong>Name:</strong> <?php echo "$firstname $lastname"; ?>
-                        </li>
-                        <li class="list-group-item">
-                            <strong>ID Number:</strong> <?php echo "$idNo"; ?>
-                        </li>
-                        <li class="list-group-item">
-                            <strong>Email:</strong> <?php echo "$email"; ?>
-                        </li>
-                        <li class="list-group-item">
-                            <strong>Account Type:</strong> <?php echo "$acctype"; ?>
-                        </li>
-                        <li class="list-group-item">
-                            <strong>Barangay:</strong> <?php echo "$brgy"; ?>
-                        </li>
-                    </ul>
-
-                    <?php
-                    // Check if the user is logged in
-                    if (isset($_SESSION['id_no']) && isset($_SESSION['username'])) {
-                        $idNo = $_SESSION['id_no'];
-                        $username = $_SESSION['username'];
-
-                        // Query to retrieve the necessary columns from the database
-                        $qrCodePath = "SELECT qr_code_data, qr_code_type FROM qr_codes WHERE user_id = ? AND username = ?";
-                        $statement = $conn->prepare($qrCodePath);
-                        $statement->bind_param("is", $idNo, $username);
-
-                        if ($statement->execute()) {
-                            $result = $statement->get_result();
-
-                            if ($row = $result->fetch_assoc()) {
-                                // Define the desired width and height for the image
-                                $width = 150; // Set your desired width
-                                $height = 150; // Set your desired height
-
-                                echo '<div class="container col-sm-6 center">';
-                                // Use the "width" and "height" attributes to resize the image
-                                echo '<img src="data:image/png;base64,' . base64_encode($row["qr_code_data"]) . '" width="' . $width . '" height="' . $height . '"/>';
-                                echo '</div>';
-                            } else {
-                                // QR code not found in the database
-                                echo '<div class="text-center mb-3">';
-                                echo '<p><i class="fa fa-solid fa-triangle-exclamation fa-sm"></i> QR Code not found.</p>';
-                                echo '</div>';
-                            }
-                        } else {
-                            // Error in executing the SQL query
-                            echo '<div class="text-center mb-3">';
-                            echo '<p>Error in executing the SQL query.</p>';
-                            echo '</div>';
-                        }
-
-                        $statement->close();
-                    } else {
-                        // User is not logged in
-                        echo '<div class="text-center mb-3">';
-                        echo '<p>You are not logged in.</p>';
-                        echo '</div>';
-                    }
-
-                    ?>
-
-
                 </div>
             </div>
         </div>
     </div>
 </div>
 
+<script>
+
+</script>
 
 </body>
 </html>

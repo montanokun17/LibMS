@@ -115,22 +115,6 @@ CREATE TABLE book_log_history (
     FOREIGN KEY (book_id) REFERENCES books(book_id)
 );
 
-CREATE TABLE returned_books (
-    return_id INT PRIMARY KEY AUTO_INCREMENT,
-    borrow_id INT,
-    borrower_user_id INT,
-    borrower_username VARCHAR(255),
-    book_id INT,
-    book_title VARCHAR(255),
-    borrow_days INT,
-    book_status VARCHAR(100) NOT NULL,
-    return_date DATE NOT NULL,
-    verified_by VARCHAR(100) NOT NULL,
-    FOREIGN KEY (borrow_id) REFERENCES borrow_requests(borrow_id),
-    FOREIGN KEY (book_id) REFERENCES books(book_id),
-    FOREIGN KEY (borrower_user_id) REFERENCES users(id_no)
-);
-
 CREATE TABLE renew_requests (
     renew_id INT PRIMARY KEY AUTO_INCREMENT,
     borrow_id INT,
@@ -162,6 +146,32 @@ CREATE TABLE renewed_books (
     FOREIGN KEY (borrow_id) REFERENCES borrow_requests(borrow_id),
     FOREIGN KEY (book_id) REFERENCES books(book_id),
     FOREIGN KEY (borrower_user_id) REFERENCES users(id_no)
+);
+
+CREATE TABLE returned_books (
+    return_id INT PRIMARY KEY AUTO_INCREMENT,
+    borrow_id INT,
+    borrower_user_id INT,
+    borrower_username VARCHAR(255),
+    book_id INT,
+    book_title VARCHAR(255),
+    borrow_days INT,
+    book_status VARCHAR(100) NOT NULL,
+    return_date DATE NOT NULL,
+    verified_by VARCHAR(100) NOT NULL,
+    FOREIGN KEY (borrow_id) REFERENCES borrow_requests(borrow_id),
+    FOREIGN KEY (book_id) REFERENCES books(book_id),
+    FOREIGN KEY (borrower_user_id) REFERENCES users(id_no)
+);
+
+CREATE TABLE qr_attendance (
+    qr_log_id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT,
+    username VARCHAR(255),
+    attendance_time_in DATETIME NOT NULL,
+    attendance_time_out DATETIME,
+    acctype VARCHAR(50),
+    FOREIGN KEY (user_id) REFERENCES users(id_no),
 );
 
 /*CREATE TABLE approved_borrow_requests (

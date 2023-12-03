@@ -98,6 +98,7 @@ if ($_SESSION['acctype'] === 'Admin') {
     <link rel="stylesheet" href="/LibMS/resources/icons/fontawesome-free-6.4.0-web/css/all.css">
     <!--Link for Google Font-->
     <link rel="stylesheet" href="/LibMS/resources/fonts/fonts.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 </head>
 

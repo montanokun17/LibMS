@@ -96,8 +96,7 @@ if ($_SESSION['acctype'] === 'Admin') {
     <link rel="stylesheet" type="text/css" href="/LibMS/users/admin/css/navbar-sidebar.css">
     <!--Link for Font Awesome Icons-->
     <link rel="stylesheet" href="/LibMS/resources/icons/fontawesome-free-6.4.0-web/css/all.css">
-    <!--Link for Google Font-->
-    <link rel="stylesheet" href="/LibMS/resources/fonts/fonts.css"/>
+    <script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
 
 </head>
 
@@ -115,15 +114,13 @@ if ($_SESSION['acctype'] === 'Admin') {
           <li class="nav-item">
             <a class="nav-link" aria-current="page" href="/LibMS/users/admin/index.php"><i class="fa-solid fa-house fa-xs"></i> Home</a>
           </li>
-
-          <li class="nav-item">
-            <a class="nav-link" aria-current="page" href="/LibMS/users/admin/qrpage/qr-attendance.php"><i class="fa-solid fa-house fa-xs"></i> QR Code Attendance</a>
-          </li>
-
-          <li class="nav-item">
-            <a class="nav-link" aria-current="page" href="/LibMS/users/admin/qrpage/qr-generator.php"><i class="fa-solid fa-house fa-xs"></i> QR Code Generator</a>
-          </li>
         </ul>
+
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="?logout=true"><i class="fa-solid fa-right-from-bracket fa-xs"></i> Logout</a>
+        </li>
+      </ul>
 
       <ul class="navbar-nav">
         <li class="nav-item">
@@ -173,11 +170,123 @@ if ($_SESSION['acctype'] === 'Admin') {
 <div class="main-box">
     <div class="container">
         <div class="row">
-              <table>
+              <table style="margin-top:30px;">
                 <tr>
                   <td class="box-1">
                     <!--BOX 1-->
-                      
+
+                    <video id="preview" style="width:400px; height:400px;"></video>
+                    
+
+
+                  </td>
+
+                  <td class="box-2 container">
+
+                    <table style="width:30pc; width:; margin-top:-170px;">
+                    <?php
+
+                      $QRQuery = "SELECT * FROM qr_attendance ORDER BY qr_log_id DESC";
+
+
+                      function getReturnByPagination($conn, $query, $offset, $limit) {
+                        $query .= " LIMIT $limit OFFSET $offset"; // Append the LIMIT and OFFSET to the query for pagination
+                        $result = mysqli_query($conn, $query);
+
+                        return $result;
+                      }
+
+                      $totalQRQuery = "SELECT COUNT(*) as total FROM qr_attendance";
+                      $totalQRResult = mysqli_query($conn, $totalQRQuery);
+                      $totalReturn = mysqli_fetch_assoc($totalQRResult)['total'];
+
+
+                      // Number of books to display per page
+                      $limit = 7;
+
+                      // Get the current page number from the query parameter
+                      $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
+
+                      // Calculate the offset for the current page
+                      $offset = ($page - 1) * $limit;
+
+                      // Get the books for the current page
+                      $result = getReturnByPagination($conn, $query, $offset, $limit);
+
+                        // Check if the query executed successfully
+                        if ($result && mysqli_num_rows($result) > 0) {
+                            echo '<div class="container" id="result">';
+                            echo '<table>';
+                            echo '<thead>';
+                            echo '<tr>';
+                            echo '<th>User ID</th>';
+                            echo '<th>Username</th>';
+                            echo '<th>Account Type</th>';
+                            echo '<th>Time In</th>';
+                            echo '<th>Time Out</th>';
+                            echo '</tr>';
+                            echo '</thead>';
+                            echo '<tbody>';
+
+                            while ($return = mysqli_fetch_assoc($result)) {
+                                echo '<tr>';
+                                echo '<td>' . $return['user_id'] . '</td>';
+                                echo '<td>' . $return['username'] . '</td>';
+                                echo '<td>' . $return['acctype'] . '</td>';
+                                echo '<td>' . $return['attendance_time_in'] . '</td>';
+                                echo '<td>' . $return['attendance_time_out'] . '</td>';
+
+                                echo '</tr>';
+                            }
+
+                            echo '</tbody>';
+                            echo '</table>';
+
+
+                            // Calculate the total number of pages
+                            $totalPages = ceil($totalReturn / $limit);
+                            if ($totalPages > 1) {
+                                echo '
+                                <div class="pagination-buttons" style="margin-top: 10px;
+                                margin-left: 70px;
+                                ">
+                                    ';
+                        
+                                if ($page > 1) {
+                                    echo '<a href="?page='.($page - 1).'" class="btn btn-primary btn-sm" id="previous" style="padding: 10px; width:10%;"><i class="fa-solid fa-angle-left"></i>'.($page - 1).' Previous</a>';
+                                }
+                        
+                                if ($page < $totalPages) {
+                                    echo '<a href="?page='.($page + 1).'" class="btn btn-primary btn-sm" id="next" style="padding: 10px; width:10%; margin-left:5px;"> '.($page + 1).' Next <i class="fa-solid fa-angle-right"></i></a>';
+                                }
+                        
+                                echo '
+                                </div>
+                                ';
+                            }
+
+                        } else {
+                            echo '<div class="container">';
+                            echo '<table style="width:;">';
+                            echo '<thead>';
+                            echo '<tr>';
+                            echo '<th>User ID</th>';
+                            echo '<th>Username</th>';
+                            echo '<th>Account Type</th>';
+                            echo '<th>Time In</th>';
+                            echo '<th>Time Out</th>';
+                            echo '</tr>';
+                            echo '</thead>';
+
+                            echo "<tr><td colspan='10'><p class='container' style='margin-left:90px; margin-top:50px; font-size: 20px; font-weight:700;'>No Records.</p></td></tr>";
+                        }
+
+
+                        // Close the database connection
+                        mysqli_close($conn);
+
+                      ?>
+                    </table>
 
                   </td>
                 </tr>
@@ -185,6 +294,77 @@ if ($_SESSION['acctype'] === 'Admin') {
         </div>
     </div>
 </div>
+
+<script>
+  function getUserIdFromDatabase($conn, $idNo) {
+    $idNo = $conn->real_escape_string($idNo); // Escape input to prevent SQL injection
+
+    $sql = "SELECT id_no FROM users WHERE id_no = '$idNo'";
+    $result = $conn->query($sql);
+
+    if ($result && $result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        return $row['id_no'];
+    } else {
+        // Handle the case when the user with the provided ID is not found
+        return null;
+    }
+}
+
+</script>
+
+<?php
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  $qrCodeContent = $_POST["qrCodeContent"];
+  
+  // Parse QR code content
+  list($idNo, $username, $acctype) = explode("\n", $qrCodeContent);
+  $idNo = substr($idNo, strpos($idNo, ":") + 2);
+  $username = substr($username, strpos($username, ":") + 2);
+  
+  // Log the information into the database
+  $user_id = getUserIdFromDatabase($conn, $idNo); // Implement a function to get user_id from the database
+  $attendance_time_in = date('Y-m-d H:i:s');
+  
+  $sql = "INSERT INTO qr_attendance (user_id, username, attendance_time_in) VALUES ($user_id, '$username', '$attendance_time_in')";
+  
+  if ($conn->query($sql) === TRUE) {
+      echo "Scanned QR code successfully logged.";
+  } else {
+      echo "Error: " . $sql . "<br>" . $conn->error;
+  }
+}
+
+?>
+
+<script>
+
+// Create a new Instascan scanner instance
+let scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
+
+// Set up a callback for when a QR code is scanned successfully
+scanner.addListener('scan', function (content) {
+    document.getElementById('result').innerText = content;
+});
+
+// Handle errors
+scanner.addListener('error', function (error) {
+    console.log(error);
+});
+
+// Start the scanner
+Instascan.Camera.getCameras().then(function (cameras) {
+    if (cameras.length > 0) {
+        scanner.start(cameras[0]);
+    } else {
+        console.error('No cameras found.');
+    }
+}).catch(function (e) {
+    console.error(e);
+});
+
+</script>
 
 </body>
 </html>
