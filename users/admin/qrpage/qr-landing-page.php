@@ -176,7 +176,6 @@ if ($_SESSION['acctype'] === 'Admin') {
                     <!--BOX 1-->
 
                     <video id="preview" style="width:400px; height:400px;"></video>
-                    
 
 
                   </td>
@@ -184,6 +183,7 @@ if ($_SESSION['acctype'] === 'Admin') {
                   <td class="box-2 container">
 
                     <table style="width:30pc; width:; margin-top:-170px;">
+
                     <?php
 
                       $QRQuery = "SELECT * FROM qr_attendance ORDER BY qr_log_id DESC";
@@ -313,39 +313,28 @@ if ($_SESSION['acctype'] === 'Admin') {
 
 </script>
 
-<?php
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  $qrCodeContent = $_POST["qrCodeContent"];
-  
-  // Parse QR code content
-  list($idNo, $username, $acctype) = explode("\n", $qrCodeContent);
-  $idNo = substr($idNo, strpos($idNo, ":") + 2);
-  $username = substr($username, strpos($username, ":") + 2);
-  
-  // Log the information into the database
-  $user_id = getUserIdFromDatabase($conn, $idNo); // Implement a function to get user_id from the database
-  $attendance_time_in = date('Y-m-d H:i:s');
-  
-  $sql = "INSERT INTO qr_attendance (user_id, username, attendance_time_in) VALUES ($user_id, '$username', '$attendance_time_in')";
-  
-  if ($conn->query($sql) === TRUE) {
-      echo "Scanned QR code successfully logged.";
-  } else {
-      echo "Error: " . $sql . "<br>" . $conn->error;
-  }
-}
-
-?>
-
 <script>
 
 // Create a new Instascan scanner instance
 let scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
 
-// Set up a callback for when a QR code is scanned successfully
-scanner.addListener('scan', function (content) {
-    document.getElementById('result').innerText = content;
+    // Set up a callback for when a QR code is scanned successfully
+    scanner.addListener('scan', function (content) {
+    document.getElementById('text').innerText = content;
+
+    // Send the scanned data to the server using AJAX
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/LibMS/users/admin/qrpage/qr-scan.php', true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+            alert(xhr.responseText);
+        } else {
+            alert('Error: ' + xhr.statusText);
+        }
+    };
+    xhr.send('content=' + encodeURIComponent(content));
+
 });
 
 // Handle errors

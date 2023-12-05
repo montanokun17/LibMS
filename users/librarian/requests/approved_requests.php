@@ -183,20 +183,20 @@ if ($_SESSION['acctype'] === 'Librarian') {
 <!--NAVBAR-->
 
 <!--SIDEBAR-->
-    <div id="sidebar">
+<div id="sidebar">
             <ul>
                 <li></li>
                 <li>
-                    <a href="#">
-                        <i class="fa fa-user fa-sm"></i>
+                    <a href="/LibMS/users/librarian/index.php">
+                        <i class="fa fa-house fa-sm"></i>
                         <span class="sidebar-name">
-                            Dashboard
+                            Home
                         </span>
                     </a>
                 </li>
 
                 <li>
-                    <a href="#">
+                    <a href="/LibMS/users/librarian/user_settings/user_settings.php">
                         <i class="fa fa-cogs fa-sm"></i>
                         <span class="sidebar-name">
                             User Options
@@ -205,16 +205,7 @@ if ($_SESSION['acctype'] === 'Librarian') {
                 </li>
 
                 <li>
-                    <a href="#">
-                        <i class="fa fa-comments fa-sm"></i>
-                        <span class="sidebar-name">
-                            Messages
-                        </span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="#">
+                    <a href="/LibMS/users/librarian/qrpage/qr-landing-page.php">
                         <i class="fa fa-solid fa-qrcode fa-sm"></i>
                         <span class="sidebar-name">
                             QR
@@ -223,7 +214,16 @@ if ($_SESSION['acctype'] === 'Librarian') {
                 </li>
 
                 <li>
-                    <a href="#">
+                    <a href="/LibMS/users/librarian/notification/notification.php">
+                        <i class="fa fa-bell fa-sm"></i>
+                        <span class="sidebar-name">
+                            Notifications
+                        </span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="/LibMS/users/librarian/books/books.php">
                         <i class="fa fa-book fa-sm"></i>
                         <span class="sidebar-name">
                             Books
@@ -241,7 +241,7 @@ if ($_SESSION['acctype'] === 'Librarian') {
                 </li>
 
                 <li>
-                    <a href="#">
+                    <a href="/LibMS/users/librarian/requests/issue_requests.php">
                         <i class="fa fa-clock-rotate-left fa-sm"></i>
                         <span class="sidebar-name">
                             Book Borrow Requests
@@ -250,7 +250,7 @@ if ($_SESSION['acctype'] === 'Librarian') {
                 </li>
 
                 <li>
-                    <a href="#">
+                    <a href="/LibMS/users/librarian/requests/renew_requests.php">
                         <i class="fa fa-clock-rotate-left fa-sm"></i>
                         <span class="sidebar-name">
                             Renewal Requests
@@ -259,7 +259,7 @@ if ($_SESSION['acctype'] === 'Librarian') {
                 </li>
 
                 <li>
-                    <a href="#">
+                    <a href="/LibMS/users/librarian/requests/return_requests.php">
                         <i class="fa fa-clock-rotate-left fa-sm"></i>
                         <span class="sidebar-name">
                              Pending Returns

@@ -159,7 +159,7 @@ if ($_SESSION['acctype'] === 'Student') {
 <!--NAVBAR-->
 
 <!--SIDEBAR-->
-    <div id="sidebar">
+<div id="sidebar">
             <ul>
                 <li></li>
                 <li>
@@ -176,15 +176,6 @@ if ($_SESSION['acctype'] === 'Student') {
                         <i class="fa fa-cogs fa-sm"></i>
                         <span class="sidebar-name">
                             User Options
-                        </span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="#">
-                        <i class="fa fa-comments fa-sm"></i>
-                        <span class="sidebar-name">
-                            Messages
                         </span>
                     </a>
                 </li>

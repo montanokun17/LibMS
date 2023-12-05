@@ -107,7 +107,7 @@ if ($_SESSION['acctype'] === 'Librarian') {
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="#"><i class="fa-solid fa-cogs fa-xs"></i> Homepage Settings</a>
+          <a class="nav-link" aria-current="page" href="/LibMS/users/librarian/index.php"><i class="fa-solid fa-house fa-xs"></i> Home</a>
         </li>
       </ul>
 
@@ -119,9 +119,37 @@ if ($_SESSION['acctype'] === 'Librarian') {
 
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link" href="#">
-            <img src="/LibMSv1/resources/images/user.png" 
-            width="40" height="40" style="border:1px solid #000000;" class="rounded-circle">
+          <a class="nav-link" href="/LibMS/users/librarian/index.php">
+            <?php
+                    if (isset($_SESSION['id_no']) && isset($_SESSION['username'])) {
+                        $idNo = $_SESSION['id_no'];
+                        $username = $_SESSION['username'];
+                                                    
+                        // Query to retrieve the necessary columns from the database
+                        $UserPicPath = "SELECT user_pic_data, user_pic_type FROM user_pics WHERE user_id = ? AND username = ?";
+                        $statement = $conn->prepare($UserPicPath);
+                        $statement->bind_param("is", $idNo, $username);
+                                                    
+                            if ($statement->execute()) {
+                                $result = $statement->get_result();
+                                                    
+                                if ($row = $result->fetch_assoc()) {
+
+                                    //echo '<div class="container col-sm-6 center">';
+                                    // Use the "width" and "height" attributes to resize the image
+                                    echo '<img src="data:image/png;base64,' . base64_encode($row["user_pic_data"]) . '" width="40" height="40" class="rounded-circle"/>';
+                                    //echo '</div>';
+                                } else {
+                                    // If not found in the database, display the default image
+                                    echo '<img src="/LibMS/resources/images/user.png" width=40" height="40" class="rounded-circle" style="margin-top: 10px; margin-bottom: 10px;">';
+                                }
+                            } else {
+                                // Error in executing the SQL query
+                                echo '<img src="/LibMS/resources/images/user.png" width="200" height="200" class="rounded-circle" style="margin-top: 10px; margin-bottom: 10px;">';
+                            }
+                        }
+                                                        
+                ?>
           </a>
         </li>
       </ul>
@@ -131,20 +159,20 @@ if ($_SESSION['acctype'] === 'Librarian') {
 <!--NAVBAR-->
 
 <!--SIDEBAR-->
-    <div id="sidebar">
+<div id="sidebar">
             <ul>
                 <li></li>
                 <li>
-                    <a href="/LibMS/users/admin/index.php">
-                        <i class="fa fa-user fa-sm"></i>
+                    <a href="/LibMS/users/librarian/index.php">
+                        <i class="fa fa-house fa-sm"></i>
                         <span class="sidebar-name">
-                            Dashboard
+                            Home
                         </span>
                     </a>
                 </li>
 
                 <li>
-                    <a href="#">
+                    <a href="/LibMS/users/librarian/user_settings/user_settings.php">
                         <i class="fa fa-cogs fa-sm"></i>
                         <span class="sidebar-name">
                             User Options
@@ -153,34 +181,25 @@ if ($_SESSION['acctype'] === 'Librarian') {
                 </li>
 
                 <li>
-                    <a href="#">
-                        <i class="fa fa-users fa-sm"></i>
-                        <span class="sidebar-name">
-                            Accounts
-                        </span>
-                    </a>
-                </li>
-                
-                <li>
-                    <a href="#">
+                    <a href="/LibMS/users/librarian/qrpage/qr-landing-page.php">
                         <i class="fa fa-solid fa-qrcode fa-sm"></i>
                         <span class="sidebar-name">
-                            QR Code and ID Card
+                            QR
                         </span>
                     </a>
                 </li>
 
                 <li>
-                    <a href="#">
-                        <i class="fa fa-comments fa-sm"></i>
+                    <a href="/LibMS/users/librarian/notification/notification.php">
+                        <i class="fa fa-bell fa-sm"></i>
                         <span class="sidebar-name">
-                            Messages
+                            Notifications
                         </span>
                     </a>
                 </li>
 
                 <li>
-                    <a href="/LibMS/users/admin/books/books.php">
+                    <a href="/LibMS/users/librarian/books/books.php">
                         <i class="fa fa-book fa-sm"></i>
                         <span class="sidebar-name">
                             Books
@@ -189,40 +208,51 @@ if ($_SESSION['acctype'] === 'Librarian') {
                 </li>
 
                 <li>
-                    <a href="#">
-                        <i class="fa fa-plus fa-sm"></i>
-                        <span class="sidebar-name">
-                            Add a Book
-                        </span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="#">
-                        <i class="fa fa-bars fa-sm"></i>
-                        <span class="sidebar-name">
-                            Issue/Return Requests
-                        </span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="#">
+                    <a href="/LibMS/users/admin/logs/history.php">
                         <i class="fa fa-book fa-sm"></i>
                         <span class="sidebar-name">
-                            Issued/Returned Books Log
+                            Books Log
+                        </span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="/LibMS/users/librarian/requests/issue_requests.php">
+                        <i class="fa fa-clock-rotate-left fa-sm"></i>
+                        <span class="sidebar-name">
+                            Book Borrow Requests
+                        </span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="/LibMS/users/librarian/requests/renew_requests.php">
+                        <i class="fa fa-clock-rotate-left fa-sm"></i>
+                        <span class="sidebar-name">
+                            Renewal Requests
+                        </span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="/LibMS/users/librarian/requests/return_requests.php">
+                        <i class="fa fa-clock-rotate-left fa-sm"></i>
+                        <span class="sidebar-name">
+                             Pending Returns
                         </span>
                     </a>
                 </li>
 
                 <li>
                     <a href="#">
-                        <i class="fa fa-trash fa-sm"></i>
+                        <i class="fa fa-clock-rotate-left fa-sm"></i>
                         <span class="sidebar-name">
-                            Recent Deletion Books
+                             Books Deletion History
                         </span>
                     </a>
                 </li>
+
+                
 
             </ul>
 
@@ -459,7 +489,10 @@ if ($_SESSION['acctype'] === 'Librarian') {
                                 echo '<td style="color: grey;"><b><i>' . $book['status'] . '</i></b></td>';
                             }
                             echo '<td>';
-                            echo '<button type="button" class="btn btn-success btn-sm"><i class="fa-solid fa-circle-info fa-sm"></i> Details</button>';
+                            echo '
+                            <a href="/LibMS/users/admin/books/details.php?book_id='.$book['book_id'].'">    
+                                <button type="button" class="btn btn-success btn-sm"><i class="fa-solid fa-circle-info fa-sm"></i> Details</button>
+                            </a>';
                             echo '</td>';
                             echo '</tr>';
                         }

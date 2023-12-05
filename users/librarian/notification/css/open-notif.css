@@ -1,0 +1,43 @@
+form {
+    margin-left: 5%;
+    margin-top: 5px;
+    color: white;
+    font-size: 12px;
+    line-height: 2pc;
+}
+
+.box-1 {
+    margin-left: 100px;
+}
+
+.card-body {
+    margin-top: 10px;
+    border-radius: 10px;
+    border: 1px solid #343a40;
+    width: 97%;
+    height: auto;
+    padding: 10px;
+    padding-bottom: 40px;
+}
+
+.main-box {
+    color: white;
+}
+
+.head-title {
+    margin-top: 10px;
+}
+
+.sender-head {
+    font-style: italic;
+    font-size: 17px;
+}
+
+label {
+    margin-bottom: 10px;
+    font-style: italic;
+}
+
+.action-box {
+    margin-top: 100px;
+}

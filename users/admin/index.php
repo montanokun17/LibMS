@@ -117,7 +117,7 @@ if ($_SESSION['acctype'] === 'Admin') {
 
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link" href="#">
+          <a class="nav-link" href="/LibMS/users/admin/index.php">
 
             <?php
                 if (isset($_SESSION['id_no']) && isset($_SESSION['username'])) {
@@ -159,7 +159,7 @@ if ($_SESSION['acctype'] === 'Admin') {
 <!--NAVBAR-->
 
 <!--SIDEBAR-->
-    <div id="sidebar">
+<div id="sidebar">
             <ul>
                 <li></li>
                 <li>
@@ -194,15 +194,6 @@ if ($_SESSION['acctype'] === 'Admin') {
                         <i class="fa fa-solid fa-qrcode fa-sm"></i>
                         <span class="sidebar-name">
                             QR
-                        </span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="#">
-                        <i class="fa fa-comments fa-sm"></i>
-                        <span class="sidebar-name">
-                            Messages
                         </span>
                     </a>
                 </li>

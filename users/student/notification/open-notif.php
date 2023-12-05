@@ -220,9 +220,9 @@ if (isset($_GET['notif_id'])) {
                 <li></li>
                 <li>
                     <a href="/LibMS/users/student/index.php">
-                        <i class="fa fa-user fa-sm"></i>
+                        <i class="fa fa-house fa-sm"></i>
                         <span class="sidebar-name">
-                            Dashboard
+                            Home
                         </span>
                     </a>
                 </li>
@@ -237,15 +237,6 @@ if (isset($_GET['notif_id'])) {
                 </li>
 
                 <li>
-                    <a href="#">
-                        <i class="fa fa-comments fa-sm"></i>
-                        <span class="sidebar-name">
-                            Messages
-                        </span>
-                    </a>
-                </li>
-
-                <li>
                     <a href="/LibMS/users/student/books/books.php">
                         <i class="fa fa-book fa-sm"></i>
                         <span class="sidebar-name">
@@ -255,7 +246,7 @@ if (isset($_GET['notif_id'])) {
                 </li>
 
                 <li>
-                    <a href="#">
+                    <a href="/LibMS/users/student/requests/pending-borrow-requests.php">
                         <i class="fa fa-bookmark fa-sm"></i>
                         <span class="sidebar-name">
                             Pending Borrow Requests
@@ -295,6 +286,7 @@ if (isset($_GET['notif_id'])) {
             </ul>
     </div>
 <!--SIDEBAR-->
+
 
 <div class="main-box">
     <div class="container">

@@ -152,6 +152,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                     echo 'Borrow request sent successfully. Please Wait for the Admin/Librarian to Accept Your Request.';
 
+                    $notificationMessage = "A new borrow request from user: $username for the book: " . $book_title . ", for $borrowDays days, was sent.";
+                    $readStatus = "UNREAD";
+
+                    // Query users table to find admins and librarians
+                    $sqlAdminsLibrarians = "SELECT id_no FROM users WHERE acctype IN ('admin', 'librarian')";
+                    $resultAdminsLibrarians = $conn->query($sqlAdminsLibrarians);
+
+                    if ($resultAdminsLibrarians) {
+                        while ($row = $resultAdminsLibrarians->fetch_assoc()) {
+                            $adminUserId = $row['id_no'];
+
+                            $sqlNotification = "INSERT INTO notifications (sender_user_id, receiver_user_id, notification_message, read_status) 
+                                    VALUES (?, ?, ?, ?)";
+                            $notificationStmt = $conn->prepare($sqlNotification);
+                            $notificationStmt->bind_param('ssss', $borrower_user_id, $adminUserId, $notificationMessage, $readStatus);
+                            $notificationStmt->execute();
+                            if ($notificationStmt->error) {
+                                echo "Error inserting notification: " . $notificationStmt->error;
+                                exit; // Stop execution if the notification insertion fails
+                            }
+                        }
+                    } else {
+                        echo "Error: " . $conn->error;
+                        exit; // Stop execution if the query to fetch admins and librarians fails
+                    }
+
+
                 } else {
                     echo "Error: " . $stmt->error;
                 }

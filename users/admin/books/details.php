@@ -70,6 +70,40 @@ if ($_SESSION['acctype'] === 'Admin') {
     }
 }
 
+
+if (isset($_GET['book_id'])) {
+    $book_id = $_GET['book_id'];
+
+    $BookQuery = "SELECT * FROM books WHERE book_id = ?";
+    $BookStmt = $conn->prepare($BookQuery);
+
+    if (is_numeric($book_id)) {
+        $BookStmt->bind_param('i', $book_id);
+        $BookStmt->execute();
+        $BookResult = $BookStmt->get_result();
+
+        if ($BookResult->num_rows === 1) {
+            $row = $BookResult->fetch_assoc();
+
+            $book_title = $row['book_title'];
+            $year = $row['year'];
+            $author = $row['author'];
+            $publisher = $row['publisher'];
+            $section = $row['section'];
+            $edition = $row['edition'];
+            $volume = $row['volume'];
+            $book_borrow_status = $row['book_borrow_status'];
+            
+        } else {
+            echo "Book Not Found" . $BookStmt->error;
+        }
+    } else {
+        echo "Invalid Book ID" . $BookStmt->error;
+    }
+} else {
+    echo "Book ID Not Set" . $BookStmt->error;
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -91,12 +125,11 @@ if ($_SESSION['acctype'] === 'Admin') {
     <link rel="stylesheet" type="text/css" href="/LibMS/resources/jquery ui/jquery-ui.min.css"/>
     <script type="text/javascript" src="/LibMS/resources/jquery/jquery-3.7.1.min.js"></script>
     <!--Link for CSS File-->
-    <link rel="stylesheet" type="text/css" href="/LibMS/users/admin/qrpage/css/qr-landing-page.css">
+    <link rel="stylesheet" type="text/css" href="/LibMS/users/admin/books/css/details.css">
     <!--Link for NAVBAR and SIDEBAR styling-->
     <link rel="stylesheet" type="text/css" href="/LibMS/users/admin/css/navbar-sidebar.css">
     <!--Link for Font Awesome Icons-->
     <link rel="stylesheet" href="/LibMS/resources/icons/fontawesome-free-6.4.0-web/css/all.css">
-    <script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
 
 </head>
 
@@ -206,15 +239,6 @@ if ($_SESSION['acctype'] === 'Admin') {
                 </li>
 
                 <li>
-                    <a href="#">
-                        <i class="fa fa-comments fa-sm"></i>
-                        <span class="sidebar-name">
-                            Messages
-                        </span>
-                    </a>
-                </li>
-
-                <li>
                     <a href="/LibMS/users/admin/books/books.php">
                         <i class="fa fa-book fa-sm"></i>
                         <span class="sidebar-name">
@@ -293,7 +317,7 @@ if ($_SESSION['acctype'] === 'Admin') {
                         <form class="form-box" method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
 
                             <div class="form-group" style="margin-top:20px;">
-                                <h2><i class="fa-solid fa-paper-plane"></i> Send Book Borrow Request:</h2>
+                                <h2><i class="fa-solid fa-book"></i> Book Details:</h2>
                             </div>
 
                             <div class="form-group" style="margin-top:10px;">
@@ -322,6 +346,11 @@ if ($_SESSION['acctype'] === 'Admin') {
                             </div>
 
                             <div class="form-group">
+                                <label for="bookStatus">Borrow Status:</label>
+                                <span id="bookStatus" class="form-control-static"><?php echo $book_borrow_status; ?></span>
+                            </div>
+
+                            <div class="form-group">
                                 <label for="bookEditionVolume">Edition and Volume:</label>
                                 <span id="bookEditionVolume" class="form-control-static"><?php echo $edition; ?></span>,
                                 <span id="bookEditionVolume" class="form-control-static"><?php echo $volume; ?></span>
@@ -329,14 +358,14 @@ if ($_SESSION['acctype'] === 'Admin') {
 
 
                             <div class="form-group" style="margin-bottom:10px; margin-top:10px;">
-                                <button class="btn btn-primary btn-md" style="width:80%;" onclick="deleteBook(<?php echo $bookId; ?>)"><i class="fa-solid fa-trash"></i> Delete</button>
+                                <button class="btn btn-danger btn-md" style="width:80%;" onclick="deleteBook(<?php echo $book_id; ?>)"><i class="fa-solid fa-trash"></i> Delete</button>
                             </div>
 
-                            <div class="form-group" style="margin-bottom:10px; margin-top:10px;">
+                            <!--<div class="form-group" style="margin-bottom:10px; margin-top:10px;">
                                 <a href="/LibMS/users/admin/books/books.php">
                                     <button class="btn btn-primary btn-md" style="width:80%;"><i class="fa-solid fa-arrow-left"></i> Go Back</button>
                                 </a>
-                            </div>
+                            </div>-->
 
 
                             <!--

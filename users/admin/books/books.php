@@ -161,7 +161,7 @@ if ($_SESSION['acctype'] === 'Admin') {
 <!--NAVBAR-->
 
 <!--SIDEBAR-->
-    <div id="sidebar">
+<div id="sidebar">
             <ul>
                 <li></li>
                 <li>
@@ -192,19 +192,10 @@ if ($_SESSION['acctype'] === 'Admin') {
                 </li>
                 
                 <li>
-                    <a href="#">
+                    <a href="/LibMS/users/admin/qrpage/qr-landing-page.php">
                         <i class="fa fa-solid fa-qrcode fa-sm"></i>
                         <span class="sidebar-name">
                             QR
-                        </span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="#">
-                        <i class="fa fa-comments fa-sm"></i>
-                        <span class="sidebar-name">
-                            Messages
                         </span>
                     </a>
                 </li>
@@ -520,7 +511,10 @@ if ($_SESSION['acctype'] === 'Admin') {
                                 echo '<td style="color: grey;"><b><i>' . $book['status'] . '</i></b></td>';
                             }
                             echo '<td>';
-                            echo '<button type="button" class="btn btn-success btn-sm"><i class="fa-solid fa-circle-info fa-sm"></i> Details</button>';
+                            echo '
+                            <a href="/LibMS/users/admin/books/details.php?book_id='.$book['book_id'].'">    
+                                <button type="button" class="btn btn-success btn-sm"><i class="fa-solid fa-circle-info fa-sm"></i> Details</button>
+                            </a>';
                             echo '</td>';
                             echo '</tr>';
                         }

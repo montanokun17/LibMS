@@ -112,25 +112,9 @@ if ($_SESSION['acctype'] === 'Librarian') {
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav">
-            <li class="nav-item">
-            <a class="nav-link" aria-current="page" href="#"><i class="fa-solid fa-house fa-xs"></i> Home</a>
-            </li>
-
-            <li class="nav-item">
-            <a class="nav-link" aria-current="page" href="/LibMS/users/librarian/requests/issue_requests.php"><i class="fa-solid fa-bookmark fa-xs"></i> Issue Requests</a>
-            </li>
-
-            <li class="nav-item">
-            <a class="nav-link" aria-current="page" href="/LibMS/users/librarian/requests/approved_requests.php"><i class="fa-solid fa-clock-rotate-left fa-xs"></i> Approved Requests</a>
-            </li>
-
-            <li class="nav-item">
-            <a class="nav-link" aria-current="page" href="/LibMS/users/librarian/requests/return_requests.php"><i class="fa-solid fa-rotate-left fa-xs"></i> Pending Return</a>
-            </li>
-
-            <li class="nav-item">
-            <a class="nav-link" aria-current="page" href="/LibMS/users/librarian/requests/renew_requests.php"><i class="fa-solid fa-clock-rotate-left fa-xs"></i> Renewal Requests</a>
-            </li>
+        <li class="nav-item">
+          <a class="nav-link" aria-current="page" href="/LibMS/users/librarian/index.php"><i class="fa-solid fa-house fa-xs"></i> Home</a>
+        </li>
       </ul>
 
       <ul class="navbar-nav ms-auto">
@@ -141,7 +125,7 @@ if ($_SESSION['acctype'] === 'Librarian') {
 
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link" href="#">
+          <a class="nav-link" href="/LibMS/users/librarian/index.php">
             <?php
                     if (isset($_SESSION['id_no']) && isset($_SESSION['username'])) {
                         $idNo = $_SESSION['id_no'];
@@ -181,20 +165,20 @@ if ($_SESSION['acctype'] === 'Librarian') {
 <!--NAVBAR-->
 
 <!--SIDEBAR-->
-    <div id="sidebar">
+<div id="sidebar">
             <ul>
                 <li></li>
                 <li>
-                    <a href="#">
-                        <i class="fa fa-user fa-sm"></i>
+                    <a href="/LibMS/users/librarian/index.php">
+                        <i class="fa fa-house fa-sm"></i>
                         <span class="sidebar-name">
-                            Dashboard
+                            Home
                         </span>
                     </a>
                 </li>
 
                 <li>
-                    <a href="#">
+                    <a href="/LibMS/users/librarian/user_settings/user_settings.php">
                         <i class="fa fa-cogs fa-sm"></i>
                         <span class="sidebar-name">
                             User Options
@@ -203,16 +187,7 @@ if ($_SESSION['acctype'] === 'Librarian') {
                 </li>
 
                 <li>
-                    <a href="#">
-                        <i class="fa fa-comments fa-sm"></i>
-                        <span class="sidebar-name">
-                            Messages
-                        </span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="#">
+                    <a href="/LibMS/users/librarian/qrpage/qr-landing-page.php">
                         <i class="fa fa-solid fa-qrcode fa-sm"></i>
                         <span class="sidebar-name">
                             QR
@@ -221,7 +196,16 @@ if ($_SESSION['acctype'] === 'Librarian') {
                 </li>
 
                 <li>
-                    <a href="#">
+                    <a href="/LibMS/users/librarian/notification/notification.php">
+                        <i class="fa fa-bell fa-sm"></i>
+                        <span class="sidebar-name">
+                            Notifications
+                        </span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="/LibMS/users/librarian/books/books.php">
                         <i class="fa fa-book fa-sm"></i>
                         <span class="sidebar-name">
                             Books
@@ -239,7 +223,7 @@ if ($_SESSION['acctype'] === 'Librarian') {
                 </li>
 
                 <li>
-                    <a href="#">
+                    <a href="/LibMS/users/librarian/requests/issue_requests.php">
                         <i class="fa fa-clock-rotate-left fa-sm"></i>
                         <span class="sidebar-name">
                             Book Borrow Requests
@@ -248,7 +232,7 @@ if ($_SESSION['acctype'] === 'Librarian') {
                 </li>
 
                 <li>
-                    <a href="#">
+                    <a href="/LibMS/users/librarian/requests/renew_requests.php">
                         <i class="fa fa-clock-rotate-left fa-sm"></i>
                         <span class="sidebar-name">
                             Renewal Requests
@@ -257,7 +241,7 @@ if ($_SESSION['acctype'] === 'Librarian') {
                 </li>
 
                 <li>
-                    <a href="#">
+                    <a href="/LibMS/users/librarian/requests/return_requests.php">
                         <i class="fa fa-clock-rotate-left fa-sm"></i>
                         <span class="sidebar-name">
                              Pending Returns
@@ -354,13 +338,12 @@ if ($_SESSION['acctype'] === 'Librarian') {
                                             echo '<td>' . $request['renew_timestamp'] . '</td>';
                                             echo '<td>
 
-                                                <a href="/LibMS/users/admin/requests/accept_request.php?borrow_id=' .$request['borrow_id']. '">
-                                                    <button class="btn btn-success btn-sm"><i class="fa fa-solid fa-check fa-sm"></i> Grant Renewal</button>
-                                                </a>
+                                                    <button class="btn btn-success btn-sm" onclick="sendGrantRenewal('. $request['borrow_id'] .')"><i class="fa fa-solid fa-check fa-sm"></i> Grant Renewal</button>
+                                                        
 
+                                                        
+                                                    <button class="btn btn-danger btn-sm" onclick="sendRejectRenewal('. $request['borrow_id'] .')"><i class="fa fa-solid fa-x fa-sm"></i> Reject Renewal</button>
                                                 
-                                                <button class="btn btn-danger btn-sm" onclick="sendRejectRequest('. $request['borrow_id'] .')"><i class="fa fa-solid fa-x fa-sm"></i> Reject Renewal</button>
-                                            
 
                                                 </td>';
 
@@ -409,6 +392,46 @@ if ($_SESSION['acctype'] === 'Librarian') {
         </div>
     </div>
 </div>
+
+<script>
+
+    function sendGrantRenewal(borrow_id) {
+
+    // You can perform an AJAX request to the server to handle the database operations
+    // For simplicity, let's assume there is a PHP script (borrow_request.php) to handle this
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/LibMS/users/librarian/requests/func/grant_renew.php", true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            alert(xhr.responseText); // You can customize this based on your response from the server
+        }
+    };
+
+    // Send data to the server, including the book ID
+    xhr.send("borrow_id=" + borrow_id);
+}
+
+function sendRejectRenewal(borrow_id) {
+
+    // You can perform an AJAX request to the server to handle the database operations
+    // For simplicity, let's assume there is a PHP script (borrow_request.php) to handle this
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/LibMS/users/librarian/requests/func/reject_renewal.php", true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            alert(xhr.responseText); // You can customize this based on your response from the server
+        }
+    };
+
+    // Send data to the server, including the book ID
+    xhr.send("borrow_id=" + borrow_id);
+}
+
+</script>
 
 </body>
 </html>

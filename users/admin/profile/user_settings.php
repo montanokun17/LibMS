@@ -161,7 +161,7 @@ if ($_SESSION['acctype'] === 'Admin') {
 <!--NAVBAR-->
 
 <!--SIDEBAR-->
-    <div id="sidebar">
+<div id="sidebar">
             <ul>
                 <li></li>
                 <li>
@@ -192,19 +192,10 @@ if ($_SESSION['acctype'] === 'Admin') {
                 </li>
                 
                 <li>
-                    <a href="#">
+                    <a href="/LibMS/users/admin/qrpage/qr-landing-page.php">
                         <i class="fa fa-solid fa-qrcode fa-sm"></i>
                         <span class="sidebar-name">
                             QR
-                        </span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="#">
-                        <i class="fa fa-comments fa-sm"></i>
-                        <span class="sidebar-name">
-                            Messages
                         </span>
                     </a>
                 </li>
@@ -514,7 +505,7 @@ if ($_SESSION['acctype'] === 'Admin') {
                                         }
 
                                             ?>
-
+upd
 
                                             </td>
                                         </tr>
@@ -529,7 +520,29 @@ if ($_SESSION['acctype'] === 'Admin') {
     </div>
 </div>
 
+<script>
+    $(document).ready(function () {
+        $("#save-btn").click(function () {
+            // Serialize the form data
+            var formData = $("#userForm").serialize();
 
+            // AJAX request
+            $.ajax({
+                type: "POST",
+                url: "/LibMS/users/admin/profile/update-user-info.php",
+                data: formData,
+                success: function (response) {
+                    // Handle the response (e.g., display a success message)
+                    alert(response);
+                },
+                error: function (error) {
+                    // Handle errors
+                    alert(error);
+                }
+            });
+        });
+    });
+</script>
 
 </body>
 </html>

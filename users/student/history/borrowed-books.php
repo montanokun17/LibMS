@@ -191,15 +191,6 @@ if ($_SESSION['acctype'] === 'Student') {
                 </li>
 
                 <li>
-                    <a href="#">
-                        <i class="fa fa-comments fa-sm"></i>
-                        <span class="sidebar-name">
-                            Messages
-                        </span>
-                    </a>
-                </li>
-
-                <li>
                     <a href="/LibMS/users/student/books/books.php">
                         <i class="fa fa-book fa-sm"></i>
                         <span class="sidebar-name">

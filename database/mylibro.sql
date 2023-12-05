@@ -3,7 +3,7 @@ CREATE DATABASE mylibro;
 USE mylibro;
 
 CREATE TABLE users (
-    id_no INT PRIMARY KEY AUTO_INCREMENT,
+    id_no INT PRIMARY KEY AUTO_INCREMENT=100003,
     username VARCHAR(50) NOT NULL,
     email VARCHAR(60) NOT NULL,
     con_num VARCHAR(20) NOT NULL,
@@ -171,6 +171,7 @@ CREATE TABLE qr_attendance (
     attendance_time_in DATETIME NOT NULL,
     attendance_time_out DATETIME,
     acctype VARCHAR(50),
+    status INT,
     FOREIGN KEY (user_id) REFERENCES users(id_no),
 );
 

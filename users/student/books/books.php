@@ -174,9 +174,9 @@ if ($_SESSION['acctype'] === 'Student') {
                 <li></li>
                 <li>
                     <a href="/LibMS/users/student/index.php">
-                        <i class="fa fa-user fa-sm"></i>
+                        <i class="fa fa-house fa-sm"></i>
                         <span class="sidebar-name">
-                            Dashboard
+                            Home
                         </span>
                     </a>
                 </li>
@@ -191,15 +191,6 @@ if ($_SESSION['acctype'] === 'Student') {
                 </li>
 
                 <li>
-                    <a href="#">
-                        <i class="fa fa-comments fa-sm"></i>
-                        <span class="sidebar-name">
-                            Messages
-                        </span>
-                    </a>
-                </li>
-
-                <li>
                     <a href="/LibMS/users/student/books/books.php">
                         <i class="fa fa-book fa-sm"></i>
                         <span class="sidebar-name">
@@ -209,7 +200,7 @@ if ($_SESSION['acctype'] === 'Student') {
                 </li>
 
                 <li>
-                    <a href="#">
+                    <a href="/LibMS/users/student/requests/pending-borrow-requests.php">
                         <i class="fa fa-bookmark fa-sm"></i>
                         <span class="sidebar-name">
                             Pending Borrow Requests
@@ -250,6 +241,7 @@ if ($_SESSION['acctype'] === 'Student') {
     </div>
 <!--SIDEBAR-->
 
+
 <div class="table-box">
     <div class="container col-12 col-md-10">
         <div class="container">
@@ -258,38 +250,38 @@ if ($_SESSION['acctype'] === 'Student') {
                     <div class="container-fluid">
 
                         <div class="search-bar" id="searchForm">
-                            <form method ="GET">
+                            <form>
                                 <input type="text" class="search" id="searchInput" placeholder ="Enter Book Section, Book Name, or Book's Status..">
-                                <button type="submit" value="search" name="search" class="btn btn-primary btn-sm"><i class="fa-solid fa-search fa-sm"></i> Search</button>
+                                <button type="button" id="searchButton" class="btn btn-primary btn-sm"><i class="fa-solid fa-search fa-sm"></i> Search</button>
                             </form>
 
                             <div class="dropdown-1">
                                     <select name="section" id="section-dd" onchange="filterBooks()">
                                         <option selected disabled>*Select Section*</option>
-                                        <option onClick="filterSection('Fiction')">Fiction</option>
-                                        <option onClick="filterSection('Mystery Thriller')">Mystery/Thriller</option>
-                                        <option onClick="filterSection('Romance')">Romance</option>
-                                        <option onClick="filterSection('Science Fiction')">Science Fiction/Fantasy</option>
-                                        <option onClick="filterSection('Horror')">Horror</option>
-                                        <option onClick="filterSection('Historical Fiction')">Historical Fiction</option>
-                                        <option onClick="filterSection('Biography/Autobiography')">Biography/Autobiography</option>
-                                        <option onClick="filterSection('Memoir')">Memoir</option>
-                                        <option onClick="filterSection('History')">History</option>
-                                        <option onClick="filterSection('Politics')">Politics and Current Events</option>
-                                        <option onClick="filterSection('Science and Technology')">Science and Technology</option>
-                                        <option onClick="filterSection('Business and Finance')">Business and Finance</option>
-                                        <option onClick="filterSection('Self-Help and Personal Development')">Self-Help and Personal Development</option>
-                                        <option onClick="filterSection('Art and Architecture')">Art and Architecture</option>
-                                        <option onClick="filterSection('Travel and Adventure')">Travel and Adventure</option>
-                                        <option onClick="filterSection('Cookbooks and Food Writing')">Cookbooks and Food Writing</option>
-                                        <option onClick="filterSection('Young Adult Fiction')">Young Adult Fiction</option>
-                                        <option onClick="filterSection('Graphic Novels and Comics')">Graphic Novels and Comics</option>
-                                        <option onClick="filterSection('Poetry')">Poetry</option>
-                                        <option onClick="filterSection('Religion and Spiritually')">Religion and Spiritually</option>
-                                        <option onClick="filterSection('Philosophy')">Philosophy</option>
-                                        <option onClick="filterSection('Reference and Dictionary')">Reference and Dictionary</option>
-                                        <option onClick="filterSection('Foreign Languages')">Foreign Languages</option>
-                                        <option onClick="filterSection('Others')">Others</option>
+                                        <option onClick="filterBooks('Fiction')">Fiction</option>
+                                        <option onClick="filterBooks('Mystery Thriller')">Mystery/Thriller</option>
+                                        <option onClick="filterBooks('Romance')">Romance</option>
+                                        <option onClick="filterBooks('Science Fiction')">Science Fiction/Fantasy</option>
+                                        <option onClick="filterBooks('Horror')">Horror</option>
+                                        <option onClick="filterBooks('Historical Fiction')">Historical Fiction</option>
+                                        <option onClick="filterBooks('Biography/Autobiography')">Biography/Autobiography</option>
+                                        <option onClick="filterBooks('Memoir')">Memoir</option>
+                                        <option onClick="filterBooks('History')">History</option>
+                                        <option onClick="filterBooks('Politics')">Politics and Current Events</option>
+                                        <option onClick="filterBooks('Science and Technology')">Science and Technology</option>
+                                        <option onClick="filterBooks('Business and Finance')">Business and Finance</option>
+                                        <option onClick="filterBooks('Self-Help and Personal Development')">Self-Help and Personal Development</option>
+                                        <option onClick="filterBooks('Art and Architecture')">Art and Architecture</option>
+                                        <option onClick="filterBooks('Travel and Adventure')">Travel and Adventure</option>
+                                        <option onClick="filterBooks('Cookbooks and Food Writing')">Cookbooks and Food Writing</option>
+                                        <option onClick="filterBooks('Young Adult Fiction')">Young Adult Fiction</option>
+                                        <option onClick="filterBooks('Graphic Novels and Comics')">Graphic Novels and Comics</option>
+                                        <option onClick="filterBooks('Poetry')">Poetry</option>
+                                        <option onClick="filterBooks('Religion and Spiritually')">Religion and Spiritually</option>
+                                        <option onClick="filterBooks('Philosophy')">Philosophy</option>
+                                        <option onClick="filterBooks('Reference and Dictionary')">Reference and Dictionary</option>
+                                        <option onClick="filterBooks('Foreign Languages')">Foreign Languages</option>
+                                        <option onClick="filterBooks('Others')">Others</option>
                                     </select>
 
                                     <select name="status" id="book-status" onchange="filterBooks()">
@@ -399,326 +391,119 @@ if ($_SESSION['acctype'] === 'Student') {
                                         <option value="filterDewey('920')">920 - Biography and Collective Biography</option>
                                     </select>
 
-                                    <select name="book_borrow_status" id="book-avail" onchange="filterBooks()">
-                                        <option selected disabled>*Select Availability*</option>
-                                        <option onClick="filterBorrowStatus('Available')">Available</option>
-                                        <option onClick="filterBorrowStatus('Pending Requests')">Pending Requests</option>
-                                    </select>
-
-
                             </div>
             
                         <?php
+
+                        
+                        $query = "SELECT * FROM books WHERE `deleted` = 0 AND `status` = 'GOOD' AND `book_borrow_status` = 'Available'";
 
                         if (isset($_GET['search'])) {
                             // Get the search query from the input field
                             $searchQuery = $_GET['search'];
                         
                             // Modify the query to include the search condition
-                            $query = "SELECT * FROM books WHERE isbn LIKE '%$searchQuery%'
-                                    OR book_title LIKE '%$searchQuery%'
-                                    OR author LIKE '%$searchQuery%'
-                                    OR year LIKE '%$searchQuery%'
-                                    OR subject LIKE '%$searchQuery%'
-                                    OR section LIKE '%$searchQuery%'
-                                    OR publisher LIKE '%$searchQuery%'
-                                    OR volume LIKE '%$searchQuery%'
-                                    OR edition LIKE '%$searchQuery%'
-                                    OR book_borrow_status LIKE '%$searchQuery%'
-                                    OR status LIKE '%$searchQuery%'
-                                    ";
+                            $query .= " AND (isbn LIKE '%$searchQuery%'
+                                        OR book_title LIKE '%$searchQuery%'
+                                        OR author LIKE '%$searchQuery%'
+                                        OR year LIKE '%$searchQuery%'
+                                        OR section LIKE '%$searchQuery%'
+                                        OR publisher LIKE '%$searchQuery%'
+                                        OR volume LIKE '%$searchQuery%'
+                                        OR edition LIKE '%$searchQuery%'
+                                        OR book_borrow_status LIKE '%$searchQuery%'
+                                        OR status LIKE '%$searchQuery%')";
                         }
                         
-                        $Array="";
                         
-                        // Add the following code at the beginning to handle AJAX requests
-                        if (isset($_POST['section']) && isset($_POST['status']) && isset($_POST['dewey']) && isset($_POST['book_borrow_status'])) {
-                            $section = $_POST['section'];
-                            $status = $_POST['status'];
-                            $dewey = $_POST['dewey'];
-                            $bookBorrowStatus = $_POST['book_borrow_status'];
-                        
-                            // Use prepared statements to prevent SQL injection
-                            $query = "SELECT * FROM books WHERE `deleted` = 0 AND `status` = ?";
-                            $params = array("s", $status);
-                        
-                            $conditions = array(
-                                "*Select Section*" => array("field" => "section", "paramType" => "s"),
-                                "*Select Dewey Classification*" => array("field" => "dewey", "paramType" => "s"),
-                                "*Select Availability*" => array("field" => "book_borrow_status", "paramType" => "s")
-                            );
-                        
-                            // Append additional conditions based on the selected filters
-                            foreach ($conditions as $value => $condition) {
-                                if ($$condition['field'] !== $value) {
-                                    $query .= " AND `" . $condition['field'] . "` = ?";
-                                    $params[0] .= $condition['paramType']; // Append the type for string
-                                    $params[] = $$condition['field'];
-                                }
-                            }
-                        
-                            $query .= " ORDER BY `book_title` ASC";
-                        
-                            // Assuming you are using mysqli
-                            $stmt = $conn->prepare($query);
-                        
-                            // Check for errors in preparing the statement
-                            if (!$stmt) {
-                                die("Error in preparing the statement: " . $conn->error);
-                            }
-                        
-                            // Bind the parameters using the splat operator
-                            $stmt->bind_param(...$params);
-                        
-                            // Execute the query
-                            $stmt->execute();
-                        
-                            // Fetch the results
-                            $result = $stmt->get_result();
-                        
-                            // Fetch data as an associative array
-                            $rows = $result->fetch_all(MYSQLI_ASSOC);
-                        
-                            // Close the statement
-                            $stmt->close();
-                        } else {
-                            $query = "SELECT * FROM books WHERE 'deleted' = 0 AND status = 'GOOD' AND book_borrow_status = 'Available' ORDER BY 'book_title' ASC";
-                        
-                            // Execute the query without parameters
-                            $result = $conn->query($query);
-                        
-                            // Fetch the results as needed
-                            $rows = $result->fetch_all(MYSQLI_ASSOC);
+                        $result = $conn->query($query);
+
+                        if ($result === false) {
+                            die("Error executing the query: " . $conn->error);
                         }
-                        
+                       
+                        ?>
 
-                       /*// Add the following code at the beginning to handle AJAX requests
-                        if (isset($_POST['section']) && isset($_POST['status']) && isset($_POST['dewey']) && isset($_POST['book_borrow_status'])) {
-                            $section = $_POST['section'];
-                            $status = $_POST['status'];
-                            $dewey = $_POST['dewey'];
-                            $bookBorrowStatus = $_POST['book_borrow_status'];
+                        <div class="container">
+                            <div class="tableContainer">
+                            <table id="dataTable" class="table">
 
-                            $query = "SELECT * FROM books WHERE `deleted` = 0 AND `status` = '$status'";
+                                <thead id="head" class="" style="">
 
-                            // Append additional conditions based on the selected filters
-                            if ($section !== "*Select Section*") {
-                                $query .= " AND `section` = '$section'";
-                            }
+                                <tr>
+                                <th>Book Title</th>
 
-                            if ($dewey !== "*Select Dewey Classification*") {
-                                $query .= " AND `dewey` = '$dewey'";
-                            }
+                                <th>Author</th>
 
-                            if ($bookBorrowStatus !== "*Select Availability*") {
-                                $query .= " AND `book_borrow_status` = '$bookBorrowStatus'";
-                            }
+                                <th>Publisher</th>
 
-                            $query .= " ORDER BY `book_title` ASC";
-                        } else {
-                            $query = "SELECT * FROM books WHERE 'deleted' = 0 AND status = 'GOOD' ORDER BY 'book_title' ASC";
-                        }*/
-                    
+                                <th>Year</th>
 
-                        function getBooksByPagination($conn, $query, $offset, $limit) {
-                            $query .= " LIMIT $limit OFFSET $offset"; // Append the LIMIT and OFFSET to the query for pagination
-                            $result = mysqli_query($conn, $query);
-                            
-                            return $result;
-                            }
-                            
-                            $totalBooksQuery = "SELECT COUNT(*) as total FROM books";
-                            $totalBooksResult = mysqli_query($conn, $totalBooksQuery);
-                            $totalBooks = mysqli_fetch_assoc($totalBooksResult)['total'];
-                            
-                            
-                            // Number of books to display per page
-                            $limit = 7;
-                            
-                            // Get the current page number from the query parameter
-                            $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
-                            
-                            // Calculate the offset for the current page
-                            $offset = ($page - 1) * $limit;
-                            
-                            // Get the books for the current page
-                            $result = getBooksByPagination($conn, $query, $offset, $limit);
-                            
-                            // Check if the query executed successfully
-                            if ($result && mysqli_num_rows($result) > 0) {
-                                echo '<div>';
-                                echo '<table id="dataTable">';
-                                echo '<thead>';
-                                echo '<tr>';
-                                echo '<th>Book Name</th>';
-                                echo '<th>Author</th>';
-                                echo '<th>Pubisher</th>';
-                                echo '<th>Year</th>';
-                                echo '<th>Volume</th>';
-                                echo '<th>Edition</th>';
-                                echo '<th>Section</th>';
-                                echo '<th>Availability</th>';
-                                echo '<th>Status</th>';
-                                echo '<th style="width:18%;">Action</th>';
-                                echo '</tr>';
-                                echo '</thead>';
-                                echo '<tbody>';
-                            
-                                while ($book = mysqli_fetch_assoc($result)) {
-                                    echo '<tr>';
-                                    echo '<td>' . $book['book_title'] . '</td>';
-                                    echo '<td>' . $book['author'] . '</td>';
-                                    echo '<td>' . $book['publisher'] . '</td>';
-                                    echo '<td>' . $book['year'] . '</td>';
-                                    echo '<td>' . $book['volume'] . '</td>';
-                                    echo '<td>' . $book['edition'] . '</td>';
-                                    echo '<td>' . $book['section'] . '</td>';
-                                    if($book['book_borrow_status'] === 'Available') {
-                                        echo '<td style="color:green; text-transform:uppercase;"><b>' . $book['book_borrow_status'] . '</b></td>';
-                                    } else {
-                                        echo '<td style="color:#FFBD33; text-transform:uppercase;"><b>' . $book['book_borrow_status'] . '</b></td>';
-                                    }
-                            
-                                    if ($book['status'] == 'GOOD') {
-                                        echo '<td style="color: green;"><b><i>' . $book['status'] . '</i></b></td>';
+                                <th>Volume</th>
+
+                                <th>Edition</th>
+
+                                <th>Section</th>
+
+                                <th>Action</th>
+
+                            </tr>
+
+                            </thead>
+
+                            <tbody style=""> 
+
+                                <?php
+
+                                    if ($result->num_rows > 0) {
+
+                                        while ($row = $result->fetch_assoc()) {
+
+                                ?>
+
+                                            <tr>
+
+                                            <td style="vertical-align: middle;"><?php echo $row['book_title']; ?></td>
+
+                                            <td style="vertical-align: middle;"><?php echo $row['author']; ?></td>
+
+                                            <td style="vertical-align: middle;"><?php echo $row['publisher']; ?></td>
+
+                                            <td style="vertical-align: middle;"><?php echo $row['year']; ?></td>
+
+                                            <td style="vertical-align: middle;"><?php echo $row['volume']; ?></td>
+
+                                            <td style="vertical-align: middle;"><?php echo $row['edition']; ?></td>
+
+                                            <td style="vertical-align: middle;"><?php echo $row['section']; ?></td>
+
+                                            <td style="vertical-align: middle;">
+
+                                            <a href="/LibMS/users/student/books/details.php?book_id=<?php echo $row ['book_id'] ?>">    
+                                                <button type="button" class="btn btn-success btn-sm"><i class="fa-solid fa-circle-info fa-sm"></i> Details</button>
+                                            </a>
+
+                                            <a href="/LibMS/users/student/requests/borrow/borrow.php?book_id=<?php echo $row ['book_id'] ?>">
+                                                <button type="button" class="btn btn-success btn-sm" style="margin-left:5px;"><i class="fa-solid fa-bookmark fa-sm"></i> Borrow</button>
+                                            </a>
+                                            </td>
+
+                                            </tr>                       
+
+                                <?php       }
+
                                     }
 
-                                    echo '<td>';
-                                        echo '<button type="button" class="btn btn-primary btn-sm"><i class="fa-solid fa-circle-info fa-sm"></i> Details</button>';
-                                        echo '
-                                        <a href="/LibMS/users/student/requests/borrow/borrow.php?book_id=' .$book['book_id']. '">
-                                            <button type="button" class="btn btn-success btn-sm" style="margin-left:5px;"><i class="fa-solid fa-bookmark fa-sm"></i> Borrow</button>
-                                        </a>
-                                            ';
-                                     
-                                    echo '</td>';
-                                    echo '</tr>';
-                                }
-                            
-                                echo '</tbody>';
-                                echo '</table>';
-                            
-                            
-                                // Calculate the total number of pages
-                                $totalPages = ceil($totalBooks / $limit);
-                                if ($totalPages > 1) {
-                                    echo '
-                                    <div class="pagination-buttons" style="margin-top: 10px;
-                                    margin-left: 70px;
-                                    ">
-                                        ';
-                            
-                                    if ($page > 1) {
-                                        echo '<a href="?page='.($page - 1).'" class="btn btn-primary btn-sm" id="previous" style="padding: 10px; width:10%;"><i class="fa-solid fa-angle-left"></i>'.($page - 1).' Previous</a>';
-                                    }
-                            
-                                    if ($page < $totalPages) {
-                                        echo '<a href="?page='.($page + 1).'" class="btn btn-primary btn-sm" id="next" style="padding: 10px; width:10%; margin-left:5px;"> '.($page + 1).' Next <i class="fa-solid fa-angle-right"></i></a>';
-                                    }
-                            
-                                    echo '
-                                    </div>
-                                    ';
-                                }
-                            
-                            } else {
-                                echo "<tr><td colspan='10'><p class='container' style='margin-left:90px; margin-top:50px; font-size: 20px; font-weight:700;'>No Books Found.</p></td></tr>";
-                            }
-                            
-                            
-                            // Close the database connection
-                            mysqli_close($conn);
-                            
-                            
-                            
-                            ?>
-                
-                <script>
-                    
-                    function filterBooks() {
-                    var section = $("#section-dd").val();
-                    var status = $("#book-status").val();
-                    var dewey = $("#dewey-classification").val();
-                    var bookBorrowStatus = $("#book-avail").val();
+                                ?>                
 
-                    $.ajax({
-                        type: "POST",
-                        url: "/LibMS/users/student/books/books.php",
-                        data: {
-                            section: section,
-                            status: status,
-                            dewey: dewey,
-                            book_borrow_status: bookBorrowStatus
-                        },
-                        success: function(response) {
-                            $("#book-list-container").html(response);
-                        },
-                        error: function(xhr, status, error) {
-                            console.error("Error filtering books:", error);
-                        }
-                    });
-                }
+                                </tbody>
 
-                $(document).ready(function() {
-                    // Intercept the form submission
-                    $('#searchForm').submit(function(event) {
-                        // Prevent the default form submission
-                        event.preventDefault();
-                        
-                        // Get the search query from the input field
-                        var searchQuery = $('#searchInput').val();
-                        
-                        // Make an AJAX request to the server
-                        $.ajax({
-                            type: 'GET',
-                            url: '/LibMS/users/student/books/books.php',
-                            data: { search: searchQuery },
-                            success: function(response) {
-                                // Display the search results in the #searchResults div
-                                $('#book-list-container').html(response);
-                            }
-                            error: function(xhr, status, error) {
-                            console.error("Error filtering books:", error);
-                        }
-                        });
-                    });
-                });
+                            </table>
+                            </div>
+                        </div>
 
-
-                </script>
 
             </div>
-
-                <script>
-                    // JavaScript function for handling pagination buttons
-                    document.addEventListener("DOMContentLoaded", function () {
-                        const previousBtn = document.getElementById("previous");
-                        const nextBtn = document.getElementById("next");
-
-                        if (previousBtn) {
-                            previousBtn.addEventListener("click", function () {
-                                // Go to the previous page by decrementing the current page number
-                                let currentPage = parseInt("<?php echo $page; ?>");
-                                if (currentPage > 1) {
-                                    currentPage--;
-                                    window.location.href = "?page=" + currentPage;
-                                }
-                            });
-                        }
-
-                        if (nextBtn) {
-                            nextBtn.addEventListener("click", function () {
-                                // Go to the next page by incrementing the current page number
-                                let currentPage = parseInt("<?php echo $page; ?>");
-                                let totalPages = parseInt("<?php echo $totalPages; ?>");
-                                if (currentPage < totalPages) {
-                                    currentPage++;
-                                    window.location.href = "?page=" + currentPage;
-                                }
-                            });
-                        }
-                    });
-                </script>
 
         </div>
 
@@ -731,6 +516,7 @@ if ($_SESSION['acctype'] === 'Student') {
 
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+<script src="/LibMS/users/student/books/search.js"></script>
 
 </body>
 </html>

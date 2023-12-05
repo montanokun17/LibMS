@@ -170,9 +170,9 @@ if ($_SESSION['acctype'] === 'Student') {
                 <li></li>
                 <li>
                     <a href="/LibMS/users/student/index.php">
-                        <i class="fa fa-user fa-sm"></i>
+                        <i class="fa fa-house fa-sm"></i>
                         <span class="sidebar-name">
-                            Dashboard
+                            Home
                         </span>
                     </a>
                 </li>
@@ -187,15 +187,6 @@ if ($_SESSION['acctype'] === 'Student') {
                 </li>
 
                 <li>
-                    <a href="#">
-                        <i class="fa fa-comments fa-sm"></i>
-                        <span class="sidebar-name">
-                            Messages
-                        </span>
-                    </a>
-                </li>
-
-                <li>
                     <a href="/LibMS/users/student/books/books.php">
                         <i class="fa fa-book fa-sm"></i>
                         <span class="sidebar-name">
@@ -205,7 +196,7 @@ if ($_SESSION['acctype'] === 'Student') {
                 </li>
 
                 <li>
-                    <a href="#">
+                    <a href="/LibMS/users/student/requests/pending-borrow-requests.php">
                         <i class="fa fa-bookmark fa-sm"></i>
                         <span class="sidebar-name">
                             Pending Borrow Requests
@@ -245,6 +236,7 @@ if ($_SESSION['acctype'] === 'Student') {
             </ul>
     </div>
 <!--SIDEBAR-->
+
 
 <div class="table-box">
     <div class="container col-12 col-md-10">

@@ -171,8 +171,7 @@ $conn->close();
                                 <div class="container">
                                     <p class="box-title">ANNOUNCEMENTS/NOTICE: </p>
                                     <p class="text-box">
-                                        MyLibro: Online Virtual Library Management for Pasig City Library, 
-                                        will be available to use soon. Stay tuned for the updates! 
+                                        Welcome to the MyLibro: Online Virtual Library Management for Pasig City Library!
                                     </p>
                                 
                                 </div>

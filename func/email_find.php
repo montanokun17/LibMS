@@ -101,7 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             </body>
             </html>
-        ';  // Set the email body
+        ';  // Set the email body (<img src="https://1drv.ms/i/s!AvPeRNCmW4xoa_ygJXG1x3O62sY?e=Zk4ob1" alt="MyLibro - Virtual LMS" width="200" height="200" style="display: block;">)
 
         // Send the email
         if ($mail->send()) {

@@ -19,12 +19,12 @@ $fetchEmail = "";
 $alert="";
 $userEmail="";
 
-$data = $_SESSION['data'];
-$fetchEmail = $data['email'];
-
-
 // Check if the form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+    $data = $_SESSION['data'];
+    $fetchEmail = $data['email'];
+
     // Retrieve the entered PIN from the form
     $enteredPin = $_POST["pin"];
 
