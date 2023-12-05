@@ -176,6 +176,9 @@ if ($_SESSION['acctype'] === 'Admin') {
                     <!--BOX 1-->
 
                     <video id="preview" style="width:400px; height:400px;"></video>
+                    <form>
+                      <input type="text" id="result" placeholder="SCANNED QR CODE">
+                    </form>
 
 
                   </td>
@@ -295,23 +298,6 @@ if ($_SESSION['acctype'] === 'Admin') {
     </div>
 </div>
 
-<script>
-  function getUserIdFromDatabase($conn, $idNo) {
-    $idNo = $conn->real_escape_string($idNo); // Escape input to prevent SQL injection
-
-    $sql = "SELECT id_no FROM users WHERE id_no = '$idNo'";
-    $result = $conn->query($sql);
-
-    if ($result && $result->num_rows > 0) {
-        $row = $result->fetch_assoc();
-        return $row['id_no'];
-    } else {
-        // Handle the case when the user with the provided ID is not found
-        return null;
-    }
-}
-
-</script>
 
 <script>
 
@@ -320,7 +306,7 @@ let scanner = new Instascan.Scanner({ video: document.getElementById('preview') 
 
     // Set up a callback for when a QR code is scanned successfully
     scanner.addListener('scan', function (content) {
-    document.getElementById('text').innerText = content;
+    document.getElementById('result').innerText = content;
 
     // Send the scanned data to the server using AJAX
     var xhr = new XMLHttpRequest();

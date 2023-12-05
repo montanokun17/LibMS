@@ -117,8 +117,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </p>';
         }
 
-        // Close the database connection (if not already closed)
-        $conn->close();
     } else {
         $alert = '<p class="alert-box center" style="margin-top:10px; margin-left:100px; padding:10px; border:2px solid #F1C232; border-radius:10px; width:60%; font-size:12px;">
             <i class="fa-solid fa-triangle-exclamation fa-md" style="color:#F1C232;"></i> Please Fill out All the Required Fields.

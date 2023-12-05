@@ -61,28 +61,18 @@ if ($_SESSION['acctype'] === 'Admin') {
 if (isset($_POST['content'])) {
     $qrCodeContent = $_POST['content'];
 
-    // Assuming the data received is in JSON format, decode it
-    $data = json_decode($qrCodeContent, true);
+        // Assuming the data received is in JSON format, decode it
+        $data = json_decode($qrCodeContent, true);
 
-    // Insert data into the database
-    $query = "INSERT INTO qr_attendance (user_id, username, attendance_time_in, acctype) VALUES (?, ?, NOW(), ?)";
-    $stmt = $conn->prepare($query);
+        // Insert data into the database
+        $insertQuery = "INSERT INTO qr_attendance (user_id, username, attendance_time_in, acctype, status) VALUES ('{$data['user_id']}', '{$data['username']}', NOW(), '{$data['acctype']}', 0)";
+        $conn->prepare($query);
+        error_log("Decoded Data: " . print_r($data, true));
 
-    // Bind parameters
-    $stmt->bind_param("iss", $data['user_id'], $data['username'], $data['acctype']);
-
-    if ($query->num_rows > 0) {
-
-        if ($stmt->execute()) {
-            echo "Data inserted successfully.";
+        if ($conn->query($insertQuery)) {
+            echo "Data inserted successfully. Time IN";
         } else {
-            echo "Error inserting data: " . $stmt->error;
+            echo "Error inserting data: " . $conn->error;
         }
-
     }
-
-    // Close the statement and connection
-    $stmt->close();
-    $conn->close();
-}
 ?>

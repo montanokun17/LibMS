@@ -19,6 +19,10 @@ CREATE TABLE users (
     pin_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+ALTER TABLE users
+MODIFY COLUMN id_no INT AUTO_INCREMENT,
+AUTO_INCREMENT = 100003;
+
 INSERT INTO users(id_no,username,email,con_num,firstname,lastname,password,acctype,schlvl,brgy, status,deleted)
 VALUES ('100001','admin','mylibrolibrarymanagementsystem@gmail.com','09154985773','MyLibro','Administrator','admin01','Admin','','San Nicolas','Active','0'),
        ('100002','librarian','mylibrolibrarymanagementsystem@gmail.com','09154985773','Librarian','Librarian LibMS','librarian01','Librarian','','San Nicolas','Active','0');

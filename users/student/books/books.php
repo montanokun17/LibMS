@@ -256,32 +256,32 @@ if ($_SESSION['acctype'] === 'Student') {
                             </form>
 
                             <div class="dropdown-1">
-                                    <select name="section" id="section-dd" onchange="filterBooks()">
+                                    <select name="section" id="section-dd" onchange="filterBooks(this.value)">
                                         <option selected disabled>*Select Section*</option>
-                                        <option onClick="filterBooks('Fiction')">Fiction</option>
-                                        <option onClick="filterBooks('Mystery Thriller')">Mystery/Thriller</option>
-                                        <option onClick="filterBooks('Romance')">Romance</option>
-                                        <option onClick="filterBooks('Science Fiction')">Science Fiction/Fantasy</option>
-                                        <option onClick="filterBooks('Horror')">Horror</option>
-                                        <option onClick="filterBooks('Historical Fiction')">Historical Fiction</option>
-                                        <option onClick="filterBooks('Biography/Autobiography')">Biography/Autobiography</option>
-                                        <option onClick="filterBooks('Memoir')">Memoir</option>
-                                        <option onClick="filterBooks('History')">History</option>
-                                        <option onClick="filterBooks('Politics')">Politics and Current Events</option>
-                                        <option onClick="filterBooks('Science and Technology')">Science and Technology</option>
-                                        <option onClick="filterBooks('Business and Finance')">Business and Finance</option>
-                                        <option onClick="filterBooks('Self-Help and Personal Development')">Self-Help and Personal Development</option>
-                                        <option onClick="filterBooks('Art and Architecture')">Art and Architecture</option>
-                                        <option onClick="filterBooks('Travel and Adventure')">Travel and Adventure</option>
-                                        <option onClick="filterBooks('Cookbooks and Food Writing')">Cookbooks and Food Writing</option>
-                                        <option onClick="filterBooks('Young Adult Fiction')">Young Adult Fiction</option>
-                                        <option onClick="filterBooks('Graphic Novels and Comics')">Graphic Novels and Comics</option>
-                                        <option onClick="filterBooks('Poetry')">Poetry</option>
-                                        <option onClick="filterBooks('Religion and Spiritually')">Religion and Spiritually</option>
-                                        <option onClick="filterBooks('Philosophy')">Philosophy</option>
-                                        <option onClick="filterBooks('Reference and Dictionary')">Reference and Dictionary</option>
-                                        <option onClick="filterBooks('Foreign Languages')">Foreign Languages</option>
-                                        <option onClick="filterBooks('Others')">Others</option>
+                                        <option value="Fiction">Fiction</option>
+                                        <option value="Mystery Thriller">Mystery/Thriller</option>
+                                        <option value="Romance">Romance</option>
+                                        <option value="Science Fiction">Science Fiction/Fantasy</option>
+                                        <option value="Horror">Horror</option>
+                                        <option value="Historical Fiction">Historical Fiction</option>
+                                        <option value="Biography/Autobiography">Biography/Autobiography</option>
+                                        <option value="Memoir">Memoir</option>
+                                        <option value="History">History</option>
+                                        <option value="Politics">Politics and Current Events</option>
+                                        <option value="Science and Technology">Science and Technology</option>
+                                        <option value="Business and Finance">Business and Finance</option>
+                                        <option value="Self-Help and Personal Development">Self-Help and Personal Development</option>
+                                        <option value="Art and Architecture">Art and Architecture</option>
+                                        <option value="Travel and Adventure">Travel and Adventure</option>
+                                        <option value="Cookbooks and Food Writing">Cookbooks and Food Writing</option>
+                                        <option value="Young Adult Fiction">Young Adult Fiction</option>
+                                        <option value="Graphic Novels and Comics">Graphic Novels and Comics</option>
+                                        <option value="Poetry">Poetry</option>
+                                        <option value="Religion and Spiritually">Religion and Spiritually</option>
+                                        <option value="Philosophy">Philosophy</option>
+                                        <option value="Reference and Dictionary">Reference and Dictionary</option>
+                                        <option value="Foreign Languages">Foreign Languages</option>
+                                        <option value="Others">Others</option>
                                     </select>
 
                                     <select name="status" id="book-status" onchange="filterBooks()">
@@ -445,7 +445,7 @@ if ($_SESSION['acctype'] === 'Student') {
 
                                 <th>Section</th>
 
-                                <th>Action</th>
+                                <th style="width:20%">Action</th>
 
                             </tr>
 
@@ -517,6 +517,8 @@ if ($_SESSION['acctype'] === 'Student') {
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
 <script src="/LibMS/users/student/books/search.js"></script>
+<script src="/LibMS/users/student/books/filter.js"></script>
+
 
 </body>
 </html>
